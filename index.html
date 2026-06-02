@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Secret Garden | 秘密花園</title>
+    <meta
+      name="description"
+      content="Secret Garden 秘密花園是一個以音樂、色彩、花語與情緒陪伴交織而成的沉浸式藝術企劃。"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Noto+Serif+TC:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css?v=20260602-4" />
+  </head>
+  <body data-theme="light">
+    <div class="ambient-layer" aria-hidden="true">
+      <canvas id="petal-canvas"></canvas>
+      <div class="cursor-orb"></div>
+    </div>
+
+    <header class="site-header">
+      <a class="brand" href="#home" aria-label="Secret Garden home">
+        <img class="brand-mark" src="assets/secret-garden-logo-cropped.png" alt="" />
+        <span id="brand-label" class="brand-label">Welcome</span>
+      </a>
+      <nav class="nav-links" aria-label="Primary navigation">
+        <a href="#about">About</a>
+        <a href="#bloom">Bloom</a>
+        <a href="#garden">Garden</a>
+        <a href="#music">Music</a>
+        <a href="#flowers">Flowers</a>
+        <a href="#gardeners">Gardeners</a>
+        <a href="#diary">Diary</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <div class="sound-cluster" id="mini-player" aria-label="Background music controls">
+        <button class="sound-toggle" type="button" aria-expanded="false" aria-label="展開音樂播放器">
+          <span class="sound-bars" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span class="mini-track-title" aria-hidden="true">
+            <span id="mini-track-title">Welcome to the Secret Garden</span>
+          </span>
+        </button>
+        <div class="music-touch-hint" id="music-touch-hint" aria-hidden="true">
+          <span>觸碰以控制音樂</span>
+        </div>
+        <div class="mini-player-panel" aria-label="迷你音樂播放器">
+          <button class="mini-player-title" id="mini-player-title" type="button" aria-label="前往專輯聆聽">
+            <span id="mini-full-title">Welcome to the Secret Garden</span>
+            <i class="mini-title-jump-icon" aria-hidden="true"></i>
+          </button>
+          <div class="mini-player-controls">
+            <button class="player-button prev" id="sound-prev" type="button" aria-label="上一首"></button>
+            <button class="player-button play" id="mini-play" type="button" aria-label="暫停"></button>
+            <button class="player-button next" id="sound-next" type="button" aria-label="下一首"></button>
+          </div>
+          <div class="mini-progress-wrap">
+            <span id="mini-current-time">0:00</span>
+            <input id="mini-progress" class="mini-progress" type="range" min="0" max="1000" value="0" aria-label="迷你播放器樂曲進度" />
+            <span id="mini-duration">2:49</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero section-panel" id="home" aria-labelledby="hero-title">
+        <div class="hero-media" aria-hidden="true"></div>
+        <div class="hero-shade" aria-hidden="true"></div>
+        <div class="hero-content reveal">
+          <img class="hero-logo" src="assets/secret-garden-logo-cropped.png" alt="" />
+          <p class="eyebrow">Immersive Experience</p>
+          <h1 id="hero-title">Secret Garden</h1>
+          <p class="hero-kicker">A garden grown through music.</p>
+          <p class="hero-copy">
+            以音樂為筆，讓情緒化作花園中的色彩。
+          </p>
+          <div class="hero-actions">
+            <a class="primary-action magnetic" href="#bloom">Enter the Garden</a>
+            <a class="ghost-action magnetic" href="#music">Listen Preview</a>
+          </div>
+        </div>
+        <div class="color-gate" aria-label="Eight color garden entrances">
+          <button class="gate-flower" style="--tone: #e94545" data-tone="261.63" data-name="Red" aria-label="Red flower entrance"></button>
+          <button class="gate-flower" style="--tone: #ff7b59" data-tone="293.66" data-name="Orange" aria-label="Coral flower entrance"></button>
+          <button class="gate-flower" style="--tone: #ffd166" data-tone="329.63" data-name="Yellow" aria-label="Gold flower entrance"></button>
+          <button class="gate-flower" style="--tone: #60d394" data-tone="349.23" data-name="Green" aria-label="Green flower entrance"></button>
+          <button class="gate-flower" style="--tone: #4d96ff" data-tone="392" data-name="Blue" aria-label="Aqua flower entrance"></button>
+          <button class="gate-flower" style="--tone: #5048F4" data-tone="440" data-name="Indigo" aria-label="Blue flower entrance"></button>
+          <button class="gate-flower" style="--tone: #9b5de5" data-tone="493.88" data-name="Violet" aria-label="Violet flower entrance"></button>
+          <button class="gate-flower" style="--tone: #acbe9a" data-tone="523.25" data-name="Gray" aria-label="Pink flower entrance"></button>
+        </div>
+        <div class="scroll-note">Every flower here was once a feeling. ｜ 獻給每一位曾經受傷，卻仍努力綻放的人。</div>
+      </section>
+
+      <section class="intro-band section-panel" aria-label="Core idea">
+        <div class="wide-copy reveal">
+          <span>Music</span>
+          <strong>Emotion</strong>
+          <span>Bloom</span>
+          <strong>Healing</strong>
+          <span>Memory</span>
+          <strong>Color</strong>
+        </div>
+      </section>
+
+      <section class="about section-panel" id="about" aria-labelledby="about-title">
+        <div class="section-heading reveal">
+          <p class="eyebrow">About</p>
+          <h2 id="about-title">關於秘密花園</h2>
+        </div>
+        <div class="about-grid">
+          <article class="origin-block reveal">
+            <h3>起源</h3>
+            <p>
+              秘密花園從情緒療癒與音樂創作出發，把難以說出口的感受轉換成聲音、色彩與花朵。每一次互動，都是把心情暫時交給花園照顧的過程。
+            </p>
+          </article>
+          <article class="origin-block reveal">
+            <h3>核心理念</h3>
+            <p>
+              我們相信情緒不需要被急著修好。它可以被聽見、被命名、被種下，然後在某一天以新的形狀重新開花。
+            </p>
+          </article>
+        </div>
+        <div class="world-map reveal" aria-label="Secret Garden project structure">
+          <div class="map-node active">Music</div>
+          <div class="map-line"></div>
+          <div class="map-node">Color</div>
+          <div class="map-line"></div>
+          <div class="map-node active">Flower Language</div>
+          <div class="map-line"></div>
+          <div class="map-node">Web Interaction</div>
+          <div class="map-line"></div>
+          <div class="map-node active">Emotional Companion</div>
+        </div>
+      </section>
+
+      <section class="bloom-experience section-panel" id="bloom" aria-labelledby="bloom-title">
+        <div class="bloom-orb orb-one" aria-hidden="true"></div>
+        <div class="bloom-orb orb-two" aria-hidden="true"></div>
+        <div class="section-heading reveal">
+          <p class="eyebrow">Color Bloom</p>
+          <h2 id="bloom-title">花朵綻放</h2>
+          <p>請選擇一顏色種子，它將為你盛開。每一次綻放，都將帶來一句為你內心中的花園所留下的祝福。</p>
+        </div>
+        <div class="bloom-lab reveal" data-bloom-color="#98d8aa">
+          <div class="bloom-intro" id="bloom-intro">
+            <p class="eyebrow">Welcome</p>
+            <h3>歡迎來到秘密花園</h3>
+            <p>從八色種子裡選一種心情，讓它在這裡長成一朵花。</p>
+            <button class="primary-action magnetic" id="start-bloom" type="button">進入花園</button>
+          </div>
+          <div class="bloom-controls" aria-label="Bloom color choices">
+            <button class="bloom-seed" type="button" style="--seed-color: #ff6b6b" data-bloom="red" aria-label="紅色種子"></button>
+            <button class="bloom-seed" type="button" style="--seed-color: #ffa94d" data-bloom="orange" aria-label="橙色種子"></button>
+            <button class="bloom-seed" type="button" style="--seed-color: #ffd86b" data-bloom="yellow" aria-label="黃色種子"></button>
+            <button class="bloom-seed" type="button" style="--seed-color: #98d8aa" data-bloom="green" aria-label="綠色種子"></button>
+            <button class="bloom-seed" type="button" style="--seed-color: #8ec5ff" data-bloom="blue" aria-label="藍色種子"></button>
+            <button class="bloom-seed" type="button" style="--seed-color: #6f75ff" data-bloom="indigo" aria-label="靛色種子"></button>
+            <button class="bloom-seed" type="button" style="--seed-color: #c6a0ff" data-bloom="purple" aria-label="紫色種子"></button>
+            <button class="bloom-seed" type="button" style="--seed-color: #acbe9a" data-bloom="gray" aria-label="灰色種子"></button>
+            <button class="bloom-audio-toggle" id="bloom-audio-toggle" type="button" aria-label="暫停花朵音樂" aria-pressed="false"></button>
+          </div>
+          <div class="bloom-scene" aria-live="polite">
+            <div class="bloom-empty" id="bloom-empty">選擇一顆種子，讓它在這裡盛開。</div>
+            <div class="bloom-message" id="bloom-message"></div>
+            <div class="bloom-palette" id="bloom-palette" aria-hidden="true">
+              <span style="--angle: 0deg; --petal-color: #ff6b6b"></span>
+              <span style="--angle: 45deg; --petal-color: #ffa94d"></span>
+              <span style="--angle: 90deg; --petal-color: #ffd86b"></span>
+              <span style="--angle: 135deg; --petal-color: #98d8aa"></span>
+              <span style="--angle: 180deg; --petal-color: #8ec5ff"></span>
+              <span style="--angle: 225deg; --petal-color: #6f75ff"></span>
+              <span style="--angle: 270deg; --petal-color: #c6a0ff"></span>
+              <span style="--angle: 315deg; --petal-color: #acbe9a"></span>
+              <i></i>
+            </div>
+            <div class="bloom-plant" id="bloom-plant" aria-hidden="true">
+              <div class="bloom-flower">
+                <span style="--rotate: 0deg"></span>
+                <span style="--rotate: 45deg"></span>
+                <span style="--rotate: 90deg"></span>
+                <span style="--rotate: 135deg"></span>
+                <span style="--rotate: 180deg"></span>
+                <span style="--rotate: 225deg"></span>
+                <span style="--rotate: 270deg"></span>
+                <span style="--rotate: 315deg"></span>
+                <i></i>
+              </div>
+              <div class="bloom-stem"></div>
+            </div>
+            <figure class="bloom-card" id="bloom-card" role="button" tabindex="-1" aria-hidden="true" aria-label="前往對應花語圖鑑卡">
+              <img src="" alt="" loading="lazy" />
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <section class="garden section-panel" id="garden" aria-labelledby="garden-title">
+        <div class="garden-backdrop" aria-hidden="true"></div>
+        <div class="section-heading reveal">
+          <p class="eyebrow">Take a Seed</p>
+          <h2 id="garden-title">種下一些花</h2>
+          <p>選一種顏色，留下今天的心情。花會在同一片夜色裡慢慢長出來。</p>
+        </div>
+        <div class="garden-stage reveal">
+          <div class="garden-toolbar" aria-label="Garden color choices">
+            <button class="seed active" type="button" data-color="#e94545" data-word="勇氣">Red</button>
+            <button class="seed" type="button" data-color="#ff7b59" data-word="溫暖">Orange</button>
+            <button class="seed" type="button" data-color="#ffd166" data-word="夢想">Yellow</button>
+            <button class="seed" type="button" data-color="#60d394" data-word="平靜">Green</button>
+            <button class="seed" type="button" data-color="#4ecdc4" data-word="真心">Blue</button>
+            <button class="seed" type="button" data-color="#4d96ff" data-word="信仰">Indigo</button>
+            <button class="seed" type="button" data-color="#9b5de5" data-word="療癒">Violet</button>
+            <button class="seed" type="button" data-color="#acbe9a" data-word="沈澱">Gray</button>
+          </div>
+          <div class="living-garden" id="living-garden" aria-live="polite">
+            <div class="garden-message">
+              <span id="garden-word">勇氣</span>
+              <small>Blooming</small>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="music section-panel" id="music" aria-labelledby="music-title">
+        <div class="section-heading reveal">
+          <p class="eyebrow">Color Music</p>
+          <h2 id="music-title">專輯聆聽</h2>
+          <p>十首顏色音樂的試聽入口。選一首歌，讓花園用這種聲音呼吸。</p>
+        </div>
+        <div class="album-player reveal">
+          <div class="album-console">
+            <div class="album-art" aria-label="Secret Garden album visual">
+              <span>Secret</span>
+              <strong>Garden</strong>
+              <i></i>
+            </div>
+            <div class="album-now">
+              <p class="eyebrow">Now Playing</p>
+              <div class="album-title-row">
+                <h3 id="album-now-title">Welcome to the Secret Garden</h3>
+                <div class="album-eq petal-wave" id="album-eq" aria-hidden="true"></div>
+              </div>
+              <p id="album-now-meta">李岳鴒｜2:49</p>
+              <div class="album-controls" aria-label="Album playback controls">
+                <button class="player-button prev" id="album-prev" type="button" aria-label="上一首"></button>
+                <button class="player-button play" id="album-play" type="button" aria-label="暫停"></button>
+                <button class="player-button next" id="album-next" type="button" aria-label="下一首"></button>
+              </div>
+              <div class="album-progress-wrap">
+                <span id="album-current-time">0:00</span>
+                <input id="album-progress" class="album-progress" type="range" min="0" max="1000" value="0" aria-label="樂曲進度" />
+                <span id="album-duration">2:49</span>
+              </div>
+            </div>
+          </div>
+          <div class="track-list" id="album-track-list">
+            <button class="track active" type="button" data-track="0" style="--track-color: #8fa780">
+              <span class="track-number">1</span>
+              <span class="track-composer">李岳鴒 ZEROYUEH</span>
+              <strong>Welcome to the<br />Secret Garden</strong>
+              <small>歡迎光臨秘密花園</small>
+              <em>2:49</em>
+            </button>
+            <button class="track" type="button" data-track="1" style="--track-color: #e94545; --track-flower: url('assets/cards/flowers/red-flower.png')">
+              <span class="track-number">2</span>
+              <span class="track-composer">林書磊 Aries Lin</span>
+              <strong>Red</strong>
+              <small>紅</small>
+              <em>3:28</em>
+            </button>
+            <button class="track" type="button" data-track="2" style="--track-color: #ff7b59; --track-flower: url('assets/cards/flowers/orange-flower.png')">
+              <span class="track-number">3</span>
+              <span class="track-composer">林書磊 Aries Lin</span>
+              <strong>Orange</strong>
+              <small>橙</small>
+              <em>3:28</em>
+            </button>
+            <button class="track" type="button" data-track="3" style="--track-color: #ffd166; --track-flower: url('assets/cards/flowers/yellow-flower.png')">
+              <span class="track-number">4</span>
+              <span class="track-composer">林書磊 Aries Lin</span>
+              <strong>Yellow</strong>
+              <small>黃</small>
+              <em>3:28</em>
+            </button>
+            <button class="track" type="button" data-track="4" style="--track-color: #60d394; --track-flower: url('assets/cards/flowers/green-flower.png')">
+              <span class="track-number">5</span>
+              <span class="track-composer">林書磊 Aries Lin</span>
+              <strong>Green</strong>
+              <small>綠</small>
+              <em>3:28</em>
+            </button>
+            <button class="track" type="button" data-track="5" style="--track-color: #4d96ff; --track-flower: url('assets/cards/flowers/blue-flower.png')">
+              <span class="track-number">6</span>
+              <span class="track-composer">陳映里 Osmond Chen</span>
+              <strong>Blue</strong>
+              <small>藍</small>
+              <em>4:10</em>
+            </button>
+            <button class="track" type="button" data-track="6" style="--track-color: #5542a1; --track-flower: url('assets/cards/flowers/indigo-flower.png')">
+              <span class="track-number">7</span>
+              <span class="track-composer">陳映里 Osmond Chen</span>
+              <strong>Indigo</strong>
+              <small>靛</small>
+              <em>5:02</em>
+            </button>
+            <button class="track" type="button" data-track="7" style="--track-color: #8b62c7; --track-flower: url('assets/cards/flowers/purple-flower.png')">
+              <span class="track-number">8</span>
+              <span class="track-composer">陳映里 Osmond Chen</span>
+              <strong>Violet</strong>
+              <small>紫</small>
+              <em>3:28</em>
+            </button>
+            <button class="track" type="button" data-track="8" style="--track-color: #acbe9a; --track-flower: url('assets/cards/flowers/gray-flower.png')">
+              <span class="track-number">9</span>
+              <span class="track-composer">陳映里 Osmond Chen</span>
+              <strong>Gray</strong>
+              <small>灰</small>
+              <em>5:11</em>
+            </button>
+            <button class="track" type="button" data-track="9" style="--track-color: #ffafcc">
+              <span class="track-number">10</span>
+              <span class="track-composer">李岳鴒 ZEROYUEH</span>
+              <strong>Secret Flower</strong>
+              <small>勿忘我</small>
+              <em>4:24</em>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section class="flowers section-panel" id="flowers" aria-labelledby="flowers-title">
+        <div class="section-heading reveal">
+          <p class="eyebrow">Flower Cards</p>
+          <h2 id="flowers-title">花語圖鑑卡</h2>
+        </div>
+        <div class="flower-actions reveal">
+          <button class="flip-all-button" id="flip-all-cards" type="button" aria-pressed="false">
+            翻開全部
+          </button>
+        </div>
+        <div class="card-grid">
+          <button class="flower-card reveal" type="button" data-flower-card="red" style="--card-color: #d92832" aria-label="翻開紅色山茶花花卡">
+            <span class="card-face front">
+              <i></i>
+              <strong>Red｜紅</strong>
+            </span>
+            <span class="card-face back">
+              <img src="assets/cards/web/red.png" alt="紅色山茶花小花卡" loading="lazy" />
+            </span>
+          </button>
+          <button class="flower-card reveal" type="button" data-flower-card="orange" style="--card-color: #f27722" aria-label="翻開橙色金盞花花卡">
+            <span class="card-face front">
+              <i></i>
+              <strong>Orange｜橙</strong>
+            </span>
+            <span class="card-face back">
+              <img src="assets/cards/web/orange.png" alt="橙色金盞花小花卡" loading="lazy" />
+            </span>
+          </button>
+          <button class="flower-card reveal" type="button" data-flower-card="yellow" style="--card-color: #e4a51a" aria-label="翻開黃色向日葵花卡">
+            <span class="card-face front">
+              <i></i>
+              <strong>Yellow｜黃</strong>
+            </span>
+            <span class="card-face back">
+              <img src="assets/cards/web/yellow.png" alt="黃色向日葵小花卡" loading="lazy" />
+            </span>
+          </button>
+          <button class="flower-card reveal" type="button" data-flower-card="green" style="--card-color: #60d394" aria-label="翻開綠色鈴蘭花卡">
+            <span class="card-face front">
+              <i></i>
+              <strong>Green｜綠</strong>
+            </span>
+            <span class="card-face back">
+              <img src="assets/cards/web/green.png" alt="綠色鈴蘭小花卡" loading="lazy" />
+            </span>
+          </button>
+          <button class="flower-card reveal" type="button" data-flower-card="blue" style="--card-color: #4d96ff" aria-label="翻開藍色藍繡球花卡">
+            <span class="card-face front">
+              <i></i>
+              <strong>Blue｜藍</strong>
+            </span>
+            <span class="card-face back">
+              <img src="assets/cards/web/blue.png" alt="藍色藍繡球小花卡" loading="lazy" />
+            </span>
+          </button>
+          <button class="flower-card reveal" type="button" data-flower-card="indigo" style="--card-color: #5048F4" aria-label="翻開靛色鳶尾花卡">
+            <span class="card-face front">
+              <i></i>
+              <strong>Indigo｜靛</strong>
+            </span>
+            <span class="card-face back">
+              <img src="assets/cards/web/indigo.png" alt="靛色鳶尾小花卡" loading="lazy" />
+            </span>
+          </button>
+          <button class="flower-card reveal" type="button" data-flower-card="purple" style="--card-color: #9b5de5" aria-label="翻開紫色薰衣草花卡">
+            <span class="card-face front">
+              <i></i>
+              <strong>Violet｜紫</strong>
+            </span>
+            <span class="card-face back">
+              <img src="assets/cards/web/purple.png" alt="紫色薰衣草小花卡" loading="lazy" />
+            </span>
+          </button>
+          <button class="flower-card reveal" type="button" data-flower-card="gray" style="--card-color: #acbe9a" aria-label="翻開灰色銀葉菊花卡">
+            <span class="card-face front">
+              <i></i>
+              <strong>Gray｜灰</strong>
+            </span>
+            <span class="card-face back">
+              <img src="assets/cards/web/gray.png" alt="灰色銀葉菊小花卡" loading="lazy" />
+            </span>
+          </button>
+        </div>
+      </section>
+
+      <section class="gardeners section-panel" id="gardeners" aria-labelledby="gardeners-title">
+        <div class="section-heading reveal">
+          <p class="eyebrow">Secret Gardeners</p>
+          <h2 id="gardeners-title">花園的園丁們</h2>
+        </div>
+        <div class="people-grid">
+          <article class="person reveal">
+            <img class="avatar" src="assets/gardeners/li-yueling.png" alt="李岳鴒大頭照" loading="lazy" />
+            <h3>李岳鴒｜專案總召</h3>
+            <p>製作人 / 作曲家 / 行政 / 視覺設計 / Alpha測試版網頁架設</p>
+            <small>喜歡的花：鳶尾｜喜歡的聲音：蟲鳴鳥啼</small>
+          </article>
+          <article class="person reveal">
+            <img class="avatar" src="assets/gardeners/chen-yingli.jpg" alt="陳映里大頭照" loading="lazy" />
+            <h3>陳映里｜專案副召</h3>
+            <p>作曲家 / 聲景錄音 / 聲音設計 /<br />攝影紀錄 / Beta測試版網站架設</p>
+            <small>喜歡的花：藍繡球｜喜歡的聲音：風拂大地</small>
+          </article>
+          <article class="person reveal">
+            <img class="avatar" src="assets/gardeners/lin-shulei.jpg" alt="林書磊大頭照" loading="lazy" />
+            <h3>林書磊｜執行長</h3>
+            <p>技術控管 / 作曲家 / 聲音設計 /<br />聲景錄音 / 線上展間架設</p>
+            <small>喜歡的花：山茶花｜喜歡的聲音：微雨浸地</small>
+          </article>
+        </div>
+      </section>
+
+      <section class="diary section-panel" id="diary" aria-labelledby="diary-title">
+        <div class="section-heading reveal">
+          <p class="eyebrow">Garden Diary</p>
+          <h2 id="diary-title">活動紀錄</h2>
+        </div>
+        <div class="diary-layout">
+          <article class="diary-feature reveal">
+            <span>今日花語</span>
+            <strong id="daily-phrase">讓心事先停在花瓣上。</strong>
+          </article>
+          <div class="timeline reveal">
+            <article>
+              <time>Hospital Performance</time>
+              <p>輔大醫院演出紀錄，讓音樂在等待與照護之間開出一點光。</p>
+            </article>
+            <article>
+              <time>Card Making</time>
+              <p>花卡製作、印刷測試與 QR code 連結體驗。</p>
+            </article>
+            <article>
+              <time>Rehearsal</time>
+              <p>彩排、聲音設計與網頁互動同步測試。</p>
+            </article>
+            <div class="version-archive" id="version-archive">
+              <div class="version-toggle">
+                <button class="version-summary" id="version-toggle" type="button" aria-expanded="false" aria-controls="version-panel">
+                  <span>
+                    <strong id="version-toggle-title">網站版本</strong>
+                    <small id="version-toggle-subtitle">v0.3b9</small>
+                  </span>
+                </button>
+                <div class="version-actions" aria-label="網站版本顯示模式">
+                  <button class="version-arrow version-list-toggle" id="version-list-toggle" type="button" aria-expanded="false" aria-controls="version-panel" aria-label="顯示版本列表">
+                    <i aria-hidden="true"></i>
+                  </button>
+                  <button class="version-arrow version-all-toggle" id="version-all-toggle" type="button" aria-expanded="false" aria-controls="version-panel" aria-label="展開所有版本內容">
+                    <i aria-hidden="true"></i>
+                    <i aria-hidden="true"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="version-panel" id="version-panel">
+                <div class="version-panel-inner">
+                  <article class="version-item"><div class="version-item-heading"><h3>v0.3b9</h3><time class="version-item-date">2026 06/02</time></div><p>- 優化了網站讀取速度。
+                    - 優化了音樂「紫」的音量平衡。
+                    - 將網站從「netlify.com」遷至「github.io」。</p></article>
+                  <article class="version-item"><div class="version-item-heading"><h3>v0.3b8</h3><time class="version-item-date">2026 06/02</time></div><p>- 修正了音樂播放系統的癱瘓錯誤。
+                    - 新增了「活動紀錄」中，顯示當前版本與版本歷史的下拉式選單。</p></article>
+                  <article class="version-item"><div class="version-item-heading"><h3>v0.3b7t</h3><time class="version-item-date">2026 06/01</time></div><p>- 修正了「專輯聆聽」中的EQ運作邏輯，讓顯示更容易閱讀。
+                    - 優化了「專輯聆聽」中，每首樂曲之間的音量平衡。
+                    - 新增了「專輯聆聽」中，「紫」的樂曲，此為測試文件，尚未完成。
+
+                    - 已知問題：音樂播放系統癱瘓。
+                  </p></article>
+                  <article class="version-item"><div class="version-item-heading"><h3>v0.3b6</h3><time class="version-item-date">2026 05/31</time></div><p>- 新增了主頁中的Logo顯示。
+                    - 優化了右上角回到首頁按鈕的顯示，將Logo替換為秘密花園之Logo，並改在主頁時顯示「Welcome」、在其他頁顯示「Secret Garden」。
+
+                    - 新增了游標的顯示，將網站內游標改為顏色種子，當游標進入可互動區域後會發芽。
+
+                    - 優化了網站內的文字敘述。
+                    - 將「開花體驗」更名為「花朵綻放」
+                    - 優化了「花朵綻放（開花體驗）」的彩色花朵顯示方式。
+                    - 將「花朵綻放（開花體驗）」的播放系統與「專輯聆聽」的播放系統整合。
+                    - 新增了「花朵綻放（開花體驗）」中，「藍、靛、紫、灰」的開花音效。
+                    - 修正了「種下一些花」中的「Gray」顏色，改為「#acbe9a」。
+                    - 優化了「專輯聆聽」中的項目，包含：新增作曲家的英文藝名、調整樂曲選擇的佈局、將EQ改至「正在播放」區域、修正了樂曲進度條在淺色模式下的顯示錯誤。
+
+                    - 優化了「花園的園丁們」之排版顯示。
+                    - 優化了「背景音樂控制器」中，「轉跳至專輯聆聽」的按鈕位置與顯示，以及修正「背景音樂控制器」為永恆顯示。
+                  </p></article>
+                  <article class="version-item"><div class="version-item-heading"><h3>v0.3b5</h3><time class="version-item-date">2026 05/29</time></div><p>- 修正了「開花體驗」的顯示，將彩色花瓣被說明文字蓋過的問題解決，並把花蕊與花瓣錯位的問題解決。
+
+                    - 將「開花體驗」中的八色種子位置改為置中。
+                    - 新增了「開花體驗」中，右下角花語小卡連結至「花語圖鑑卡」的功能。
+                  </p></article>
+                  <article class="version-item"><div class="version-item-heading"><h3>v0.3b4</h3><time class="version-item-date">2026 05/29</time></div><p>- 修正了「專輯聆聽」中，樂曲選擇的花朵背景圖片顯示問題。
+                    - 優化了「專輯聆聽」中的播放事件。將暫停時的淡出時長縮減30%，並加入繼續播放時淡入、切換歌曲時淡出。
+
+                    - 優化了「背景音樂控制器」操作提示的水平位置，以及行為模式。
+                  </p></article>
+                  <article class="version-item"><div class="version-item-heading"><h3>v0.3b3t</h3><time class="version-item-date">2026 05/29</time></div><p>- 修正了「專輯聆聽」中，EQ動態的顯示問題。
+                    - 修正了「背景音樂控制器」操作提示的顯示問題。
+                   
+                    - 已知問題：「專輯聆聽」中的樂曲選擇圖片背景出現顯示問題。
+                  </p></article>
+                  <article class="version-item"><div class="version-item-heading"><h3>v0.3b2</h3><time class="version-item-date">2026 05/28</time></div><p>- 縮減網頁佈局至80%。
+                    - 將主頁的「Enter the Garden」按鈕從原先導向「種下一些花」改為導向至「開花體驗」。
+
+                    - 新增了「專輯聆聽」中每首音樂的背景圖片，圖片為「花語圖鑑卡」中對應該色的花朵，並把播放中動畫改為EQ動態顯示。
+
+                    - 優化了「背景音樂控制器」，將音樂控制功能整合進彈出式互動控制器，並在控制器中新增「轉跳至專輯聆聽」之按鈕，並增加了「背景音樂控制器」的操作提示。
+
+                    - 補上了「聯絡方式」中的「Instagram」及「YouTube」連結功能。
+                    - 優化了「深淺模式切換花朵」的點擊動畫。
+                    - 新增了「深淺模式切換花朵」的待機動畫。
+                  </p></article>
+                  <article class="version-item"><div class="version-item-heading"><h3>v0.3b1</h3><time class="version-item-date">2026 05/28</time></div><p>- 優化主頁副標題之顯示方式。並且把主頁下方的八色花色號校準至與小花卡色號一致。
+
+                    - 將「開花網站」回歸於此新網站，該區域在「關於秘密花園」下方，並命名為「開花體驗」，使用者可以選擇一種顏色來讓其綻放成一朵花，並搭配相應的開花音效 與顏色音樂。此版本缺少「藍、靛、紫、灰」的開花音效，以「紅、橙、黃、綠」之開花音效暫時代替，並且已有「藍、靛、灰」之顏色音樂、缺少「紫」。「開花體驗」的播放系統為單獨控制，由該區右上角的按鈕控制音樂的播放/停止。
+
+                    - 將「線上花園入口」更名為「種下一些花」，並把該區的八色名稱更改為與「小花卡圖鑑」區域相同，並將「Blooming Now」改為「Blooming」。
+
+                    - 將「音樂/專輯宇宙」區域更名為「專輯聆聽」，並導入10首音樂的播放控制，包含上一首、下一首、暫停/播放，及播放進度條，也加入作曲者、曲目時長、曲目編號及播放中動畫等。
+
+                    - 將「背景音樂」功能接上專輯聆聽播放系統，於右上角區域控制上一首、下一首、暫停/播放。此系統獨立於「開花體驗」的播放系統。
+
+                    - 將「小花卡圖鑑」更名為「花語圖鑑卡」，並將「Gray｜灰」的色號從「#7f877d」改為「#acbe9a」。
+
+                    - 將「團隊與園丁們」更名為「花園的園丁們」，並且加上了成員照片、職位、其餘資訊等等。
+
+                    - 將「合作與聯絡」中的「Email」按鈕連線至秘密花園信箱，供使用者聯絡我們。
+
+                    - 此版本為2026 05/28創意專案簡報使用之網站版本。</p></article>
+                  <article class="version-item"><div class="version-item-heading"><h3>v0.2b2</h3><time class="version-item-date">2026 05/27</time></div><p>- 新增「淺色模式」，使用者可於右下角的花朵切換 深色/淺色模式。</p></article>
+                  <article class="version-item"><div class="version-item-heading"><h3>v0.2b1</h3><time class="version-item-date">2026 05/27</time></div><p>- 將小花卡圖鑑更新為8張：紅 山茶花、橙 金盞花、黃 向日葵、綠 鈴蘭、藍 藍繡球、靛 鳶尾、紫 薰衣草、灰 銀葉菊。分別對應八色音樂。點擊可以翻開該花卡，再次點即可關閉，右上角按鈕可一次翻開/關閉所有花卡。</p></article>
+                  <article class="version-item"><div class="version-item-heading"><h3>v0.1b</h3><time class="version-item-date">2026 05/27</time></div><p>- 網站建立。旨在將「秘密花園」計畫以線上平台呈現。頁面共分為八區：主頁，展示計畫名稱、簡介等；「關於秘密花園」，展示核心理念與專案起源；「線上花園入口」，透過點擊並開花來讓使用者與網站互動；「音樂/專輯宇宙」，聆聽專輯的初始樣板；「小花卡圖鑑」，為展示花語及顏色的測試區域；「團隊與園丁們」，預留團隊核心人員之資料顯示區；「活動紀錄」，為秘密花園之活動進度顯示區；「合作與聯絡」，為聯絡資訊與連結導向預備區。並預留背景音樂播放功能於右上角
+
+                    - Beta測試版由陳映里修改及提供。
+                  </p></article>
+                  <article class="version-item"><div class="version-item-heading"><h3>v0.1a2</h3><time class="version-item-date">2026 05/14</time></div><p>網站前身，為「開花網站」，基於v0.1a1進行新增與修改：
+                    - 將進入花園前的八色種子改為八色花瓣的花朵。
+
+                    - 新增花朵綻放時播放相應之開花音效、顏色音樂，此版本只有「紅、橙、黃、綠」具有音效及音樂，「藍、靛、紫、灰」的音效與音樂尚未加入。並且在每個花朵的右下方加入花語圖卡。
+                  </p></article>
+                  <article class="version-item"><div class="version-item-heading"><h3>v0.1a1</h3><time class="version-item-date">2026 05/10</time></div><p>網站前身，為「開花網站」，進入花園前有八色種子出現，並以8種顏色的種子綻放成花作為特色，在此版本中會播放專輯第一首歌曲「Welcome to the Secret Garden」作為背景音樂，並且每個不同顏色的種子會有不同的祝福語。
+
+                    - Alpha測試版由李岳鴒修改及提供。
+                  </p></article>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="contact section-panel" id="contact" aria-labelledby="contact-title">
+        <div class="section-heading reveal">
+          <p class="eyebrow">Contact</p>
+          <h2 id="contact-title">合作與聯絡</h2>
+          <p>展演、醫院合作、裝置藝術、音樂企劃與花卡收藏，都可以從這裡開始。</p>
+        </div>
+        <div class="contact-links reveal">
+          <a class="magnetic" href="mailto:secret.gardener.mit@gmail.com">Email</a>
+          <a class="magnetic" href="https://www.instagram.com/secret_garden_0625?igsh=MTh5aHJhMnB4MGkwMA%3D%3D&utm_source=qr">Instagram</a>
+          <a class="magnetic" href="https://youtube.com/@secretgardener-mit?si=hP4gkZCS1fGj2H9G">YouTube</a>
+          <button class="magnetic spotify-soon-trigger" id="spotify-soon-trigger" type="button">Spotify</button>
+        </div>
+      </section>
+    </main>
+
+    <div class="theme-toggle" aria-label="Theme switcher">
+      <button class="theme-toggle-button" id="theme-toggle" type="button" aria-label="切換到深色主題">
+        <span class="theme-flower-visual" aria-hidden="true"></span>
+      </button>
+      <span class="theme-toggle-label" id="theme-toggle-label">深色</span>
+    </div>
+    <div class="coming-soon-modal" id="spotify-soon-modal" aria-hidden="true">
+      <div class="coming-soon-backdrop" data-close-spotify-modal></div>
+      <div class="coming-soon-card" role="dialog" aria-modal="true" aria-labelledby="spotify-soon-title">
+        <button class="coming-soon-close" type="button" aria-label="關閉 Spotify 提示" data-close-spotify-modal></button>
+        <p class="eyebrow">Spotify</p>
+        <h3 id="spotify-soon-title">Comming Soon</h3>
+        <p>專輯正在上架 Spotify 中。</p>
+      </div>
+    </div>
+    <div class="bloom-toast" id="bloom-toast" aria-live="polite"></div>
+    <script src="script.js?v=20260602-4"></script>
+  </body>
+</html>
