@@ -37,6 +37,7 @@ const versionPanel = document.getElementById("version-panel");
 const versionPanelInner = versionPanel?.querySelector(".version-panel-inner");
 const versionToggleTitle = document.getElementById("version-toggle-title");
 const versionToggleSubtitle = document.getElementById("version-toggle-subtitle");
+const CURRENT_SITE_VERSION = "v0.3b9";
 const albumNowTitle = document.getElementById("album-now-title");
 const albumNowMeta = document.getElementById("album-now-meta");
 const albumCurrentTime = document.getElementById("album-current-time");
@@ -1137,7 +1138,7 @@ function setVersionArchiveMode(mode, options = {}) {
   versionListToggle?.setAttribute("aria-expanded", String(open && !allOpen));
   versionAllToggle?.setAttribute("aria-expanded", String(allOpen));
   if (versionToggleTitle) versionToggleTitle.textContent = open ? "網站版本紀錄" : "網站版本";
-  if (versionToggleSubtitle) versionToggleSubtitle.textContent = open ? "在此處查看網站更新紀錄" : "v0.3b8";
+  if (versionToggleSubtitle) versionToggleSubtitle.textContent = open ? "在此處查看網站更新紀錄" : CURRENT_SITE_VERSION;
 
   if (mode === "all") {
     setAllVersionItems(true);
@@ -1149,6 +1150,7 @@ function setVersionArchiveMode(mode, options = {}) {
 }
 
 prepareVersionItems();
+if (versionToggleSubtitle) versionToggleSubtitle.textContent = CURRENT_SITE_VERSION;
 
 versionToggle?.addEventListener("click", (event) => {
   event.stopPropagation();
