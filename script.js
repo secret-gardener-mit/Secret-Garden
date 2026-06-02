@@ -37,7 +37,10 @@ const versionPanel = document.getElementById("version-panel");
 const versionPanelInner = versionPanel?.querySelector(".version-panel-inner");
 const versionToggleTitle = document.getElementById("version-toggle-title");
 const versionToggleSubtitle = document.getElementById("version-toggle-subtitle");
-const CURRENT_SITE_VERSION = "v0.3b10";
+const dailyPhrase = document.getElementById("daily-phrase");
+const dailyPhraseNext = document.getElementById("daily-phrase-next");
+const dailyPhraseRandom = document.getElementById("daily-phrase-random");
+const CURRENT_SITE_VERSION = "v0.3b12";
 const albumNowTitle = document.getElementById("album-now-title");
 const albumNowMeta = document.getElementById("album-now-meta");
 const albumCurrentTime = document.getElementById("album-current-time");
@@ -53,20 +56,63 @@ const bloomSfxAudio = new Audio();
 const flowerAudio = new Audio();
 const AUDIO_FADE_DURATION = 300;
 const AUDIO_START_EPSILON = 0.08;
-backgroundAudio.preload = "auto";
-backgroundAnalysisAudio.preload = "auto";
-bloomSfxAudio.preload = "auto";
-flowerAudio.preload = "auto";
+backgroundAudio.preload = "metadata";
+backgroundAnalysisAudio.preload = "none";
+bloomSfxAudio.preload = "none";
+flowerAudio.preload = "none";
 backgroundAudio.loop = false;
 backgroundAnalysisAudio.loop = false;
 flowerAudio.loop = true;
 
-const phrases = [
-  "讓心事先停在花瓣上。",
-  "今天的溫柔，也值得被留下。",
-  "每一段靜默，都可能正在發芽。",
-  "把難過種下，不代表它會永遠留下。",
-  "願你在風裡，慢慢回到自己。"
+// 今日花語資料庫：日後要新增、刪除、編輯祝福語，集中修改這個陣列即可。
+// 可直接在反引號內按 Enter 換行；網頁會保留換行，但視覺顯示固定為兩行。
+// 祝福花語至多16個字，單行至多8個字。
+const dailyPhrases = [
+  `你已經很努力了。`,
+  `今天的你，
+  也值得被愛。`,
+  `慢一點也沒關係。`,
+  `有人正在想念你。`,
+  `你的溫柔
+  沒有白費。`,
+  `請別急著
+  否定自己。`,
+  `傷口會
+  慢慢長成花。`,
+  `你的存在
+  不需要被定義。`,
+  `累了，
+  就休息一下吧。`,
+  `願你
+  今晚安心入睡。`,
+  `你不需要
+  獨自撐著。`,
+  `總會有人理解你。`,
+  `迷路時，
+  也別討厭自己。`,
+  `願你
+  被世界溫柔接住。`,
+  `你的眼淚
+  有它的重量。`,
+  `蝴蝶看不見
+  自己的美麗。`,
+  `今天的你
+  也辛苦了。`,
+  `願你的心
+  慢慢放晴。`,
+  `你的感受永遠是
+  真實存在的。`,
+  `記得回頭看看
+  自己已經走了多遠`,
+  `請好好照顧
+  自己的心。`,
+  `即便拒絕了別人，你也不是壞人。`,
+  `願你
+  記得自己的光。`,
+  `花會記得
+  你的故事。`,
+  `每一段靜默，
+  都可能正在發芽。`
 ];
 
 const bloomChoices = {
@@ -74,7 +120,7 @@ const bloomChoices = {
     color: "#e94545",
     tone: 261.63,
     message: "願你的勇敢，被世界溫柔擁抱",
-    card: "assets/cards/web/red.png",
+    card: "assets/cards/web/red.jpg",
     alt: "紅色山茶花小花卡",
     bloom: "assets/audio/red_bloom.mp3",
     music: "assets/audio/red.mp3"
@@ -83,7 +129,7 @@ const bloomChoices = {
     color: "#ff7b59",
     tone: 293.66,
     message: "願今天有道暖陽落進你心裡",
-    card: "assets/cards/web/orange.png",
+    card: "assets/cards/web/orange.jpg",
     alt: "橙色金盞花小花卡",
     bloom: "assets/audio/orange_bloom.mp3",
     music: "assets/audio/orange.mp3"
@@ -92,7 +138,7 @@ const bloomChoices = {
     color: "#ffd166",
     tone: 329.63,
     message: "願閃閃發亮的星，與你起舞",
-    card: "assets/cards/web/yellow.png",
+    card: "assets/cards/web/yellow.jpg",
     alt: "黃色向日葵小花卡",
     bloom: "assets/audio/yellow_bloom.mp3",
     music: "assets/audio/yellow.mp3"
@@ -101,7 +147,7 @@ const bloomChoices = {
     color: "#60d394",
     tone: 349.23,
     message: "或許有些事，慢慢來也沒關係",
-    card: "assets/cards/web/green.png",
+    card: "assets/cards/web/green.jpg",
     alt: "綠色鈴蘭小花卡",
     bloom: "assets/audio/green_bloom.mp3",
     music: "assets/audio/green.mp3"
@@ -110,7 +156,7 @@ const bloomChoices = {
     color: "#4d96ff",
     tone: 392,
     message: "願你今晚能睡得安穩，有個好夢",
-    card: "assets/cards/web/blue.png",
+    card: "assets/cards/web/blue.jpg",
     alt: "藍色藍繡球小花卡",
     bloom: "assets/audio/blue_bloom.mp3",
     music: "assets/audio/blue.mp3"
@@ -119,7 +165,7 @@ const bloomChoices = {
     color: "#5048F4",
     tone: 440,
     message: "那些深夜裡的情緒，將化為雨滴落下",
-    card: "assets/cards/web/indigo.png",
+    card: "assets/cards/web/indigo.jpg",
     alt: "靛色鳶尾小花卡",
     bloom: "assets/audio/indigo_bloom.mp3",
     music: "assets/audio/indigo.mp3"
@@ -128,7 +174,7 @@ const bloomChoices = {
     color: "#9b5de5",
     tone: 493.88,
     message: "也許有些孤獨，會化為星光",
-    card: "assets/cards/web/purple.png",
+    card: "assets/cards/web/purple.jpg",
     alt: "紫色薰衣草小花卡",
     bloom: "assets/audio/violet_bloom.mp3",
     music: "assets/audio/violet.mp3"
@@ -137,7 +183,7 @@ const bloomChoices = {
     color: "#acbe9a",
     tone: 523.25,
     message: "傾聽四周，或許它們也在聆聽著你",
-    card: "assets/cards/web/gray.png",
+    card: "assets/cards/web/gray.jpg",
     alt: "灰色銀葉菊小花卡",
     bloom: "assets/audio/gray_bloom.mp3",
     music: "assets/audio/gray.mp3"
@@ -273,6 +319,9 @@ let themeFlowerSpeed = 0.02;
 let themeFlowerTargetSpeed = 0.02;
 let themeFlowerLastTime = 0;
 let themeFlowerBoostTimer;
+let themeFlowerFrameLastTime = 0;
+let petalFrameLastTime = 0;
+let scrollOptimizeTimer;
 let activeColor = "#e94545";
 let activeWord = "勇氣";
 let themeTransitionTimer;
@@ -291,6 +340,13 @@ let brandLabelTimer;
 let brandLabelTarget = "Welcome";
 let brandLabelChanging = false;
 const usesHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+const browserUA = navigator.userAgent || "";
+const isChromeBrowser = /Chrome\//.test(browserUA) && !/Edg\/|OPR\/|Opera\//.test(browserUA);
+const visualPerformanceLite = usesHover && !isChromeBrowser;
+const platformName = navigator.userAgentData?.platform || navigator.platform || navigator.userAgent || "";
+const isWindowsPlatform = /win/i.test(platformName);
+const nativeCursorEnabled = usesHover && (isWindowsPlatform || visualPerformanceLite);
+const customCursorEnabled = usesHover && !nativeCursorEnabled;
 const cursorPalette = ["#ffd166", "#ff7a90", "#4ecdc4", "#9b5de5", "#60d394", "#4d96ff", "#ff9f68", "#d7b9ff"];
 const interactiveCursorSelector = [
   "a",
@@ -308,16 +364,66 @@ const interactiveCursorSelector = [
   ".living-garden"
 ].join(",");
 
-if (cursor) {
+function encodeCursorSvg(svg, hotspotX = 16, hotspotY = 18) {
+  const data = `data:image/svg+xml,${encodeURIComponent(svg)}`;
+  return `url("${data}") ${hotspotX} ${hotspotY}, auto`;
+}
+
+function mixHexColor(hex, mix = "#07110f", amount = 0.36) {
+  const parse = (value) => {
+    const normalized = value.replace("#", "");
+    return [
+      Number.parseInt(normalized.slice(0, 2), 16),
+      Number.parseInt(normalized.slice(2, 4), 16),
+      Number.parseInt(normalized.slice(4, 6), 16)
+    ];
+  };
+  const [r1, g1, b1] = parse(hex);
+  const [r2, g2, b2] = parse(mix);
+  const blended = [r1, g1, b1].map((channel, index) => {
+    const target = [r2, g2, b2][index];
+    return Math.round(channel * (1 - amount) + target * amount).toString(16).padStart(2, "0");
+  });
+  return `#${blended.join("")}`;
+}
+
+function buildWindowsSeedCursor(color, { sprout = false, pressed = false } = {}) {
+  const seedColor = pressed ? mixHexColor(color) : color;
+  const seedSize = pressed ? 16 : 20;
+  const seedOffset = (20 - seedSize) / 2;
+  const sproutMarkup = sprout
+    ? `
+      <path d="M16 15 C16 9 16 5 16 2" fill="none" stroke="#4f8d4c" stroke-width="3" stroke-linecap="round"/>
+      <path d="M17 7 C23 4 27 6 28 11 C23 12 19 11 17 7Z" fill="#8ed77e" stroke="#4f8d4c" stroke-width="1"/>
+    `
+    : "";
+  return `
+    <svg xmlns="http://www.w3.org/2000/svg" width="36" height="42" viewBox="0 0 36 42">
+      ${sproutMarkup}
+      <circle cx="18" cy="${22 + seedOffset / 2}" r="${seedSize / 2}" fill="${seedColor}" stroke="#ffffff" stroke-opacity="0.82" stroke-width="2"/>
+      <circle cx="14" cy="${18 + seedOffset / 2}" r="${Math.max(2, seedSize * 0.16)}" fill="#ffffff" fill-opacity="0.62"/>
+    </svg>
+  `;
+}
+
+if (cursor && customCursorEnabled) {
   document.documentElement.appendChild(cursor);
   const cursorColor = cursorPalette[Math.floor(Math.random() * cursorPalette.length)];
   document.documentElement.style.setProperty("--cursor-color", cursorColor);
+  document.documentElement.classList.add("custom-cursor-enabled");
+} else if (nativeCursorEnabled) {
+  const cursorColor = cursorPalette[Math.floor(Math.random() * cursorPalette.length)];
+  document.documentElement.style.setProperty("--windows-cursor", encodeCursorSvg(buildWindowsSeedCursor(cursorColor)));
+  document.documentElement.style.setProperty("--windows-cursor-press", encodeCursorSvg(buildWindowsSeedCursor(cursorColor, { pressed: true })));
+  document.documentElement.style.setProperty("--windows-cursor-sprout", encodeCursorSvg(buildWindowsSeedCursor(cursorColor, { sprout: true }), 16, 22));
+  document.documentElement.classList.add("windows-custom-cursor");
+  cursor?.remove();
+} else {
+  cursor?.remove();
 }
 
-function getCursorZoomCompensation() {
-  if (!cursor || !document.body.contains(cursor)) return 1;
-  const zoom = Number.parseFloat(window.getComputedStyle(document.body).zoom);
-  return Number.isFinite(zoom) && zoom > 0 ? zoom : 1;
+if (visualPerformanceLite) {
+  document.documentElement.classList.add("performance-lite");
 }
 
 function setCursorClass(className, active) {
@@ -377,7 +483,7 @@ function applyTheme(theme, persist = true) {
     themeToggle.title = `切換到${targetTheme}主題`;
   }
   if (persist) saveTheme(nextTheme);
-  if (width && height) petals = Array.from({ length: Math.min(80, Math.floor(width / 18)) }, createPetal);
+  if (width && height) petals = createPetalSet();
 }
 
 function transitionTheme(theme) {
@@ -390,21 +496,34 @@ function transitionTheme(theme) {
     themeTransitionApplyTimer = window.setTimeout(() => applyTheme(theme), 120);
     themeTransitionTimer = window.setTimeout(() => {
       document.body.classList.remove("theme-shifting");
-    }, 760);
+    }, visualPerformanceLite ? 420 : 760);
   });
 }
 
 function animateThemeFlower(timestamp = 0) {
-  if (!themeFlowerVisual) return;
+  if (!themeFlowerVisual || visualPerformanceLite) return;
+  requestAnimationFrame(animateThemeFlower);
+  if (document.hidden) return;
+  themeFlowerFrameLastTime = timestamp;
   const delta = themeFlowerLastTime ? Math.min(40, timestamp - themeFlowerLastTime) : 16;
   themeFlowerLastTime = timestamp;
   themeFlowerSpeed += (themeFlowerTargetSpeed - themeFlowerSpeed) * 0.045;
   themeFlowerAngle = (themeFlowerAngle + themeFlowerSpeed * delta) % 360;
-  themeFlowerVisual.style.transform = `rotate(${themeFlowerAngle}deg)`;
-  requestAnimationFrame(animateThemeFlower);
+  themeFlowerVisual.style.transform = `translate3d(0, 0, 0) rotate(${themeFlowerAngle}deg)`;
 }
 
 function boostThemeFlower() {
+  if (visualPerformanceLite) {
+    if (!themeToggle) return;
+    themeToggle.classList.remove("is-boosting");
+    void themeToggle.offsetWidth;
+    themeToggle.classList.add("is-boosting");
+    window.clearTimeout(themeFlowerBoostTimer);
+    themeFlowerBoostTimer = window.setTimeout(() => {
+      themeToggle.classList.remove("is-boosting");
+    }, 560);
+    return;
+  }
   themeFlowerTargetSpeed = 1.08;
   window.clearTimeout(themeFlowerBoostTimer);
   themeFlowerBoostTimer = window.setTimeout(() => {
@@ -412,9 +531,43 @@ function boostThemeFlower() {
   }, 590);
 }
 
+function beginScrollOptimization() {
+  if (!visualPerformanceLite) return;
+  document.body.classList.add("scroll-optimizing");
+  window.clearTimeout(scrollOptimizeTimer);
+  scrollOptimizeTimer = window.setTimeout(() => {
+    document.body.classList.remove("scroll-optimizing");
+  }, 900);
+}
+
+function smoothScrollToElement(target, options = {}) {
+  const element = typeof target === "string" ? document.querySelector(target) : target;
+  if (!element) return;
+  beginScrollOptimization();
+  element.scrollIntoView({
+    behavior: "smooth",
+    block: options.block || "start",
+    inline: options.inline || "nearest"
+  });
+}
+
+function smoothScrollToTop(top) {
+  beginScrollOptimization();
+  window.scrollTo({ top, behavior: "smooth" });
+}
+
+function getPetalCount() {
+  const petalDensity = visualPerformanceLite ? 32 : 18;
+  const petalLimit = visualPerformanceLite ? 42 : 80;
+  return Math.min(petalLimit, Math.floor(width / petalDensity));
+}
+
+function createPetalSet() {
+  return Array.from({ length: getPetalCount() }, createPetal);
+}
 
 function resizeCanvas() {
-  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const dpr = Math.min(window.devicePixelRatio || 1, visualPerformanceLite ? 1.25 : 2);
   width = window.innerWidth;
   height = window.innerHeight;
   canvas.width = Math.floor(width * dpr);
@@ -422,7 +575,7 @@ function resizeCanvas() {
   canvas.style.width = `${width}px`;
   canvas.style.height = `${height}px`;
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  petals = Array.from({ length: Math.min(80, Math.floor(width / 18)) }, createPetal);
+  petals = createPetalSet();
 }
 
 function createPetal() {
@@ -442,7 +595,11 @@ function createPetal() {
   };
 }
 
-function drawPetals() {
+function drawPetals(timestamp = 0) {
+  requestAnimationFrame(drawPetals);
+  if (document.hidden) return;
+  if (visualPerformanceLite && timestamp - petalFrameLastTime < 33) return;
+  petalFrameLastTime = timestamp;
   ctx.clearRect(0, 0, width, height);
   for (const petal of petals) {
     petal.y += petal.speed;
@@ -475,7 +632,6 @@ function drawPetals() {
     ctx.fill();
     ctx.restore();
   }
-  requestAnimationFrame(drawPetals);
 }
 
 function ensureAudio() {
@@ -706,10 +862,17 @@ function isAnalysisStreamUnavailable() {
 
 function updateTrackWaves() {
   waveFrame = requestAnimationFrame(updateTrackWaves);
-  const playingWave = document.querySelector(".album-eq.petal-wave");
-  if (!playingWave || backgroundAudio.paused) return;
+  const playingWaves = [...document.querySelectorAll(".album-eq.petal-wave")];
+  if (!playingWaves.length || backgroundAudio.paused) return;
+  const playingWave = playingWaves.find((wave) => getComputedStyle(wave).display !== "none") || playingWaves[0];
   const bars = [...playingWave.querySelectorAll("b")];
   if (!bars.length) return;
+  const paintAlbumEqBars = (levels) => {
+    playingWaves.forEach((wave) => {
+      const waveBars = [...wave.querySelectorAll("b")];
+      if (waveBars.length) paintEqBars(wave, waveBars, levels);
+    });
+  };
   if (
     userActivatedAudio &&
     (!backgroundAnalyser ||
@@ -725,7 +888,7 @@ function updateTrackWaves() {
     }
   }
   if (!backgroundAnalyser || !frequencyData || !timeDomainData) {
-    paintEqBars(playingWave, bars, fallbackEqLevels(bars));
+    paintAlbumEqBars(fallbackEqLevels(bars));
     return;
   }
 
@@ -742,10 +905,10 @@ function updateTrackWaves() {
   }
   if (analysisUnavailable || analysisInvalid) {
     if (analysisUnavailable || (analysisInvalidSince && performance.now() - analysisInvalidSince > 1200)) {
-      paintEqBars(playingWave, bars, fallbackEqLevels(bars));
+      paintAlbumEqBars(fallbackEqLevels(bars));
       return;
     }
-    paintEqBars(playingWave, bars, bars.map(() => 0));
+    paintAlbumEqBars(bars.map(() => 0));
     return;
   }
 
@@ -794,7 +957,7 @@ function updateTrackWaves() {
     return smoothedLevel;
   });
 
-  paintEqBars(playingWave, bars, levels);
+  paintAlbumEqBars(levels);
 }
 
 function syncSoundButton() {
@@ -820,20 +983,25 @@ function formatTime(seconds = 0) {
 function updateAlbumUI() {
   const track = backgroundTracks[backgroundTrackIndex];
   if (!track) return;
+  const fullTitle = `${track.title} ${track.subtitle}`.trim();
+  const isLongTitle = fullTitle.length > 24;
+  const albumNow = albumNowTitle?.closest(".album-now");
   document.documentElement.style.setProperty("--current-track-color", track.color);
   if (track.flower) {
     document.documentElement.style.setProperty("--current-track-flower", `url("${track.flower}")`);
-    albumNowTitle?.closest(".album-now")?.classList.add("has-flower");
+    albumNow?.classList.add("has-flower");
   } else {
     document.documentElement.style.removeProperty("--current-track-flower");
-    albumNowTitle?.closest(".album-now")?.classList.remove("has-flower");
+    albumNow?.classList.remove("has-flower");
   }
+  albumNow?.classList.toggle("is-long-title", isLongTitle);
+  miniPlayer?.classList.toggle("is-long-title", isLongTitle);
   if (albumNowTitle) albumNowTitle.textContent = track.title;
   if (albumNowMeta) albumNowMeta.textContent = `${track.composer}｜${track.duration}`;
   if (albumDuration) albumDuration.textContent = track.duration;
   if (miniTrackTitle) miniTrackTitle.textContent = track.title;
-  if (miniFullTitle) miniFullTitle.textContent = `${track.title} ${track.subtitle}`;
-  miniPlayerTitle?.classList.toggle("is-long", `${track.title} ${track.subtitle}`.length > 24);
+  if (miniFullTitle) miniFullTitle.textContent = fullTitle;
+  miniPlayerTitle?.classList.toggle("is-long", isLongTitle);
   document.querySelectorAll(".track[data-track]").forEach((button) => {
     const active = Number(button.dataset.track) === backgroundTrackIndex;
     button.classList.toggle("active", active);
@@ -1055,7 +1223,7 @@ miniProgress?.addEventListener("input", () => {
 });
 
 miniToAlbumButton?.addEventListener("click", () => {
-  document.querySelector("#music")?.scrollIntoView({ behavior: "smooth" });
+  smoothScrollToElement("#music");
   if (!usesHover) closeMiniPlayer();
 });
 
@@ -1085,7 +1253,7 @@ soundToggle?.addEventListener("click", () => {
 });
 
 miniPlayerTitle?.addEventListener("click", () => {
-  document.querySelector("#music")?.scrollIntoView({ behavior: "smooth" });
+  smoothScrollToElement("#music");
   if (!usesHover) closeMiniPlayer();
 });
 musicTouchHint?.addEventListener("animationend", dismissMusicHint);
@@ -1169,7 +1337,7 @@ function scrollDiaryIntoView() {
   const diary = document.getElementById("diary");
   if (!diary) return;
   const top = Math.max(0, window.scrollY + diary.getBoundingClientRect().top - 12);
-  window.scrollTo({ top, behavior: "smooth" });
+  smoothScrollToTop(top);
   scheduleActiveSectionUpdate();
 }
 
@@ -1279,7 +1447,7 @@ document.querySelectorAll(".gate-flower").forEach((button) => {
     const color = button.style.getPropertyValue("--tone");
     playTone(button.dataset.tone, color);
     showToast(`${button.dataset.name} entrance opened`);
-    document.querySelector("#garden").scrollIntoView({ behavior: "smooth" });
+    smoothScrollToElement("#garden");
     window.setTimeout(() => plantFlower(color, button.dataset.name), 680);
   });
 });
@@ -1337,7 +1505,7 @@ function updateFlipAllButton() {
 function openFlowerCardFromBloom(key) {
   const targetCard = document.querySelector(`.flower-card[data-flower-card="${key}"]`);
   if (!targetCard) return;
-  document.querySelector("#flowers")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  smoothScrollToElement("#flowers", { block: "start" });
   document.querySelectorAll(".flower-card").forEach((card) => {
     card.classList.remove("flipped");
   });
@@ -1502,6 +1670,7 @@ if (themeToggle) {
 
 document.querySelectorAll(".magnetic").forEach((element) => {
   element.addEventListener("pointermove", (event) => {
+    if (visualPerformanceLite) return;
     const rect = element.getBoundingClientRect();
     const x = event.clientX - rect.left - rect.width / 2;
     const y = event.clientY - rect.top - rect.height / 2;
@@ -1512,44 +1681,58 @@ document.querySelectorAll(".magnetic").forEach((element) => {
   });
 });
 
-window.addEventListener("pointermove", (event) => {
-  pointer = { x: event.clientX, y: event.clientY, active: true };
-  if (!cursor) return;
-  const cursorZoom = getCursorZoomCompensation();
-  addCursorClass("custom-cursor-active");
-  setCursorClass("cursor-interactive", Boolean(event.target?.closest?.(interactiveCursorSelector)));
-  cursor.style.setProperty("--cursor-x", `${event.clientX / cursorZoom}px`);
-  cursor.style.setProperty("--cursor-y", `${event.clientY / cursorZoom}px`);
-});
+if (customCursorEnabled || nativeCursorEnabled) {
+  window.addEventListener("pointermove", (event) => {
+    pointer = { x: event.clientX, y: event.clientY, active: true };
+    setCursorClass("cursor-interactive", Boolean(event.target?.closest?.(interactiveCursorSelector)));
+    if (!customCursorEnabled || !cursor) return;
+    addCursorClass("custom-cursor-active");
+    cursor.style.setProperty("--cursor-x", `${event.clientX}px`);
+    cursor.style.setProperty("--cursor-y", `${event.clientY}px`);
+  });
 
-document.addEventListener("pointerover", (event) => {
-  setCursorClass("cursor-interactive", Boolean(event.target?.closest?.(interactiveCursorSelector)));
-});
+  document.addEventListener("pointerover", (event) => {
+    setCursorClass("cursor-interactive", Boolean(event.target?.closest?.(interactiveCursorSelector)));
+  });
 
-document.addEventListener("pointerout", (event) => {
-  if (event.relatedTarget?.closest?.(interactiveCursorSelector)) return;
-  removeCursorClasses("cursor-interactive");
-});
+  document.addEventListener("pointerout", (event) => {
+    if (event.relatedTarget?.closest?.(interactiveCursorSelector)) return;
+    removeCursorClasses("cursor-interactive");
+  });
 
-window.addEventListener("pointerleave", () => {
-  pointer.active = false;
-  removeCursorClasses("custom-cursor-active", "cursor-interactive", "cursor-pressing");
-});
+  window.addEventListener("pointerleave", () => {
+    pointer.active = false;
+    removeCursorClasses("custom-cursor-active", "cursor-interactive", "cursor-pressing");
+  });
 
-window.addEventListener("pointerdown", () => {
-  addCursorClass("cursor-pressing");
-});
+  window.addEventListener("pointerdown", () => {
+    addCursorClass("cursor-pressing");
+  });
 
-window.addEventListener("pointerup", () => {
-  removeCursorClasses("cursor-pressing");
-});
+  window.addEventListener("pointerup", () => {
+    removeCursorClasses("cursor-pressing");
+  });
 
-window.addEventListener("pointercancel", () => {
-  removeCursorClasses("cursor-pressing");
-});
+  window.addEventListener("pointercancel", () => {
+    removeCursorClasses("cursor-pressing");
+  });
+}
 
 syncSoundButton();
-playBackground({ restart: true });
+
+function scheduleInitialBackgroundPlayback() {
+  const start = () => {
+    if (backgroundAudio.src || userActivatedAudio) return;
+    playBackground({ restart: true });
+  };
+  if ("requestIdleCallback" in window) {
+    window.requestIdleCallback(start, { timeout: 1800 });
+    return;
+  }
+  window.setTimeout(start, 900);
+}
+
+scheduleInitialBackgroundPlayback();
 
 window.addEventListener(
   "pointerdown",
@@ -1640,7 +1823,50 @@ if (musicSection) {
   musicObserver.observe(musicSection);
 }
 
-document.getElementById("daily-phrase").textContent = phrases[new Date().getDate() % phrases.length];
+let dailyPhraseIndex = Math.max(0, (new Date().getDate() - 1) % dailyPhrases.length);
+
+function normalizeDailyPhrase(phrase) {
+  return String(phrase)
+    .split("\n")
+    .map((line) => line.trim())
+    .join("\n")
+    .trim();
+}
+
+function setDailyPhrase(index, animated = false) {
+  if (!dailyPhrase || dailyPhrases.length === 0) return;
+  dailyPhraseIndex = ((index % dailyPhrases.length) + dailyPhrases.length) % dailyPhrases.length;
+  const phrase = normalizeDailyPhrase(dailyPhrases[dailyPhraseIndex]);
+  if (!animated) {
+    dailyPhrase.textContent = phrase;
+    return;
+  }
+  dailyPhrase.classList.add("is-changing");
+  window.setTimeout(() => {
+    dailyPhrase.textContent = phrase;
+    dailyPhrase.classList.remove("is-changing");
+  }, 150);
+}
+
+setDailyPhrase(dailyPhraseIndex);
+
+dailyPhraseNext?.addEventListener("click", () => {
+  setDailyPhrase(dailyPhraseIndex + 1, true);
+  playTone(523.25, "#ffd166");
+});
+
+dailyPhraseRandom?.addEventListener("click", () => {
+  if (dailyPhrases.length < 2) {
+    setDailyPhrase(dailyPhraseIndex, true);
+    return;
+  }
+  let nextIndex = dailyPhraseIndex;
+  while (nextIndex === dailyPhraseIndex) {
+    nextIndex = Math.floor(Math.random() * dailyPhrases.length);
+  }
+  setDailyPhrase(nextIndex, true);
+  playTone(659.25, "#ffafcc");
+});
 
 resizeCanvas();
 drawPetals();
