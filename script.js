@@ -37,7 +37,7 @@ const versionPanel = document.getElementById("version-panel");
 const versionPanelInner = versionPanel?.querySelector(".version-panel-inner");
 const versionToggleTitle = document.getElementById("version-toggle-title");
 const versionToggleSubtitle = document.getElementById("version-toggle-subtitle");
-const CURRENT_SITE_VERSION = "v0.3b9";
+const CURRENT_SITE_VERSION = "v0.3b10";
 const albumNowTitle = document.getElementById("album-now-title");
 const albumNowMeta = document.getElementById("album-now-meta");
 const albumCurrentTime = document.getElementById("album-current-time");
@@ -263,6 +263,9 @@ let frequencyData;
 let timeDomainData;
 let eqBarLevels = [];
 let lastAnalysisSyncAt = 0;
+let lastAnalysisMediaTime = 0;
+let analysisStalledSince = 0;
+let analysisInvalidSince = 0;
 let waveFrame;
 let userActivatedAudio = false;
 let themeFlowerAngle = 0;
@@ -676,6 +679,31 @@ function paintEqBars(playingWave, bars, levels) {
   });
 }
 
+function isAnalysisStreamUnavailable() {
+  if (!userActivatedAudio || !backgroundAnalyser) return true;
+  if (backgroundAudio.paused || !backgroundWanted) {
+    analysisStalledSince = 0;
+    lastAnalysisMediaTime = backgroundAnalysisAudio.currentTime || 0;
+    return false;
+  }
+
+  const now = performance.now();
+  const analysisTime = backgroundAnalysisAudio.currentTime || 0;
+  const backgroundTime = backgroundAudio.currentTime || 0;
+  const isSynchronized = Math.abs(analysisTime - backgroundTime) < 1.4;
+  const isAdvancing = Math.abs(analysisTime - lastAnalysisMediaTime) > 0.012;
+  const stalled = backgroundAnalysisAudio.paused || !isSynchronized || !isAdvancing;
+
+  if (stalled) {
+    analysisStalledSince ||= now;
+  } else {
+    analysisStalledSince = 0;
+  }
+
+  lastAnalysisMediaTime = analysisTime;
+  return Boolean(analysisStalledSince && now - analysisStalledSince > 1200);
+}
+
 function updateTrackWaves() {
   waveFrame = requestAnimationFrame(updateTrackWaves);
   const playingWave = document.querySelector(".album-eq.petal-wave");
@@ -701,6 +729,23 @@ function updateTrackWaves() {
 
   backgroundAnalyser.getFloatFrequencyData(frequencyData);
   backgroundAnalyser.getByteTimeDomainData(timeDomainData);
+  const analysisUnavailable = isAnalysisStreamUnavailable();
+  const hasFrequencyData = frequencyData.some((value) => Number.isFinite(value));
+  const hasTimeDomainSignal = timeDomainData.some((sample) => sample !== 128);
+  const analysisInvalid = !hasFrequencyData && !hasTimeDomainSignal;
+  if (analysisInvalid) {
+    analysisInvalidSince ||= performance.now();
+  } else {
+    analysisInvalidSince = 0;
+  }
+  if (analysisUnavailable || analysisInvalid) {
+    if (analysisUnavailable || (analysisInvalidSince && performance.now() - analysisInvalidSince > 1200)) {
+      paintEqBars(playingWave, bars, fallbackEqLevels(bars));
+      return;
+    }
+    paintEqBars(playingWave, bars, bars.map(() => 0));
+    return;
+  }
 
   let signalEnergy = 0;
   for (let index = 0; index < timeDomainData.length; index += 1) {
@@ -708,10 +753,6 @@ function updateTrackWaves() {
     signalEnergy += centered * centered;
   }
   const volumeLevel = Math.min(1, Math.max(0, (Math.sqrt(signalEnergy / timeDomainData.length) - 0.004) * 5.6));
-  if (volumeLevel < 0.012 && backgroundAudio.currentTime > 0.1) {
-    paintEqBars(playingWave, bars, fallbackEqLevels(bars));
-    return;
-  }
 
   const minHz = 32;
   const nyquist = (audioContext?.sampleRate || 44100) / 2;
@@ -833,6 +874,9 @@ async function playBackground({ direction = 0, restart = false } = {}) {
     setAudioVolume(backgroundAudio, 1);
     eqBarLevels = [];
     lastAnalysisSyncAt = 0;
+    lastAnalysisMediaTime = 0;
+    analysisStalledSince = 0;
+    analysisInvalidSince = 0;
   }
   updateAlbumUI();
   if (userActivatedAudio) {
