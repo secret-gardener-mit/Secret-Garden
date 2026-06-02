@@ -714,7 +714,9 @@ function updateTrackWaves() {
     userActivatedAudio &&
     (!backgroundAnalyser ||
       backgroundAnalysisAudio.paused ||
-      Math.abs((backgroundAnalysisAudio.currentTime || 0) - (backgroundAudio.currentTime || 0)) > 0.6)
+      Math.abs((backgroundAnalysisAudio.currentTime || 0) - (backgroundAudio.currentTime || 0)) > 0.6 ||
+      !frequencyData ||
+      !timeDomainData)
   ) {
     const now = performance.now();
     if (now - lastAnalysisSyncAt > 700) {
@@ -780,9 +782,10 @@ function updateTrackWaves() {
     }
 
     const rms = count ? Math.sqrt(energy / count) : 0;
-    const frequencyCompensation = 1 + (index / Math.max(1, bars.length - 1)) * 0.72;
+    const bandPosition = index / Math.max(1, bars.length - 1);
+    const frequencyCompensation = 0.86 + bandPosition * 0.96;
     const rawLevel = (rms * 0.76 + peak * 0.24) * frequencyCompensation;
-    const volumeGatedLevel = Math.max(0, rawLevel - 0.06) * (0.78 + volumeLevel * 0.55);
+    const volumeGatedLevel = Math.max(0, rawLevel - 0.018) * (0.88 + volumeLevel * 0.48);
     const targetLevel = Math.min(1, volumeGatedLevel);
     const previousLevel = eqBarLevels[index] || 0;
     const smoothing = targetLevel > previousLevel ? 0.46 : 0.2;
