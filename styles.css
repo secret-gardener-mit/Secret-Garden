@@ -4058,6 +4058,781 @@ html.performance-lite body.scroll-optimizing .theme-toggle-button::after {
   }
 }
 
+@media (max-width: 760px) {
+  html {
+    scroll-padding-top: 72px;
+  }
+
+  html.custom-cursor-enabled,
+  html.custom-cursor-enabled *,
+  html.custom-cursor-enabled *::before,
+  html.custom-cursor-enabled *::after {
+    cursor: auto !important;
+  }
+
+  .cursor-orb {
+    display: none;
+  }
+
+  .ambient-layer {
+    z-index: 35;
+  }
+
+  .site-header {
+    grid-template-columns: minmax(0, auto) minmax(112px, auto);
+    gap: 10px;
+    padding: 10px 12px 0;
+    pointer-events: none;
+  }
+
+  .brand,
+  .sound-cluster,
+  .nav-links {
+    pointer-events: auto;
+  }
+
+  .brand {
+    gap: 6px;
+    min-width: 0;
+    padding: 4px 7px 4px 3px;
+    border-radius: 999px;
+    background: rgba(9, 24, 20, 0.12);
+    backdrop-filter: blur(14px);
+  }
+
+  body[data-theme="light"] .brand {
+    background: rgba(255, 251, 246, 0.44);
+  }
+
+  .brand-mark {
+    width: 38px;
+    height: 30px;
+  }
+
+  .brand-label {
+    min-width: 0;
+    max-width: 88px;
+    overflow: hidden;
+    font-size: 13px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .sound-cluster {
+    justify-self: end;
+  }
+
+  .sound-toggle {
+    min-height: 36px;
+    max-width: min(48vw, 178px);
+    padding: 0 10px;
+    gap: 7px;
+  }
+
+  .sound-cluster.is-long-title .sound-toggle {
+    max-width: min(54vw, 210px);
+  }
+
+  .mini-track-title,
+  .sound-cluster.is-long-title .mini-track-title {
+    max-width: min(34vw, 142px);
+    font-size: 13px;
+  }
+
+  .sound-bars {
+    height: 14px;
+    gap: 2px;
+  }
+
+  .sound-bars i {
+    width: 3px;
+  }
+
+  .mini-player-panel {
+    position: fixed;
+    top: 58px;
+    left: 12px;
+    right: 12px;
+    width: auto;
+    padding: 14px;
+    transform-origin: top right;
+  }
+
+  .mini-player-title {
+    grid-template-columns: minmax(0, 1fr) 20px;
+  }
+
+  .mini-title-viewport {
+    font-size: 16px;
+  }
+
+  .mini-player-controls {
+    justify-content: center;
+  }
+
+  .mini-progress-wrap {
+    grid-template-columns: 34px 1fr 34px;
+  }
+
+  .nav-links {
+    top: auto;
+    left: max(10px, env(safe-area-inset-left));
+    right: max(10px, env(safe-area-inset-right));
+    bottom: max(10px, env(safe-area-inset-bottom));
+    transform: none;
+    z-index: 78;
+    justify-content: flex-start;
+    gap: 2px;
+    padding: 6px;
+    border-radius: 999px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .nav-links::-webkit-scrollbar {
+    display: none;
+  }
+
+  .nav-links a {
+    flex: 0 0 auto;
+    min-width: 58px;
+    padding: 9px 11px;
+    font-size: 12px;
+    text-align: center;
+  }
+
+  .hero {
+    min-height: 100svh;
+    padding: 86px 18px 146px;
+  }
+
+  .hero-media {
+    background-position: 36% center;
+    animation: none;
+    transform: scale(1.03);
+  }
+
+  body[data-theme="light"] .hero-media {
+    background-position: 31% center;
+  }
+
+  .hero-shade {
+    background:
+      linear-gradient(180deg, rgba(4, 12, 11, 0.2), rgba(4, 12, 11, 0.28) 46%, rgba(4, 12, 11, 0.88)),
+      radial-gradient(circle at 50% 42%, rgba(255, 248, 236, 0.12), transparent 40%);
+  }
+
+  body[data-theme="light"] .hero-shade {
+    background:
+      linear-gradient(180deg, rgba(255, 249, 241, 0.28), rgba(255, 249, 241, 0.15) 44%, rgba(251, 244, 234, 0.9)),
+      radial-gradient(circle at 52% 42%, rgba(255, 255, 255, 0.44), transparent 42%);
+  }
+
+  .hero-content {
+    width: 100%;
+    padding-bottom: 92px;
+  }
+
+  .hero-logo {
+    width: clamp(120px, 38vw, 174px);
+    margin-bottom: 8px;
+  }
+
+  .hero .eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+  }
+
+  h1 {
+    font-size: clamp(58px, 17vw, 82px);
+    line-height: 0.88;
+  }
+
+  .hero-kicker {
+    margin-top: 16px;
+    font-size: clamp(22px, 7vw, 30px);
+    line-height: 1.08;
+  }
+
+  .hero-copy {
+    width: min(330px, 100%);
+    margin-top: 14px;
+    font-size: 15px;
+    line-height: 1.75;
+  }
+
+  .hero-actions {
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  .primary-action,
+  .ghost-action,
+  .contact-links a,
+  .contact-links button {
+    min-height: 44px;
+    padding: 0 16px;
+    font-size: 14px;
+  }
+
+  .color-gate {
+    bottom: 62px;
+    width: min(330px, calc(100% - 34px));
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 9px 11px;
+    justify-items: center;
+  }
+
+  .gate-flower {
+    width: 44px;
+  }
+
+  .gate-flower::after {
+    display: none;
+  }
+
+  .intro-band {
+    padding: 32px 18px;
+  }
+
+  .wide-copy {
+    justify-content: flex-start;
+    gap: 14px 22px;
+    font-size: clamp(31px, 12vw, 50px);
+    line-height: 1;
+  }
+
+  .about,
+  .bloom-experience,
+  .music,
+  .flowers,
+  .gardeners,
+  .diary,
+  .contact,
+  .garden {
+    padding: 72px 16px;
+  }
+
+  .section-heading {
+    margin-bottom: 28px;
+  }
+
+  .section-heading h2 {
+    font-size: clamp(46px, 14vw, 66px);
+    line-height: 0.92;
+  }
+
+  .section-heading p:not(.eyebrow) {
+    font-size: 15px;
+    line-height: 1.75;
+  }
+
+  .about-grid,
+  .people-grid,
+  .card-grid,
+  .album-player .track-list,
+  .album-console,
+  .album-layout,
+  .diary-layout {
+    width: 100%;
+    grid-template-columns: 1fr;
+  }
+
+  .origin-block,
+  .person,
+  .timeline article {
+    padding: 22px;
+  }
+
+  .origin-block h3,
+  .person h3 {
+    font-size: 28px;
+  }
+
+  .origin-block p,
+  .person p,
+  .timeline p {
+    font-size: 15px;
+    line-height: 1.78;
+  }
+
+  .world-map {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .map-node {
+    width: 100%;
+    min-height: 48px;
+    border-radius: 8px;
+  }
+
+  .map-line {
+    width: 1px;
+    height: 18px;
+    justify-self: center;
+  }
+
+  .bloom-lab {
+    min-height: 720px;
+    border-radius: 8px;
+  }
+
+  .bloom-intro {
+    padding: 24px;
+  }
+
+  .bloom-intro h3 {
+    font-size: clamp(44px, 14vw, 64px);
+  }
+
+  .bloom-intro p:not(.eyebrow) {
+    font-size: 15px;
+  }
+
+  .bloom-controls {
+    justify-content: center;
+    gap: 9px;
+    padding: 14px 60px 14px 14px;
+  }
+
+  .bloom-seed {
+    width: 40px;
+  }
+
+  .bloom-audio-toggle {
+    right: 12px;
+    width: 40px;
+  }
+
+  .bloom-scene {
+    min-height: 620px;
+    padding: 24px 12px 28px;
+  }
+
+  .bloom-message {
+    top: 22px;
+    max-width: calc(100% - 28px);
+    font-size: clamp(18px, 6vw, 25px);
+  }
+
+  .bloom-empty {
+    bottom: 18px;
+    width: calc(100% - 28px);
+    padding: 13px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+  }
+
+  .bloom-palette {
+    width: 150px;
+  }
+
+  .bloom-palette span,
+  .bloom-flower span {
+    width: 42px;
+    height: 78px;
+    transform-origin: 21px 56px;
+  }
+
+  .bloom-palette span {
+    left: 54px;
+    top: 20px;
+  }
+
+  .bloom-palette i,
+  .bloom-flower i {
+    left: 50%;
+    top: 50%;
+    width: 36px;
+    transform: translate(-50%, -50%);
+  }
+
+  .bloom-plant {
+    width: 188px;
+    margin-top: 48px;
+  }
+
+  .bloom-flower {
+    width: 172px;
+  }
+
+  .bloom-flower span {
+    left: 65px;
+    top: 31px;
+  }
+
+  .bloom-card {
+    position: relative;
+    right: auto;
+    bottom: auto;
+    width: min(160px, 44vw);
+    margin: 18px auto 0;
+  }
+
+  .garden {
+    min-height: auto;
+  }
+
+  .garden-toolbar {
+    padding: 10px;
+  }
+
+  .seed {
+    min-height: 38px;
+    padding: 0 12px;
+    font-size: 13px;
+  }
+
+  .living-garden {
+    min-height: 480px;
+  }
+
+  .garden-message {
+    top: 18px;
+    left: 18px;
+  }
+
+  .album-player {
+    gap: 18px;
+  }
+
+  .album-art {
+    min-height: 220px;
+    padding: 24px;
+  }
+
+  .album-console .album-art {
+    min-height: 220px;
+  }
+
+  .album-art strong {
+    font-size: clamp(48px, 16vw, 70px);
+  }
+
+  .album-art i {
+    width: 62px;
+  }
+
+  .album-now {
+    min-height: 360px;
+    padding: 24px 18px;
+  }
+
+  .album-title-row,
+  .album-now.is-long-title .album-title-row {
+    width: 100%;
+    display: grid;
+    gap: 10px;
+  }
+
+  .album-now h3 {
+    font-size: clamp(44px, 15vw, 66px);
+  }
+
+  .album-now.is-long-title h3 {
+    font-size: clamp(38px, 11vw, 52px);
+  }
+
+  .album-meta-row {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .album-controls {
+    justify-content: center;
+  }
+
+  .player-button {
+    width: 46px;
+  }
+
+  .album-progress-wrap {
+    grid-template-columns: 42px 1fr 42px;
+    gap: 8px;
+  }
+
+  .album-eq.petal-wave,
+  .album-eq-meta.petal-wave,
+  .album-now.is-long-title .album-eq-meta.petal-wave {
+    width: 116px;
+    height: 42px;
+  }
+
+  .album-player .track-list {
+    gap: 10px;
+  }
+
+  .album-player .track {
+    aspect-ratio: auto;
+    min-height: 116px;
+    padding: 16px;
+  }
+
+  .album-player .track::after {
+    right: -18px;
+    bottom: -54px;
+    width: 150px;
+  }
+
+  .track-number {
+    font-size: 24px;
+  }
+
+  .album-player .track .track-composer {
+    top: 16px;
+    right: 16px;
+    max-width: calc(100% - 76px);
+    font-size: 11px;
+  }
+
+  .album-player .track strong {
+    font-size: 24px;
+  }
+
+  .album-player .track small,
+  .album-player .track em {
+    font-size: 13px;
+  }
+
+  .flower-actions {
+    width: 100%;
+    margin: -14px 0 20px;
+    justify-content: center;
+  }
+
+  .flip-all-button {
+    min-height: 48px;
+    width: min(100%, 220px);
+  }
+
+  .card-grid {
+    gap: 16px;
+  }
+
+  .flower-card {
+    width: min(100%, 260px);
+    justify-self: center;
+  }
+
+  .card-face {
+    padding: 22px;
+  }
+
+  .card-face i {
+    width: 128px;
+  }
+
+  .card-face strong {
+    font-size: 30px;
+  }
+
+  .people-grid {
+    gap: 14px;
+  }
+
+  .person {
+    display: grid;
+    grid-template-columns: 82px 1fr;
+    gap: 10px 16px;
+    align-items: center;
+  }
+
+  .avatar {
+    grid-row: span 3;
+    width: 82px;
+    margin: 0;
+  }
+
+  .person h3 {
+    margin-bottom: 0;
+    font-size: 28px;
+  }
+
+  .person p {
+    max-width: none;
+    font-size: 14px;
+  }
+
+  .person small {
+    margin-top: 0;
+    font-size: 13px;
+  }
+
+  .diary-layout {
+    gap: 14px;
+  }
+
+  .diary-feature {
+    height: 320px;
+    margin-top: 0;
+    padding: 24px;
+  }
+
+  .diary-feature strong {
+    font-size: clamp(30px, 10vw, 42px);
+  }
+
+  .timeline {
+    --diary-record-height: 118px;
+  }
+
+  .timeline-meta {
+    justify-content: space-between;
+    gap: 8px;
+    font-size: 11px;
+  }
+
+  .timeline-range {
+    max-width: 64%;
+  }
+
+  .timeline-entry-heading {
+    padding: 18px 56px 0 18px;
+  }
+
+  .timeline-entry-body {
+    padding: 22px 46px 16px 18px;
+  }
+
+  .timeline-entry-title {
+    font-size: 17px;
+  }
+
+  .timeline-entry-summary,
+  .timeline-entry-content-inner p {
+    font-size: 14px;
+    line-height: 1.78;
+  }
+
+  .timeline-entry-toggle {
+    top: 12px;
+    right: 10px;
+  }
+
+  .timeline-empty-note {
+    padding: 18px;
+    font-size: 14px;
+  }
+
+  .version-toggle {
+    min-height: 118px;
+  }
+
+  .version-summary {
+    padding: 20px 18px;
+  }
+
+  .version-actions {
+    gap: 12px;
+    padding: 20px 18px 20px 4px;
+  }
+
+  .version-panel-inner {
+    padding-inline: 18px;
+  }
+
+  .version-archive.is-open .version-panel-inner {
+    padding: 18px;
+  }
+
+  .version-item-toggle {
+    padding: 18px 4px 18px 0;
+  }
+
+  .version-item-content-inner {
+    padding-right: 20px;
+  }
+
+  .contact {
+    min-height: 86svh;
+  }
+
+  .contact-links {
+    width: min(320px, 100%);
+    margin-inline: auto;
+    gap: 10px;
+  }
+
+  .contact-links a,
+  .contact-links button {
+    width: 100%;
+  }
+
+  .theme-toggle {
+    right: 14px;
+    bottom: calc(70px + env(safe-area-inset-bottom));
+    transform: scale(0.86);
+    transform-origin: bottom right;
+  }
+
+  .bloom-toast {
+    right: 12px;
+    bottom: calc(132px + env(safe-area-inset-bottom));
+    max-width: calc(100vw - 24px);
+  }
+}
+
+@media (max-width: 420px) {
+  .section-heading h2 {
+    font-size: clamp(40px, 15vw, 56px);
+  }
+
+  .hero {
+    padding-inline: 14px;
+  }
+
+  h1 {
+    font-size: clamp(52px, 16vw, 70px);
+  }
+
+  .hero-actions {
+    width: 100%;
+  }
+
+  .hero-actions a {
+    flex: 1 1 136px;
+  }
+
+  .color-gate {
+    width: min(300px, calc(100% - 28px));
+    gap: 8px;
+  }
+
+  .gate-flower {
+    width: 40px;
+  }
+
+  .wide-copy {
+    font-size: clamp(28px, 11vw, 44px);
+  }
+
+  .bloom-controls {
+    gap: 8px;
+    padding-left: 10px;
+  }
+
+  .bloom-seed {
+    width: 36px;
+  }
+
+  .album-now h3 {
+    font-size: clamp(38px, 14vw, 56px);
+  }
+
+  .person {
+    grid-template-columns: 1fr;
+    justify-items: start;
+  }
+
+  .avatar {
+    grid-row: auto;
+    width: 92px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
