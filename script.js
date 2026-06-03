@@ -38,9 +38,8 @@ const versionPanelInner = versionPanel?.querySelector(".version-panel-inner");
 const versionToggleTitle = document.getElementById("version-toggle-title");
 const versionToggleSubtitle = document.getElementById("version-toggle-subtitle");
 const dailyPhrase = document.getElementById("daily-phrase");
-const dailyPhraseNext = document.getElementById("daily-phrase-next");
 const dailyPhraseRandom = document.getElementById("daily-phrase-random");
-const CURRENT_SITE_VERSION = "v0.3b12";
+const CURRENT_SITE_VERSION = "v0.3b12a";
 const albumNowTitle = document.getElementById("album-now-title");
 const albumNowMeta = document.getElementById("album-now-meta");
 const albumCurrentTime = document.getElementById("album-current-time");
@@ -1278,6 +1277,224 @@ document.addEventListener("keydown", (event) => {
   }
 });
 
+const timelineEntries = [...document.querySelectorAll(".timeline > article:not(.version-item)")];
+const timeline = document.querySelector(".timeline");
+const TIMELINE_ITEMS_PER_PAGE = 3;
+let timelinePage = 0;
+let timelineSort = "desc";
+let timelineActiveSectionReady = false;
+let timelineEmptyNote;
+
+function requestTimelineActiveSectionSync() {
+  if (timelineActiveSectionReady) scheduleActiveSectionUpdate();
+}
+
+function getTimelineClosedHeight() {
+  if (!timeline) return 108;
+  return Number.parseFloat(getComputedStyle(timeline).getPropertyValue("--diary-record-height")) || 108;
+}
+
+function closeTimelineEntry(item) {
+  if (!item) return;
+  const closedHeight = getTimelineClosedHeight();
+  if (item.classList.contains("is-open")) {
+    item.style.height = `${item.getBoundingClientRect().height}px`;
+    item.offsetHeight;
+    item.classList.remove("is-open");
+    item.querySelector(".timeline-entry-toggle")?.setAttribute("aria-expanded", "false");
+    requestAnimationFrame(() => {
+      item.style.height = `${closedHeight}px`;
+    });
+    return;
+  }
+  item.style.height = `${closedHeight}px`;
+  item.querySelector(".timeline-entry-toggle")?.setAttribute("aria-expanded", "false");
+}
+
+function openTimelineEntry(item) {
+  if (!item) return;
+  const closedHeight = getTimelineClosedHeight();
+  item.style.height = `${closedHeight}px`;
+  item.classList.add("is-open");
+  item.querySelector(".timeline-entry-toggle")?.setAttribute("aria-expanded", "true");
+  requestAnimationFrame(() => {
+    item.style.height = `${item.scrollHeight}px`;
+  });
+}
+
+function refreshOpenTimelineEntryHeight() {
+  document.querySelectorAll(".timeline-entry.is-open").forEach((item) => {
+    item.style.height = `${item.scrollHeight}px`;
+  });
+}
+
+function prepareTimelineEntries() {
+  timelineEntries.forEach((item, index) => {
+    if (item.querySelector(".timeline-entry-toggle")) return;
+    const title = item.querySelector("time");
+    const body = item.querySelector("p");
+    if (!title || !body) return;
+
+    item.classList.add("timeline-entry");
+
+    const heading = document.createElement("div");
+    heading.className = "timeline-entry-heading";
+
+    const entryTitle = document.createElement("span");
+    entryTitle.className = "timeline-entry-title";
+    entryTitle.textContent = title.textContent.trim();
+
+    const toggle = document.createElement("button");
+    toggle.className = "timeline-entry-toggle";
+    toggle.type = "button";
+    toggle.setAttribute("aria-expanded", "false");
+    toggle.setAttribute("aria-label", `展開 ${title.textContent.trim()} 完整內容`);
+
+    const arrow = document.createElement("i");
+    arrow.className = "timeline-entry-arrow";
+    arrow.setAttribute("aria-hidden", "true");
+
+    const bodyWrap = document.createElement("div");
+    bodyWrap.className = "timeline-entry-body";
+
+    const summary = document.createElement("p");
+    summary.className = "timeline-entry-summary";
+    summary.textContent = item.dataset.summary || body.textContent.trim().replace(/\s+/g, " ");
+
+    const content = document.createElement("div");
+    content.className = "timeline-entry-content";
+    content.id = `timeline-entry-content-${index + 1}`;
+    toggle.setAttribute("aria-controls", content.id);
+
+    const contentInner = document.createElement("div");
+    contentInner.className = "timeline-entry-content-inner";
+
+    title.remove();
+    heading.appendChild(entryTitle);
+    toggle.appendChild(arrow);
+    contentInner.appendChild(body);
+    content.appendChild(contentInner);
+    bodyWrap.append(summary, content);
+    item.append(heading, toggle, bodyWrap);
+
+    toggle.addEventListener("click", () => {
+      const open = !item.classList.contains("is-open");
+      if (open) {
+        timelineEntries.forEach((entry) => {
+          if (entry === item) return;
+          closeTimelineEntry(entry);
+        });
+      }
+      if (open) {
+        openTimelineEntry(item);
+      } else {
+        closeTimelineEntry(item);
+      }
+      requestTimelineActiveSectionSync();
+    });
+  });
+}
+
+prepareTimelineEntries();
+
+const timelinePager = document.createElement("div");
+timelinePager.className = "timeline-pager";
+timelinePager.innerHTML = `
+  <button class="timeline-page-button timeline-page-prev" type="button" aria-label="上一頁"><span aria-hidden="true"></span></button>
+  <span class="timeline-page-current" aria-live="polite">1 / 1</span>
+  <button class="timeline-page-button timeline-page-next" type="button" aria-label="下一頁"><span aria-hidden="true"></span></button>
+`;
+
+const timelineMeta = document.createElement("div");
+timelineMeta.className = "timeline-meta";
+timelineMeta.innerHTML = `
+  <span class="timeline-range" aria-live="polite">正在顯示 0 則中的第 0 ~ 0 則</span>
+  <button class="timeline-sort-toggle" type="button" aria-label="切換活動紀錄排序">新→舊</button>
+`;
+
+timelineEmptyNote = document.createElement("div");
+timelineEmptyNote.className = "timeline-empty-note";
+timelineEmptyNote.hidden = true;
+
+const timelinePrevButton = timelinePager.querySelector(".timeline-page-prev");
+const timelineNextButton = timelinePager.querySelector(".timeline-page-next");
+const timelinePageCurrent = timelinePager.querySelector(".timeline-page-current");
+const timelineRange = timelineMeta.querySelector(".timeline-range");
+const timelineSortToggle = timelineMeta.querySelector(".timeline-sort-toggle");
+
+if (timeline && timelineEntries.length) {
+  timeline.insertBefore(timelineMeta, timeline.firstElementChild);
+  timeline.insertBefore(timelineEmptyNote, versionArchive || null);
+  timeline.insertBefore(timelinePager, versionArchive || null);
+}
+
+function getOrderedTimelineEntries() {
+  return timelineSort === "desc" ? [...timelineEntries] : [...timelineEntries].reverse();
+}
+
+function setTimelinePage(nextPage, direction = "next") {
+  if (!timelineEntries.length) return;
+  const pageCount = Math.max(1, Math.ceil(timelineEntries.length / TIMELINE_ITEMS_PER_PAGE));
+  timelinePage = Math.min(Math.max(nextPage, 0), pageCount - 1);
+  const start = timelinePage * TIMELINE_ITEMS_PER_PAGE;
+  const end = Math.min(start + TIMELINE_ITEMS_PER_PAGE, timelineEntries.length);
+  const orderedEntries = getOrderedTimelineEntries();
+  const visibleEntries = orderedEntries.slice(start, end);
+  const visible = new Set(visibleEntries);
+  const insertBeforeNode = timelineEmptyNote || timelinePager || versionArchive || null;
+
+  orderedEntries.forEach((item) => timeline?.insertBefore(item, insertBeforeNode));
+
+  timeline?.classList.remove("is-sliding-next", "is-sliding-prev");
+  if (direction) {
+    timeline?.classList.add(direction === "prev" ? "is-sliding-prev" : "is-sliding-next");
+    window.setTimeout(() => timeline?.classList.remove("is-sliding-next", "is-sliding-prev"), 860);
+  }
+
+  timelineEntries.forEach((item) => {
+    const show = visible.has(item);
+    item.classList.toggle("is-page-visible", show);
+    item.hidden = !show;
+    if (!show) {
+      closeTimelineEntry(item);
+    }
+  });
+
+  if (timelinePageCurrent) timelinePageCurrent.textContent = `${timelinePage + 1} / ${pageCount}`;
+  if (timelineRange) {
+    const rangeLabel = end - start === 1 ? `第 ${start + 1} 則` : `第 ${start + 1} ~ ${end} 則`;
+    timelineRange.textContent = `正在顯示 ${timelineEntries.length} 則中的${rangeLabel}`;
+  }
+  if (timelineEmptyNote) {
+    const missing = Math.max(0, TIMELINE_ITEMS_PER_PAGE - visibleEntries.length);
+    timelineEmptyNote.hidden = missing === 0;
+    timelineEmptyNote.textContent =
+      timelineSort === "desc"
+        ? "你已看完全部紀錄，願你在花朵中能療癒身心。"
+        : "沒有最新消息，敬請期待我們未來的消息。";
+    timelineEmptyNote.style.setProperty("--empty-records", String(missing || 1));
+    timelineEmptyNote.style.setProperty("--empty-note-height", `${missing * 108 + Math.max(0, missing - 1) * 12}px`);
+  }
+  timelinePrevButton?.toggleAttribute("disabled", timelinePage === 0);
+  timelineNextButton?.toggleAttribute("disabled", timelinePage >= pageCount - 1);
+  requestTimelineActiveSectionSync();
+}
+
+timelinePrevButton?.addEventListener("click", () => setTimelinePage(timelinePage - 1, "prev"));
+timelineNextButton?.addEventListener("click", () => setTimelinePage(timelinePage + 1, "next"));
+timelineSortToggle?.addEventListener("click", () => {
+  const anchoredEntry = getOrderedTimelineEntries()[timelinePage * TIMELINE_ITEMS_PER_PAGE] || timelineEntries[0];
+  timelineSort = timelineSort === "desc" ? "asc" : "desc";
+  if (timelineSortToggle) timelineSortToggle.textContent = timelineSort === "desc" ? "新→舊" : "舊→新";
+  const anchoredIndex = Math.max(0, getOrderedTimelineEntries().indexOf(anchoredEntry));
+  const anchoredPage = Math.floor(anchoredIndex / TIMELINE_ITEMS_PER_PAGE);
+  const direction = anchoredPage < timelinePage ? "prev" : "next";
+  setTimelinePage(anchoredPage, direction);
+});
+
+setTimelinePage(0, "");
+window.addEventListener("resize", refreshOpenTimelineEntryHeight);
+
 const versionItems = [...document.querySelectorAll(".version-item")];
 
 function prepareVersionItems() {
@@ -1791,6 +2008,8 @@ pageSections.forEach((section) => sectionObserver.observe(section));
 window.addEventListener("scroll", scheduleActiveSectionUpdate, { passive: true });
 window.addEventListener("resize", scheduleActiveSectionUpdate);
 updateActiveSection();
+timelineActiveSectionReady = true;
+requestTimelineActiveSectionSync();
 
 const homeSection = document.getElementById("home");
 if (homeSection && brandLabel) {
@@ -1823,7 +2042,7 @@ if (musicSection) {
   musicObserver.observe(musicSection);
 }
 
-let dailyPhraseIndex = Math.max(0, (new Date().getDate() - 1) % dailyPhrases.length);
+let dailyPhraseIndex = dailyPhrases.length ? Math.floor(Math.random() * dailyPhrases.length) : 0;
 
 function normalizeDailyPhrase(phrase) {
   return String(phrase)
@@ -1837,23 +2056,23 @@ function setDailyPhrase(index, animated = false) {
   if (!dailyPhrase || dailyPhrases.length === 0) return;
   dailyPhraseIndex = ((index % dailyPhrases.length) + dailyPhrases.length) % dailyPhrases.length;
   const phrase = normalizeDailyPhrase(dailyPhrases[dailyPhraseIndex]);
-  if (!animated) {
+  const isSingleLine = phrase.split("\n").filter(Boolean).length <= 1;
+  const applyPhrase = () => {
     dailyPhrase.textContent = phrase;
+    dailyPhrase.classList.toggle("is-single-line", isSingleLine);
+  };
+  if (!animated) {
+    applyPhrase();
     return;
   }
   dailyPhrase.classList.add("is-changing");
   window.setTimeout(() => {
-    dailyPhrase.textContent = phrase;
+    applyPhrase();
     dailyPhrase.classList.remove("is-changing");
   }, 150);
 }
 
 setDailyPhrase(dailyPhraseIndex);
-
-dailyPhraseNext?.addEventListener("click", () => {
-  setDailyPhrase(dailyPhraseIndex + 1, true);
-  playTone(523.25, "#ffd166");
-});
 
 dailyPhraseRandom?.addEventListener("click", () => {
   if (dailyPhrases.length < 2) {
