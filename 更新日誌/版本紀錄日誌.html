@@ -617,6 +617,21 @@
         <p class="date">修改時間：2026 06/03</p>
         <p class="details">再次細修活動紀錄與今日花語的動畫節奏。依使用者要求，將活動紀錄格子區域的翻頁滑入動畫延長至 0.80 秒，讓頁面切換更緩、更容易被眼睛跟上。今日花語改為不論單行或雙行祝福，都會置中於「今日花語」標題與底部隨機按鈕之間，使文字重心更穩定。最後一頁出現的補位提示文字，例如「你已經看完全部的紀錄」或「沒有更新的消息」，也改為套用與活動紀錄格子一致的翻頁滑入動畫，避免翻到最後一頁時提示文字突然出現。</p>
       </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.3b12a-4</h3>
+        <p class="date">修改時間：2026 06/03</p>
+        <p class="details">新增網站分頁圖示。依使用者要求，使用 assets 中的 Secret Garden Logo 圖片作為瀏覽器分頁欄位顯示的 favicon，讓使用者在多個瀏覽器分頁之間切換時，可以透過秘密花園的 Logo 更快辨識本網站。此修改在 index.html 的 head 中加入標準 icon、shortcut icon 與 apple-touch-icon 設定，提升 Chrome、Safari、Edge 與行動裝置加入主畫面時的辨識度。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.3b12a-5</h3>
+        <p class="date">修改時間：2026 06/03</p>
+        <p class="details">放大網站分頁圖示。使用者回饋原本的 favicon 在瀏覽器標籤頁中仍然偏小、不易看清楚，因此重新以 Secret Garden Logo 產生一張專用的 assets/favicon-secret-garden.png。新圖示收緊原始 Logo 四周透明留白，讓圖案在固定尺寸的瀏覽器分頁圖示中佔比更高，視覺上接近放大兩倍，並將 index.html 中的 icon、shortcut icon 與 apple-touch-icon 全部改指向此新版圖示。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.3b12a-6</h3>
+        <p class="date">修改時間：2026 06/03</p>
+        <p class="details">再次最大化網站分頁圖示。依使用者要求，改以去背方式處理 Logo，只保留「長出花朵的調色盤」主體，移除周圍音符與裝飾線條，並將圖片邊界精準裁切到主體第一個可見像素。新輸出檔案為 assets/favicon-secret-garden-max.png，並將 index.html 中的 icon、shortcut icon 與 apple-touch-icon 改指向此最大化版本，同時加入 favicon 快取版本參數，降低瀏覽器持續沿用舊圖示的機率。此修改讓瀏覽器標籤頁中的秘密花園 Logo 佔用盡可能大的顯示面積。</p>
+      </article>
     </section>
 
     <section class="asset-section">
