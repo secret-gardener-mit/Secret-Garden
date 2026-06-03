@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>秘密花園網站版本紀錄日誌</title>
+  <style>
+    :root {
+      --gold: #d6a72f;
+      --ink: #171717;
+      --muted: #4c4c4c;
+      --line: #ded7ca;
+      --paper: #fffaf0;
+    }
+
+    body {
+      margin: 0;
+      padding: 48px;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: "Noto Serif TC", "Microsoft JhengHei", "PingFang TC", serif;
+      line-height: 1.85;
+    }
+
+    main {
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      margin: 0 0 12px;
+      color: var(--gold);
+      font-size: 40px;
+      line-height: 1.25;
+    }
+
+    .intro {
+      margin: 0 0 36px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .version-group {
+      margin: 48px 0;
+      padding-top: 24px;
+      border-top: 1px solid var(--line);
+    }
+
+    .major-version {
+      margin: 0 0 20px;
+      color: var(--gold);
+      font-size: 30px;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+    }
+
+    .minor-entry {
+      margin: 0 0 28px;
+      padding: 18px 20px;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.46);
+    }
+
+    .minor-version {
+      margin: 0 0 4px;
+      color: #111;
+      font-size: 22px;
+      font-weight: 800;
+      font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+    }
+
+    .date {
+      margin: 0 0 12px;
+      color: #333;
+      font-size: 13px;
+      font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+      font-weight: 700;
+    }
+
+    .details {
+      margin: 0;
+      color: #202020;
+      font-size: 14px;
+      white-space: pre-line;
+    }
+
+    .note {
+      margin-top: 40px;
+      padding: 18px 20px;
+      border-left: 4px solid var(--gold);
+      background: rgba(214, 167, 47, 0.11);
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .asset-section {
+      margin: 54px 0 36px;
+      padding-top: 24px;
+      border-top: 1px solid var(--line);
+    }
+
+    .asset-section h2 {
+      margin: 0 0 10px;
+      color: var(--gold);
+      font-size: 30px;
+      font-weight: 800;
+    }
+
+    .asset-section > p {
+      margin: 0 0 22px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .asset-version {
+      margin: 0 0 28px;
+      padding: 18px 20px;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.48);
+    }
+
+    .asset-version h3 {
+      margin: 0 0 14px;
+      color: #111;
+      font-size: 22px;
+      font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+    }
+
+    .asset-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+    }
+
+    .asset-card {
+      display: grid;
+      gap: 9px;
+      padding: 12px;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      border-radius: 8px;
+      background: rgba(255, 250, 240, 0.78);
+    }
+
+    .asset-card img {
+      width: 100%;
+      max-height: 180px;
+      object-fit: contain;
+      border-radius: 6px;
+      background: #f2eadb;
+    }
+
+    .asset-card audio {
+      width: 100%;
+    }
+
+    .asset-card a {
+      color: #111;
+      font-size: 14px;
+      font-weight: 800;
+      word-break: break-word;
+      text-decoration-color: rgba(214, 167, 47, 0.55);
+    }
+
+    .asset-card small {
+      color: var(--muted);
+      font-size: 12px;
+      word-break: break-word;
+    }
+
+    .missing-list {
+      margin: 16px 0 0;
+      padding-left: 18px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .missing-list li {
+      margin: 0 0 8px;
+      word-break: break-word;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>秘密花園網站版本紀錄日誌</h1>
+    <p class="intro">此檔案為獨立版本紀錄，不會影響網站程式碼。版本命名採用「vX.XbX-X」：前半段為網站主版本，最後的「-X」代表該主版本中的第幾次修改需求。每一次使用者提出的一則修改請求，皆視為一個修改版。主版本時間線以網站本體「活動紀錄」中的版本紀錄為校準來源；若對話記憶與網站內紀錄衝突，優先採用網站內紀錄。</p>
+
+    <section class="version-group">
+      <h2 class="major-version">v0.1a1</h2>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.1a1-1</h3>
+        <p class="date">修改時間：2026 05/10</p>
+        <p class="details">建立「開花網站」前身版本。網站核心體驗以八色種子進入花園為主，使用者可選擇不同顏色的種子，讓種子綻放成花。此版本已具備基本的開花互動概念，並以《Welcome to the Secret Garden》作為背景音樂，讓使用者在進入網站時能先感受到秘密花園的世界觀氛圍。每一種顏色的種子亦搭配不同祝福語，形成後續「花語」、「顏色音樂」與「情緒陪伴」架構的原型。</p>
+      </article>
+    </section>
+
+    <section class="version-group">
+      <h2 class="major-version">v0.1a2</h2>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.1a2-1</h3>
+        <p class="date">修改時間：2026 05/14</p>
+        <p class="details">延續 v0.1a1 的開花網站原型，將進入花園前的八色種子改為八色花瓣形式，使視覺更接近花朵與花園意象。新增花朵綻放時播放相應開花音效與顏色音樂的機制，此時紅、橙、黃、綠已具備音效與音樂，藍、靛、紫、灰則仍保留待補素材。每個花朵右下方新增花語圖卡，讓開花互動與花語收藏概念產生連結。</p>
+      </article>
+    </section>
+
+    <section class="version-group">
+      <h2 class="major-version">v0.1b</h2>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.1b-1</h3>
+        <p class="date">修改時間：2026 05/27</p>
+        <p class="details">建立全新的「秘密花園沉浸式作品入口網站」初版。網站主體從單一開花體驗擴展為完整藝術企劃入口，包含首頁、關於秘密花園、線上花園入口、音樂／專輯宇宙、小花卡圖鑑、團隊與園丁們、活動紀錄、合作與聯絡等區域。首頁被設計為「進入花園的感覺」而非傳統資訊頁，包含花瓣飄落、微風粒子、八色入口、世界觀句子與音樂企劃氛圍。此版本確立網站不是學生作業式介紹頁，而是互動式藝術 IP 入口。</p>
+      </article>
+    </section>
+
+    <section class="version-group">
+      <h2 class="major-version">v0.2b1</h2>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.2b1-1</h3>
+        <p class="date">修改時間：2026 05/27</p>
+        <p class="details">重製「小花卡圖鑑」內容。將原本的小卡替換為八種花與八種顏色對應：山茶花／紅、金盞花／橙、向日葵／黃、鈴蘭／綠、藍繡球／藍、鳶尾／靛、薰衣草／紫、銀葉菊／灰。卡片背面改為使用提供的對應圖片素材，翻面後單純顯示完整圖卡圖片。未翻開時只顯示花朵圖案與顏色文字，移除花種與花語文字，讓正面更像可互動的收藏卡入口。翻卡互動由原本游標懸停自動翻頁，改為點擊後才翻頁；再次點擊則翻回正面。懸停時新增外框選取效果，提示使用者卡片可以互動。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.2b1-2</h3>
+        <p class="date">修改時間：2026 05/28</p>
+        <p class="details">在花卡圖鑑區域右上方新增「翻開全部／關閉全部」按鈕。按鈕位置依照使用者提供的截圖紅框位置放置，靠近右側卡片上方，讓大量瀏覽花卡時可以快速打開或收起所有卡片。按鈕狀態會依目前卡片是否全部打開而切換文字。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.2b1-3</h3>
+        <p class="date">修改時間：2026 05/28</p>
+        <p class="details">修正「翻開全部／關閉全部」按鈕的碰撞箱問題。原先只有特定角度或區域能成功點擊，導致使用者誤以為按鈕失效。此修改擴大可點擊範圍並調整層級與互動區，使按鈕能更容易被選取與觸發。</p>
+      </article>
+    </section>
+
+    <section class="version-group">
+      <h2 class="major-version">v0.2b2</h2>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.2b2-1</h3>
+        <p class="date">修改時間：2026 05/28</p>
+        <p class="details">新增深色／淺色主題切換系統。原先網站以深色花園作為主要視覺，新增淺色模式後，首頁主視覺更換為提供的淺色秘密花園背景圖，並依背景色調重新調整整站主題色。包含導覽列、文字、卡片、按鈕、面板、花瓣與背景對比等，使淺色模式下文字仍可清楚閱讀。新增右下角小花形狀的主題切換按鈕，深色模式時小花顯示淺色主題代表色，淺色模式時小花顯示深色主題代表色，按鈕下方顯示按下後會切換到的「深色／淺色」文字。網站預設顯示模式改為淺色。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.2b2-2</h3>
+        <p class="date">修改時間：2026 05/28</p>
+        <p class="details">修正淺色模式下部分文字背景區域可讀性不足的問題。針對顏色文字或花朵旁的標籤，增加更柔和且適合淺色背景的半透明背景，避免文字與背景照片或花瓣重疊後難以辨識。主題切換時新增交疊式過渡動畫，降低突然換色的硬直感。右下角主題切換小花移除可見外框，改為去背效果並保留微微發光，視覺上更接近首頁下方八色小花朵。</p>
+      </article>
+    </section>
+
+    <section class="version-group">
+      <h2 class="major-version">v0.3b1</h2>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.3b1-2</h3>
+        <p class="date">修改時間：2026 05/28</p>
+        <p class="details">將舊版「開花網站」回歸到新版秘密花園網站中，放在「關於秘密花園」下方，命名為「開花體驗」。使用者可以選擇一種顏色，讓種子綻放成一朵花，並搭配對應的開花音效與顏色音樂。此階段的開花體驗仍是獨立播放系統，由該區右上角按鈕控制音樂播放與停止；藍、靛、紫、灰的開花音效仍未完成，以紅、橙、黃、綠音效暫時代替，且紫色音樂仍缺少。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.3b1-3</h3>
+        <p class="date">修改時間：2026 05/28</p>
+        <p class="details">將「線上花園入口」更名為「種下一些花」。此區域的八色名稱同步改為與「小花卡圖鑑」一致，並將「Blooming Now」改為「Blooming」。這讓線上花園與八色花卡之間的命名系統更一致，也使網站各區域開始朝同一套花色世界觀整合。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.3b1-4</h3>
+        <p class="date">修改時間：2026 05/28</p>
+        <p class="details">將「音樂／專輯宇宙」更名為「專輯聆聽」，並導入十首音樂的播放控制。此版新增上一首、下一首、暫停／播放與播放進度條，也加入作曲者、曲目時長、曲目編號與播放中動畫等資訊。使用者提供的第一首 Welcome to the Secret Garden 與第十首 Secret Flower DEMO 素材也歸入此專輯播放系統。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.3b1-5</h3>
+        <p class="date">修改時間：2026 05/28</p>
+        <p class="details">將右上角「背景音樂」功能接上「專輯聆聽」播放系統，讓全站背景音樂可以透過右上角區域控制上一首、下一首與暫停／播放。不過在 v0.3b1 階段，這套背景音樂系統仍獨立於「開花體驗」播放系統，尚未與花朵綻放選色整合。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.3b1-6</h3>
+        <p class="date">修改時間：2026 05/28</p>
+        <p class="details">將「小花卡圖鑑」更名為「花語圖鑑卡」，並將 Gray｜灰的色號從 #7f877d 調整為 #acbe9a。此版讓花卡名稱與後續網站主選單一致，灰色也更接近秘密花園中較柔和的銀葉菊色彩。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.3b1-7</h3>
+        <p class="date">修改時間：2026 05/28</p>
+        <p class="details">更新「花園的園丁們」頁面內容。將 Music Gardener 改為「李岳鴒｜專案總召」，職位改為「製作人／作曲家／行政／視覺設計／開花網頁設計」，喜歡的花改為鳶尾，喜歡的聲音改為蟲鳴鳥啼，並替換為提供的大頭照。將 Visual Gardener 改為「陳映里｜專案副召」，職位改為「作曲家／聲景錄音／聲音設計／攝影紀錄／網站架設」，喜歡的花改為藍繡球，喜歡的聲音改為風拂大地，並替換大頭照。將 Interactive Gardener 改為「林書磊｜執行長」，職位改為「技術控管／作曲家／聲音設計／聲景錄音／線上展間架設」，喜歡的花改為山茶花，喜歡的聲音改為微雨浸地，並替換大頭照。整體讓團隊介紹從角色代稱轉為真實專案成員資訊。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.3b1-8</h3>
+        <p class="date">修改時間：2026 05/28</p>
+        <p class="details">將「合作與聯絡」中的 Email 按鈕連線至秘密花園信箱，讓使用者可以透過網站直接聯絡團隊。此版確立網站不只是作品展示，也能作為後續合作、展演與聯繫的入口。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.3b1-9</h3>
+        <p class="date">修改時間：2026 05/28</p>
+        <p class="details">v0.3b1 是 2026 05/28 創意專案簡報使用版本。此版主要優化首頁副標題顯示方式，並將首頁下方八色花的色號校準至與花卡色號一致，讓首頁入口、花卡與後續互動體驗的色彩系統開始統一。</p>
+      </article>
+    </section>
+
+    <section class="version-group">
+      <h2 class="major-version">v0.3b2</h2>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.3b2-2</h3>
+        <p class="date">修改時間：2026 05/28</p>
+        <p class="details">設計右上角小音樂播放器。當頁面離開「專輯聆聽」區域時，大型播放控制縮小並移動到右上角，取代原本 Sound 控制區域，但保留播放時起伏的顏色條。小播放器持續顯示曲名，並與專輯聆聽頁面播放狀態連動。使用者在其他頁面操作右上角播放器，也會同步更新專輯聆聽的選曲狀態。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.3b2-3</h3>
+        <p class="date">修改時間：2026 05/28</p>
+        <p class="details">優化右上角小播放器懸浮展開行為。當電腦游標懸浮在右上角曲名區域時，自動展開較精細播放控制介面，包含暫停／開始、上一首、下一首、小型進度條與完整曲名。曲名過長時以滾動顯示。選單只在游標懸浮時開啟，點擊樂曲標題可收合，游標離開超過三秒也自動收合。行動裝置則改為點擊開啟、點擊標題關閉，不自動收合。播放器內新增可捲動至「專輯聆聽」頁面的圖示。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.3b2-4</h3>
+        <p class="date">修改時間：2026 05/29</p>
+        <p class="details">優化專輯聆聽曲目卡的花朵背景。當游標懸浮在某首歌曲按鍵上，按鈕右側空白處浮現對應顏色音樂的花朵，選取後持續顯示。背景花朵使用花語圖鑑卡素材，但只保留花朵本身，不顯示字卡文字。花朵傾斜約 30 度向左擺頭，並保留出現與消失動畫。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.3b2-5</h3>
+        <p class="date">修改時間：2026 05/29</p>
+        <p class="details">修正花朵背景被圓形外框裁切與遮字問題。將原本花語卡片進一步去背，只留下花朵本身。花朵加入按鈕背景後不遮住文字，邊緣以漸層消失處理。選取底色新增淡入與淡出動畫。大型 Now Playing 播放區也加入目前對應的花朵與底色。小播放器刪除 Sound 文字，滑鼠離開控制區域即自動收合，控制器開啟時再按一次正在播放按鈕也會收起。導覽列保持置中，不再被右上角曲名長度推移。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.3b2-6</h3>
+        <p class="date">修改時間：2026 05/29</p>
+        <p class="details">修正右上角播放器互動熱區與導覽列衝突。原本小播放器 hover 觸發區域延伸到 About、Bloom、Garden 等導覽列，導致導覽按鈕無法點擊。重新限制觸發範圍，並依使用者紅框設定可維持選單開啟的安全區域，避免游標從播放按鈕移到控制器途中選單關閉。專輯聆聽中的花瓣起伏效果移到曲目卡右上角，並改為簡化 EQ 直條線條波形。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.3b2-7</h3>
+        <p class="date">修改時間：2026 05/29</p>
+        <p class="details">排查 Chrome 音訊與 EQ 問題。使用者回報 Safari 有聲音且 EQ 會動，但 Chrome 無聲且 EQ 不動。逐步調整音訊與 EQ 串接邏輯，使 Chrome 也能播放背景音樂。後續補上「觸碰以控制音樂」提示，於網站初次載入時在播放器下方以箭頭與文字提示使用者，提示淡入、停留三秒後淡出，並在深色／淺色模式下使用不同的柔邊半透明提示背景。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.3b2-8</h3>
+        <p class="date">修改時間：2026 05/29</p>
+        <p class="details">優化操作提示與 EQ 顯示。放大「觸碰以控制音樂」提示文字，拉開提示與控制器距離，讓箭頭有足夠空間。提示背景改為真正柔邊，不顯示明顯外框。EQ 顏色加深，拿掉 EQ 下方黑框，改為沒有黑框但仍清楚可辨的線條。處理花朵背景與 EQ 重疊問題，裁切花朵避免遮擋 EQ 區域，並使用柔邊切口。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.3b2-9</h3>
+        <p class="date">修改時間：2026 05/29</p>
+        <p class="details">調整曲目卡花朵顯示區域。依使用者紅框，讓花朵顯示區域更大，盡可能填滿指定框內，並延長暈邊漸層，避免使用者看見外框輪廓。操作提示改為只在使用者初次進入網站或重新整理後顯示一次；若三秒後自動消失，或使用者在提示顯示期間開啟控制器使提示關閉，後續都不再自動出現，直到重新整理頁面。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.3b2-10</h3>
+        <p class="date">修改時間：2026 05/29</p>
+        <p class="details">反覆調整花朵背景裁切與暈邊效果。先取消每朵花的暈邊淡出，嘗試完整顯示花朵；後續又依使用者提供的前一版 Archive.zip，將花卉背景恢復為先前版本效果，只處理花的背景圖片與暈邊，其餘新版功能與介面維持不變。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.3b2-11</h3>
+        <p class="date">修改時間：2026 05/29</p>
+        <p class="details">調整音樂淡入淡出邏輯。播放暫停時加入淡出，淡入與淡出皆控制在 0.3 秒。若音檔是從頭開始播放，包括自動播放、使用者選擇歌曲播放、上一首播完後換下一首等，不加入播放淡入效果，以免從頭開始播放時音量起始不自然。後續補上按下一首／上一首時，當前音樂停止處也要 0.3 秒淡出；使用者手動切換音樂時，上一首歌同樣要有淡出效果。</p>
+      </article>
+    </section>
+
+    <section class="version-group">
+      <h2 class="major-version">v0.3b3t</h2>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.3b3t-1</h3>
+        <p class="date">修改時間：2026 05/29</p>
+        <p class="details">修正專輯聆聽 EQ 動態顯示。使用者回報 Chrome、手機版或直接開 HTML 時 EQ 顯示與實際播放狀態不一致，因此調整 EQ 分析、顯示顏色、手機支援與黑框移除等細節。此版本主要以測試與修復 EQ 為主，讓播放中視覺回饋更穩定。</p>
+      </article>
+    </section>
+
+    <section class="version-group">
+      <h2 class="major-version">v0.3b4</h2>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.3b4-1</h3>
+        <p class="date">修改時間：2026 05/29</p>
+        <p class="details">修正專輯聆聽曲目背景花朵圖片顯示問題。花朵背景從花語卡素材抽出後，處理去背、柔邊、選取淡入淡出、花朵不遮字、主播放器同步顯示等問題。此版本也優化背景音樂控制器操作提示的水平位置與行為模式，讓提示不再反覆出現或偏離播放框。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.3b4-2</h3>
+        <p class="date">修改時間：2026 05/29</p>
+        <p class="details">優化專輯聆聽播放事件。將暫停、續播、切歌、自動下一首等狀態下的音量變化邏輯整理為一致流程。暫停與切換歌曲會淡出，從頭播放的新曲不淡入，避免啟動瞬間被過度柔化。此修改讓音樂播放器在不同控制入口之間行為一致。</p>
+      </article>
+    </section>
+
+    <section class="version-group">
+      <h2 class="major-version">v0.3b5</h2>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.3b5-1</h3>
+        <p class="date">修改時間：2026 05/29</p>
+        <p class="details">依網站內「活動紀錄」校準：v0.3b5 是「開花體驗」顯示與跳轉的第一輪集中修正。此版處理彩色花瓣被說明文字蓋過、花蕊與花瓣錯位等顯示問題，並將八色種子位置改為置中。這些修正讓開花體驗從功能可用，往視覺更穩定的狀態推進。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.3b5-2</h3>
+        <p class="date">修改時間：2026 05/29</p>
+        <p class="details">新增「開花體驗」右下角花語小卡連結至「花語圖鑑卡」的功能。使用者點擊花朵旁的卡牌後，頁面會跳轉到對應的花語圖鑑卡，並讓對應卡牌自動翻開。後續也調整為延遲翻開，避免跳轉完成時卡牌已經翻好，讓使用者能看見翻頁動作。</p>
+      </article>
+    </section>
+
+    <section class="version-group">
+      <h2 class="major-version">v0.3b6</h2>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.3b6-1</h3>
+        <p class="date">修改時間：2026 05/31</p>
+        <p class="details">新增與調整主頁 Logo 系統。首頁加入大型秘密花園 Logo，右上角導覽品牌也替換為使用者提供的無文字 Logo 圖像。首頁時品牌文字顯示 Welcome，其他頁面顯示 Secret Garden，並加入文字切換動畫。Logo 在後續調整中放大三倍，並重新平衡 Logo、Immersive Experience 與 Secret Garden 標題間距。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.3b6-2</h3>
+        <p class="date">修改時間：2026 05/31</p>
+        <p class="details">新增種子游標。當系統游標進入網站區域，原本游標隱藏，替換為圓形種子游標。每次進入網站會隨機改變顏色，點擊時種子縮小並加深，按壓與恢復都有動畫。當游標碰到可互動元素時，種子會長出小草，離開互動區後小草縮回。此版本也修正淺色模式下播放器進度條仍為深色的問題。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.3b6-3</h3>
+        <p class="date">修改時間：2026 05/31</p>
+        <p class="details">修正種子游標定位與系統手指游標干擾。調整自訂游標實際位置，讓網頁內種子游標與系統游標位置對齊。移除種子游標影子。將整個「種下一些花」種花區設為會讓種子游標長草的互動區。後續關閉系統內建手指游標，確保全站互動時都只顯示自訂種子游標。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.3b6-4</h3>
+        <p class="date">修改時間：2026 05/31</p>
+        <p class="details">重新設計小音樂控制器的跳轉方式。恢復在控制器開啟狀態下，再按一次正在播放欄位即可關閉控制器。移除原本獨立的「跳到專輯聆聽」按鈕，改為點擊樂曲名稱即可跳轉至專輯聆聽位置，並在曲名旁加入可導向的提示圖示，避免使用者不知道曲名可被點擊。此版也修正背景音樂控制器為永恆顯示，讓即使位於專輯聆聽區域時，右上角仍保留正在播放介面與小控制器。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.3b6-5</h3>
+        <p class="date">修改時間：2026 05/31</p>
+        <p class="details">將「開花體驗」更名為「花朵綻放」，並將花朵綻放播放系統與「專輯聆聽」播放系統整合。使用者選擇某一朵花時，先播放對應開花音效，再開始播放該顏色音樂；這首音樂會同步接入右上角正在播放、小音樂控制器與專輯聆聽選取狀態。若音樂自動播放至下一首，花朵會切換至下一個顏色並播放開花動畫，但不重播開花音效。此版也補上藍、靛、紫、灰開花音效素材，並保留「秘密花」音效供後續使用。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.3b6-6</h3>
+        <p class="date">修改時間：2026 05/31</p>
+        <p class="details">優化「花朵綻放」初始彩色花朵的花瓣距離。此版不再重複記錄 v0.3b5 已處理的「提示文字遮住彩色花」與「花蕊花瓣對齊」問題，而是專注於使用者後續提出的彩色花瓣靠近花蕊需求。修改後，未綻放任何花朵時顯示的彩色花朵花瓣更往花蕊中央靠攏，整體結構更接近其他單色花朵。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.3b6-7</h3>
+        <p class="date">修改時間：2026 05/31</p>
+        <p class="details">優化「專輯聆聽」區域。新增作曲家的英文藝名資訊：李岳鴒為 ZEROYUEH，林書磊為 Aries Lin，陳映里為 Osmond Chen。調整樂曲選擇卡片佈局，將作曲者移至右上角、時間獨立顯示，修正文字換行與溢出問題。將每張小卡中的 EQ 移到大型 Now Playing 播放區，並修正淺色模式下主播放器進度條仍是深色的問題。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.3b6-8</h3>
+        <p class="date">修改時間：2026 05/31</p>
+        <p class="details">調整合作與聯絡區 Spotify 行為。點擊 Spotify 按鈕不再直接導向外部連結，而是跳出「Comming Soon」彈窗，提示專輯尚未上架 Spotify。後續修正彈窗圖層與游標層級，使自訂游標在彈窗上方仍可見；再修正游標消失問題，確保彈窗期間仍能辨識游標位置。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.3b6-9</h3>
+        <p class="date">修改時間：2026 05/31</p>
+        <p class="details">調整「關於秘密花園」區域中的關鍵詞排版。將 Music、Emotion、Bloom、Healing、Memory、Color 等字縮小，並增加左右留白，避免右下角主題切換小花與文字卡在一起。此修改讓大型文字列在桌面縮放下更穩定，也避免浮動控制元件遮擋內容。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.3b6-10</h3>
+        <p class="date">修改時間：2026 05/31</p>
+        <p class="details">微調「花園的園丁們」職位文字換行。陳映里的職位中，「攝影紀錄」原本被拆成「攝」在上一行、「影紀錄」在下一行，修正為整個詞一起換到下一行。林書磊的「聲景錄音」也同樣修正，避免「聲」單獨留在上一行。此修改提升中文職稱排版完整性與專業感。</p>
+      </article>
+    </section>
+
+    <section class="version-group">
+      <h2 class="major-version">v0.3b7t</h2>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.3b7t-1</h3>
+        <p class="date">修改時間：2026 06/01</p>
+        <p class="details">重新整理專案內音效與音樂檔案對應。使用者重新整理音效與音樂素材後，重新依花朵與顏色資訊將各種音檔對應至所需位置。確保開花音效、顏色音樂與專輯曲目仍能正確連到各自素材。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.3b7t-2</h3>
+        <p class="date">修改時間：2026 06/01</p>
+        <p class="details">重寫與調整 EQ 引擎。使用者指出原本 EQ 對音樂起伏與頻率分配反應不準，要求橫軸由左至右代表低頻到高頻，縱軸由下至上代表音量大小。嘗試建立更接近音訊頻譜的 EQ 顯示方式，使波形不只是裝飾，而能回應實際音訊能量。</p>
+      </article>
+    </section>
+
+    <section class="version-group">
+      <h2 class="major-version">v0.3b8</h2>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.3b8-1</h3>
+        <p class="date">修改時間：2026 06/02</p>
+        <p class="details">修復音樂播放系統癱瘓。使用者回報十首專輯音樂完全無法播放，但開花音效仍正常，判斷問題集中在背景音樂／專輯播放系統。修正音樂播放功能後，曲目可再次正常播放。隨後修復 EQ 沒有動靜的問題，讓播放視覺回饋恢復。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.3b8-2</h3>
+        <p class="date">修改時間：2026 06/02</p>
+        <p class="details">新增「活動紀錄」中的網站版本欄位。於活動紀錄三個項目下方新增「網站版本」頁面項目，副標顯示當前網站版本，最右側以箭頭提示可點擊。點擊後欄位變成「網站版本紀錄」，副標改為「在此處查看網站更新紀錄」，欄位展開並顯示版本紀錄內容。初期建立版本紀錄空位，以便後續自行填寫更新歷史。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.3b8-3</h3>
+        <p class="date">修改時間：2026 06/02</p>
+        <p class="details">優化網站版本紀錄的視覺與結構。使「網站版本／網站版本紀錄」文字樣式、大小與顏色與活動紀錄前三個欄位一致。版本紀錄格子被包覆在「網站版本紀錄」的大格子中，版本號改用與頂部導覽列相同的 sans 字體。右側箭頭改為更細、開腳約 90 度且無圓形外框。後續又修正發布日期顏色、雙層箭頭錯位、導覽列當前頁判斷，以及內層下拉選單展開時頁面不應抖動或被往上推的問題。</p>
+      </article>
+    </section>
+
+    <section class="version-group">
+      <h2 class="major-version">v0.3b9</h2>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.3b9-1</h3>
+        <p class="date">修改時間：2026 06/02</p>
+        <p class="details">優化網站讀取速度。此版調整初始載入策略，降低過多音訊、圖片或動畫資源在一開始同時載入造成的等待時間，讓網站上傳後的首次開啟更穩定。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.3b9-2</h3>
+        <p class="date">修改時間：2026 06/02</p>
+        <p class="details">優化音樂「紫」的音量平衡。此調整讓專輯聆聽中各曲目之間的音量落差更小，避免使用者切換到紫色曲目時感受到過度突兀的音量差異。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.3b9-3</h3>
+        <p class="date">修改時間：2026 06/02</p>
+        <p class="details">修正「活動紀錄」中目前版本號在下拉式選單收合後會異常回到舊版的錯誤。將目前版本集中為程式碼常數，日後只要修改該常數即可同步更新網頁顯示，不會因收合選單而回到先前版本。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.3b9-4</h3>
+        <p class="date">修改時間：2026 06/02</p>
+        <p class="details">將網站部署來源從 netlify.com 遷移至 github.io。此項為使用者自行更新並寫入網站內「活動紀錄」的內容，本獨立日誌依該來源同步校正時間線。</p>
+      </article>
+    </section>
+
+    <section class="version-group">
+      <h2 class="major-version">v0.3b10</h2>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.3b10-1</h3>
+        <p class="date">修改時間：2026 06/02</p>
+        <p class="details">調整 EQ 偵測與假波動備援邏輯。原本 EQ 在偵測不到波形時會自動切換為假波動，但音樂很小聲仍在播放時，假波動會干擾真實波形。嘗試讓瀏覽器能分析波形時不使用假波動，只在真的無法偵測時才啟用備援。版本歷史新增 v0.3b10 並描述此次 EQ 更新。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.3b10-2</h3>
+        <p class="date">修改時間：2026 06/02</p>
+        <p class="details">移除或回退假波動策略。使用者上傳網站後發現 EQ 一開始正常，幾秒後變成假波動，因此要求刪除假波動，嘗試讓各網站環境、Chrome、Safari、手機版都能顯示真實 EQ。後續因跨瀏覽器限制，使用者要求先改回上一版 EQ，並將低音區靈敏度稍微調低、高音區靈敏度稍微調高，靈敏度由低頻到高頻漸進式增加。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.3b10-3</h3>
+        <p class="date">修改時間：2026 06/02</p>
+        <p class="details">處理長曲名 Welcome to the Secret Garden 的特殊顯示問題。大型播放器中，這首歌的 EQ 被推出畫面外，因此改到歌曲時間旁邊的指定位置。右上角正在播放框在播放此曲時加長，使曲名完整顯示。小音樂控制器中的曲名捲動範圍限制在「連結至專輯播放」按鈕右側，避免疊到按鈕；曲名顯示邊界只在需要捲動時加入暈邊效果，不需要捲動的短曲名則不受暈邊影響。後續再微調 EQ 位置，使其貼近樂曲時長右邊。</p>
+      </article>
+    </section>
+
+    <section class="version-group">
+      <h2 class="major-version">v0.3b11</h2>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.3b11-1</h3>
+        <p class="date">修改時間：2026 06/02</p>
+        <p class="details">優化非 Chrome 瀏覽器動畫效能與網站載入速度。使用者在非 Chrome 瀏覽器中發現右下角深淺切換小花、轉跳頁面等動畫明顯卡頓，且網站載入緩慢。此版本降低部分動畫負擔，減少音訊與圖片初始載入壓力，改善 Safari、Edge 等瀏覽器的效能表現，並更新版本號為 v0.3b11。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.3b11-2</h3>
+        <p class="date">修改時間：2026 06/02</p>
+        <p class="details">修正 Safari 中的新問題。使用者回報 v0.3b11 後，Safari 種子游標卡在左上角、不會跟隨游標移動；右下角深淺色小花動畫仍然很卡；合作與聯絡四個按鈕 hover 時會整個飛走。此修改讓 Safari 路徑下的游標恢復移動，降低主題切換動畫負擔，並在效能輕量模式下停用磁吸按鈕位移，避免聯絡按鈕在 hover 時異常飄走。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.3b11-3</h3>
+        <p class="date">修改時間：2026 06/02</p>
+        <p class="details">繼續修正種子游標抖動與低幀率。使用者指出種子游標雖然會移動，但位置經常亂跳、左右亂閃且幀率低，右下角主題切換小花在切換時甚至卡到不轉。此修改將 Safari／非 Chrome 的種子游標改為更接近系統原生游標圖案，避免 DOM 游標每幀追蹤造成抖動；右下角小花在 performance-lite 模式下改由 CSS 動畫負責，減少 JS 逐幀更新與 Safari 重繪負擔。</p>
+      </article>
+    </section>
+
+    <section class="version-group">
+      <h2 class="major-version">v0.3b12</h2>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.3b12-1</h3>
+        <p class="date">修改時間：2026 06/03</p>
+        <p class="details">優化「活動紀錄」左側的今日花語區域，將原本靜態句子改為可互動功能。根據使用者提供的「今日花語列表.txt」，建立 25 句祝福語資料庫，並集中放在 script.js 的 dailyPhrases 陣列，方便日後新增、刪除與編輯。新增「下一句話」按鈕，可順序切換花語。花語顯示固定為兩行高度，避免不同句長造成版面跳動。深色模式中的「今日花語」標題色先調整為更深的顏色。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.3b12-2</h3>
+        <p class="date">修改時間：2026 06/03</p>
+        <p class="details">改良今日花語資料庫的換行編輯方式。將花語陣列改為反引號樣板字串，使用者可在程式碼中直接按 Enter 輸入換行。網頁顯示端使用保留換行的文字呈現方式，使安排在資料庫中的換行能真正顯示在網站上，同時仍限制在固定兩行。將「今日花語」四個字改為暗一點的白色。於「下一句話」右邊新增「隨機花語」按鈕，可從目前 25 句花語中隨機抽出一句，並避免抽到目前正在顯示的同一句。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.3b12-3</h3>
+        <p class="date">修改時間：2026 06/03</p>
+        <p class="details">讓「活動紀錄」右側欄位內容也支援程式碼換行。針對計畫成立、計畫補助、Hospital Performance 等 timeline 內容文字，加入保留換行的顯示方式。日後使用者可在 index.html 的活動紀錄段落內直接換行，網頁會依照輸入的換行位置顯示，方便撰寫較長、分段清楚的活動紀錄。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.3b12-4</h3>
+        <p class="date">修改時間：2026 06/03</p>
+        <p class="details">建立本獨立「版本紀錄日誌」檔案。依使用者要求，根據先前所有對話與修改內容，整理出詳細版本紀錄。版本命名採用 vX.XbX-X，每次使用者提出的一則修改請求視為一個修改版。檔案以 HTML 文字檔形式建立，使用大字黃色標注主版本，小型修改版使用黑色中等字型，修改時間與詳細敘述使用黑色小型文字。日後若使用者提出新的修改需求，需同步依此格式追加到本檔案中。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.3b12-5</h3>
+        <p class="date">修改時間：2026 06/03</p>
+        <p class="details">整理更新日誌附件資料夾。依使用者要求，在專案根目錄建立「更新日誌」資料夾，將本 HTML 日誌移入其中；並在「更新日誌/assets」中依版本號建立資料夾，將目前仍可從本機路徑讀取的截圖、素材、音檔、壓縮檔與文字檔複製到對應版本。由於部分早期 CleanShot 截圖、暫存截圖與舊卡片素材原始路徑已不存在，這些檔案在附件索引中標示為「來源檔案目前無法存取」。此修改讓更新日誌不只記錄文字，也能回看當時提供的視覺參考與素材來源。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.3b12-6</h3>
+        <p class="date">修改時間：2026 06/03</p>
+        <p class="details">依使用者回饋重新校正本獨立更新日誌的時間線。原本部分項目依對話順序誤歸到較早主版本，例如「開花體驗」彩色花朵被提示文字遮住的修正曾被放在 v0.3b1-4，但依網站本體「活動紀錄」與使用者校正，應歸入 v0.3b5 至 v0.3b6 的開花體驗與花朵綻放優化階段。此修改以網站內版本紀錄為權威來源，重寫 v0.3b1、v0.3b5、v0.3b6、v0.3b8、v0.3b9 等段落，使整體時間線更接近實際版本演進。後續使用者提供的新截圖或檔案，也會直接放入該次修改所對應的「更新日誌/assets/vX.XbX-X」資料夾。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.3b12-7</h3>
+        <p class="date">修改時間：2026 06/03</p>
+        <p class="details">優化「活動紀錄」中的文章顯示區塊。將輔大醫院義演、演出彩排、計畫補助、計畫成立等文章格改為與「網站版本」欄位相近高度的下拉式選單。收合狀態只顯示標題與第一行內文摘要，若摘要超出可視範圍則以省略號結尾；展開後顯示全文並保留原本在 HTML 中輸入的換行。每格右側新增單層箭頭，位置與網站版本欄位一致但尺寸更小，箭頭底部貼近標題文字底部。此修改讓活動紀錄可以容納更長文字，同時維持頁面掃讀時的整齊高度。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.3b12-8</h3>
+        <p class="date">修改時間：2026 06/03</p>
+        <p class="details">修正「活動紀錄」文章下拉選單的展開位移與高度問題。原本收合摘要與展開全文是兩個不同位置的文字區，導致展開後第一行內文會整段往下移。此修改改為同一份內文在收合時被外框裁切成一行並顯示省略號，展開時從同一位置向下延展到完整高度，因此第一行位置不再跳動。同時縮減收合狀態下標題與副標題下方的多餘空間，讓右側活動格整體高度更接近舊版排版，並讓左側「今日花語」卡片比例更接近正方形。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.3b12-9</h3>
+        <p class="date">修改時間：2026 06/03</p>
+        <p class="details">新增「活動紀錄」文章分頁與排序功能。除固定顯示在底部的「網站版本」欄位外，最新資訊一次只顯示三則活動紀錄。原本第四則「計畫成立」的位置改為小型分頁列，提供上一頁、下一頁箭頭與目前頁數，按鈕無外框且不佔用過多高度。第四則與後續新增的活動紀錄會依目前 HTML 中的紀錄數量自動安排到下一頁，不需要手動指定頁面。第一則活動卡右上方新增常駐狀態文字，顯示「正在顯示 XX 則中的第 X ~ X 則」，旁邊提供排序切換，可在「新→舊」與「舊→新」之間切換，預設為新到舊。換頁時加入左右滑入動畫，讓頁面切換更自然。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.3b12-10</h3>
+        <p class="date">修改時間：2026 06/03</p>
+        <p class="details">修正活動紀錄分頁更新後造成全站功能無法載入的初始化錯誤。使用者回報網站停留在快速預覽狀態，首頁背景、導覽列與部分靜態元素可見，但主要互動、動畫與後續功能皆未啟動。排查後確認原因為活動紀錄分頁在頁面初始化早期呼叫導覽列當前區塊同步，而導覽列同步所需的 requestAnimationFrame 狀態尚未完成初始化，導致瀏覽器拋出 ReferenceError 並中斷後續 script.js 執行。此修改為活動紀錄分頁與導覽列同步之間加入初始化保護，讓分頁可以先完成渲染，等導覽列同步準備好後再啟用互相更新，避免單一模組的初始化順序再次使整站腳本停止。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.3b12-11</h3>
+        <p class="date">修改時間：2026 06/03</p>
+        <p class="details">細修「活動紀錄」分頁與文章展開體驗。將「正在顯示...」與「新→舊／舊→新」排序按鈕從第一張活動卡片內移出，改為位於右側活動紀錄區上方的總資訊列。排序功能維持作用於所有活動紀錄，而不是只影響目前頁面的三則紀錄；切換排序時會重新排列整份紀錄再切頁。若目前頁面只顯示一則紀錄，範圍文字改為「第 X 則」，不再顯示「第 X ~ X 則」。最後一頁不足三則時，新增補位提示卡維持與三格紀錄相同的頁面高度，並依排序方向顯示不同文字：新到舊時提示已看完所有紀錄，舊到新時提示敬請期待未來消息。文章下拉展開時，取消為了維持今日花語近似正方形而造成的空間限制，使內容能自然向下展開，降低展開動畫卡頓。此版也整理獨立更新日誌中使用者留在版本號後方的校正備註，移除錯置版本區塊與重複內容，將團隊頁、關鍵詞排版與園丁職位換行等紀錄歸回較合理的版本時間線。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.3b12-12</h3>
+        <p class="date">修改時間：2026 06/03</p>
+        <p class="details">再次優化「活動紀錄」版面與下拉行為。將左側「今日花語」卡片固定為與右側三則活動紀錄區相近的高度，並讓它從第一則活動紀錄的位置開始對齊；任何活動紀錄或網站版本下拉展開，都不再改變今日花語卡片高度。活動紀錄展開後，內文與標題之間維持與收合狀態一致的間距，不再因展開而貼近標題。恢復活動紀錄下拉展開時的柔順高度動畫，使其接近網站版本選單拉開時的感覺。活動紀錄改為手風琴邏輯，同一時間只允許一則活動紀錄展開；若使用者打開新的活動紀錄，其他已展開的活動紀錄會自動收合，但網站版本選單不受此限制。最後一頁補位提示改為無框、無底色，只保留與紀錄內文相同大小的文字，同時維持不足三則時的版面高度。切換新舊排序時，不再固定回到第一頁，而是以目前頁面的第一則活動紀錄為定位，計算它在新排序中的所在頁面並跳轉至該頁。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.3b12-13</h3>
+        <p class="date">修改時間：2026 06/03</p>
+        <p class="details">修正活動紀錄下拉選單展開時內文仍會微幅跳動的問題。依使用者指定，將展開邏輯改為「整張活動卡片高度伸縮」：收合時卡片固定為與其他紀錄一致的高度，只裁切到第一行內文；展開時由 JavaScript 量測該則紀錄完整內容的 scrollHeight，並把卡片高度動畫延展到內文結尾。如此內文仍停留在同一個 DOM 位置，不再以另一個內容高度區塊補償，視覺上更接近原本外框向下展開。此版也讓活動紀錄展開動畫重新接近「網站版本」選單的柔順拉開效果，並在視窗縮放時重新量測已展開卡片高度，維持版面穩定。</p>
+      </article>
+    </section>
+
+    <section class="version-group">
+      <h2 class="major-version">v0.3b12a</h2>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.3b12a-1</h3>
+        <p class="date">修改時間：2026 06/03</p>
+        <p class="details">更新「活動紀錄」下拉式選單的互動模式與資訊層級。依使用者最新需求，活動紀錄卡片不再整張都可點擊展開，而是只透過右側箭頭按鈕控制展開與收合，避免使用者瀏覽文字時誤觸。每則活動紀錄新增獨立的關閉狀態簡介文字，與展開後的正式內文分開管理；收合時卡片顯示主標題與簡介，展開時簡介會以淡出與高度收合動畫退場，並由完整內文在同一位置淡入取代。再次點擊箭頭時，內文縮回、簡介回歸，整體仍保留活動卡片高度伸縮動畫與手風琴邏輯，使視覺轉換更柔順。網站版本同步更新為 v0.3b12a。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.3b12a-2</h3>
+        <p class="date">修改時間：2026 06/03</p>
+        <p class="details">細修活動紀錄與今日花語互動。依使用者回饋，將活動紀錄格子區域的翻頁滑入動畫放慢，使切換頁面時不再顯得過快。今日花語改為每次網站刷新時自動隨機抽出一句祝福語，而不是固定依日期顯示；若抽出的祝福語只有單行，文字會自動置中於「今日花語」標題與按鈕列之間，若為雙行則維持原本兩行樣式。刪除原本「下一句話」按鈕，只保留一顆位於左側的白色循環箭頭圖示按鈕，點擊後會隨機抽換花語，讓介面更安靜、也更符合花語卡片的氛圍。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.3b12a-3</h3>
+        <p class="date">修改時間：2026 06/03</p>
+        <p class="details">再次細修活動紀錄與今日花語的動畫節奏。依使用者要求，將活動紀錄格子區域的翻頁滑入動畫延長至 0.80 秒，讓頁面切換更緩、更容易被眼睛跟上。今日花語改為不論單行或雙行祝福，都會置中於「今日花語」標題與底部隨機按鈕之間，使文字重心更穩定。最後一頁出現的補位提示文字，例如「你已經看完全部的紀錄」或「沒有更新的消息」，也改為套用與活動紀錄格子一致的翻頁滑入動畫，避免翻到最後一頁時提示文字突然出現。</p>
+      </article>
+    </section>
+
+    <section class="asset-section">
+      <h2>附件與參考素材索引</h2>
+      <p>以下素材已依版本號複製到「更新日誌/assets」中。若檔案顯示為缺失，代表該截圖或素材的原始本機路徑目前已不存在，無法從工作區再次取回。</p>
+
+      <div class="asset-version">
+        <h3>v0.2b2-1</h3>
+        <div class="asset-grid">
+          <div class="asset-card">
+            <img src="assets/v0.2b2-1/背景.png" alt="淺色主題背景圖">
+            <a href="assets/v0.2b2-1/背景.png">背景.png</a>
+            <small>淺色主題入口主視覺背景。</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="asset-version">
+        <h3>v0.2b3-1</h3>
+        <div class="asset-grid">
+          <div class="asset-card">
+            <img src="assets/v0.2b3-1/李岳鴒_大頭照1.png" alt="李岳鴒大頭照">
+            <a href="assets/v0.2b3-1/李岳鴒_大頭照1.png">李岳鴒_大頭照1.png</a>
+            <small>李岳鴒｜專案總召照片。</small>
+          </div>
+          <div class="asset-card">
+            <img src="assets/v0.2b3-1/陳映里_大頭照.jpg" alt="陳映里大頭照">
+            <a href="assets/v0.2b3-1/陳映里_大頭照.jpg">陳映里_大頭照.jpg</a>
+            <small>陳映里｜專案副召照片。</small>
+          </div>
+          <div class="asset-card">
+            <img src="assets/v0.2b3-1/林書磊_大頭照 2.jpeg" alt="林書磊大頭照">
+            <a href="assets/v0.2b3-1/林書磊_大頭照 2.jpeg">林書磊_大頭照 2.jpeg</a>
+            <small>林書磊｜執行長照片。</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="asset-version">
+        <h3>v0.3b1-1</h3>
+        <div class="asset-grid">
+          <div class="asset-card">
+            <a href="assets/v0.3b1-1/Secret Garden Web.zip">Secret Garden Web.zip</a>
+            <small>舊版開花網站壓縮檔，用於重建新版「花朵綻放」區域。</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="asset-version">
+        <h3>v0.3b6-1</h3>
+        <div class="asset-grid">
+          <div class="asset-card">
+            <img src="assets/v0.3b6-1/secret garden Logo_no text PNG.png" alt="Secret Garden Logo">
+            <a href="assets/v0.3b6-1/secret garden Logo_no text PNG.png">secret garden Logo_no text PNG.png</a>
+            <small>網站右上角與首頁使用的無文字 Logo。</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="asset-version">
+        <h3>v0.3b6-5</h3>
+        <div class="asset-grid">
+          <div class="asset-card">
+            <a href="assets/v0.3b6-5/Archive.zip">Archive.zip</a>
+            <small>更新後的開花音效素材壓縮檔。</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="asset-version">
+        <h3>v0.3b1-4</h3>
+        <div class="asset-grid">
+          <div class="asset-card">
+            <audio controls src="assets/v0.3b1-4/1. Welcome to the Secret Garden.mp3"></audio>
+            <a href="assets/v0.3b1-4/1. Welcome to the Secret Garden.mp3">1. Welcome to the Secret Garden.mp3</a>
+            <small>專輯第一首 Welcome to the Secret Garden。</small>
+          </div>
+          <div class="asset-card">
+            <audio controls src="assets/v0.3b1-4/10. Secret Flower(DEMO).wav"></audio>
+            <a href="assets/v0.3b1-4/10. Secret Flower(DEMO).wav">10. Secret Flower(DEMO).wav</a>
+            <small>專輯第十首 Secret Flower DEMO。</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="asset-version">
+        <h3>v0.3b4-1</h3>
+        <div class="asset-grid">
+          <div class="asset-card">
+            <a href="assets/v0.3b4-1/Archive.zip">Archive.zip</a>
+            <small>前版花卉背景效果參考壓縮檔。</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="asset-version">
+        <h3>v0.3b10-3</h3>
+        <div class="asset-grid">
+          <div class="asset-card">
+            <img src="assets/v0.3b10-3/CleanShot 2026-06-02 at 17.04.26@2x.png" alt="Welcome EQ 主播放器截圖">
+            <a href="assets/v0.3b10-3/CleanShot 2026-06-02 at 17.04.26@2x.png">CleanShot 2026-06-02 at 17.04.26@2x.png</a>
+            <small>Welcome 播放時 EQ 被推出畫面外的參考截圖。</small>
+          </div>
+          <div class="asset-card">
+            <img src="assets/v0.3b10-3/CleanShot 2026-06-02 at 17.04.46@2x.png" alt="右上角長曲名截圖">
+            <a href="assets/v0.3b10-3/CleanShot 2026-06-02 at 17.04.46@2x.png">CleanShot 2026-06-02 at 17.04.46@2x.png</a>
+            <small>右上角正在播放長曲名被裁切的參考截圖。</small>
+          </div>
+          <div class="asset-card">
+            <img src="assets/v0.3b10-3/截圖 2026-06-02 下午5.12.16.png" alt="小播放器長曲名截圖">
+            <a href="assets/v0.3b10-3/截圖 2026-06-02 下午5.12.16.png">截圖 2026-06-02 下午5.12.16.png</a>
+            <small>小播放器長曲名與跳轉按鈕重疊的參考截圖。</small>
+          </div>
+          <div class="asset-card">
+            <img src="assets/v0.3b10-3/CleanShot 2026-06-02 at 18.35.48@2x.png" alt="EQ 位置跑偏截圖">
+            <a href="assets/v0.3b10-3/CleanShot 2026-06-02 at 18.35.48@2x.png">CleanShot 2026-06-02 at 18.35.48@2x.png</a>
+            <small>Welcome EQ 位置仍跑偏的後續修正參考。</small>
+          </div>
+          <div class="asset-card">
+            <img src="assets/v0.3b10-3/截圖 2026-06-02 下午6.36.16.png" alt="小播放器暈邊截圖">
+            <a href="assets/v0.3b10-3/截圖 2026-06-02 下午6.36.16.png">截圖 2026-06-02 下午6.36.16.png</a>
+            <small>小播放器曲名暈邊與停靠位置調整參考。</small>
+          </div>
+          <div class="asset-card">
+            <img src="assets/v0.3b10-3/CleanShot 2026-06-02 at 19.19.34@2x.png" alt="EQ 放到時間右邊截圖">
+            <a href="assets/v0.3b10-3/CleanShot 2026-06-02 at 19.19.34@2x.png">CleanShot 2026-06-02 at 19.19.34@2x.png</a>
+            <small>EQ 移至樂曲時長右側的最終參考。</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="asset-version">
+        <h3>v0.3b6-3</h3>
+        <div class="asset-grid">
+          <div class="asset-card">
+            <a href="assets/v0.3b6-3/IMG_1589.HEIC">IMG_1589.HEIC</a>
+            <small>種子游標位置偏差回報照片。部分瀏覽器可能無法直接預覽 HEIC。</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="asset-version">
+        <h3>v0.3b8-3</h3>
+        <div class="asset-grid">
+          <div class="asset-card">
+            <img src="assets/v0.3b8-3/CleanShot 2026-06-02 at 02.10.45@2x.png" alt="版本選單佈局截圖">
+            <a href="assets/v0.3b8-3/CleanShot 2026-06-02 at 02.10.45@2x.png">CleanShot 2026-06-02 at 02.10.45@2x.png</a>
+            <small>版本選單文字與箭頭位置調整參考。</small>
+          </div>
+          <div class="asset-card">
+            <img src="assets/v0.3b8-3/CleanShot 2026-06-02 at 02.34.03@2x.png" alt="導覽列判斷錯誤截圖">
+            <a href="assets/v0.3b8-3/CleanShot 2026-06-02 at 02.34.03@2x.png">CleanShot 2026-06-02 at 02.34.03@2x.png</a>
+            <small>導覽列當前頁判斷錯誤修正參考。</small>
+          </div>
+          <div class="asset-card">
+            <img src="assets/v0.3b8-3/CleanShot 2026-06-02 at 02.36.03@2x.png" alt="雙層箭頭截圖">
+            <a href="assets/v0.3b8-3/CleanShot 2026-06-02 at 02.36.03@2x.png">CleanShot 2026-06-02 at 02.36.03@2x.png</a>
+            <small>雙層箭頭錯位修正參考。</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="asset-version">
+        <h3>v0.3b11-2</h3>
+        <div class="asset-grid">
+          <div class="asset-card">
+            <img src="assets/v0.3b11-2/截圖 2026-06-02 晚上10.10.15.png" alt="Safari 聯絡按鈕 hover 異常截圖">
+            <a href="assets/v0.3b11-2/截圖 2026-06-02 晚上10.10.15.png">截圖 2026-06-02 晚上10.10.15.png</a>
+            <small>Safari 中聯絡按鈕 hover 位移異常參考。</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="asset-version">
+        <h3>v0.3b12-1</h3>
+        <div class="asset-grid">
+          <div class="asset-card">
+            <a href="assets/v0.3b12-1/今日花語列表.txt">今日花語列表.txt</a>
+            <small>25 句今日花語祝福資料來源。</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="asset-version">
+        <h3>v0.3b12-8</h3>
+        <div class="asset-grid">
+          <div class="asset-card">
+            <img src="assets/v0.3b12-8/CleanShot 2026-06-03 at 08.49.57@2x.png" alt="活動文章展開後內文位移參考">
+            <a href="assets/v0.3b12-8/CleanShot 2026-06-03 at 08.49.57@2x.png">CleanShot 2026-06-03 at 08.49.57@2x.png</a>
+            <small>活動文章展開後第一行內文往下移的參考截圖。</small>
+          </div>
+          <div class="asset-card">
+            <img src="assets/v0.3b12-8/CleanShot 2026-06-03 at 08.56.21@2x.png" alt="新版活動格高度參考">
+            <a href="assets/v0.3b12-8/CleanShot 2026-06-03 at 08.56.21@2x.png">CleanShot 2026-06-03 at 08.56.21@2x.png</a>
+            <small>新增下拉式選單後，活動格總高度偏高的參考截圖。</small>
+          </div>
+          <div class="asset-card">
+            <img src="assets/v0.3b12-8/CleanShot 2026-06-03 at 08.56.45@2x.png" alt="舊版活動格高度參考">
+            <a href="assets/v0.3b12-8/CleanShot 2026-06-03 at 08.56.45@2x.png">CleanShot 2026-06-03 at 08.56.45@2x.png</a>
+            <small>未加入文章下拉式選單前的舊版活動格高度參考。</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="asset-version">
+        <h3>v0.3b12-9</h3>
+        <div class="asset-grid">
+          <div class="asset-card">
+            <img src="assets/v0.3b12-9/CleanShot 2026-06-03 at 09.44.04@2x.png" alt="活動紀錄分頁需求參考">
+            <a href="assets/v0.3b12-9/CleanShot 2026-06-03 at 09.44.04@2x.png">CleanShot 2026-06-03 at 09.44.04@2x.png</a>
+            <small>活動紀錄改為三則一頁、第四格改為分頁列的需求參考截圖。</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="asset-version">
+        <h3>v0.3b12-10</h3>
+        <div class="asset-grid">
+          <div class="asset-card">
+            <img src="assets/v0.3b12-10/截圖 2026-06-03 上午10.09.14.png" alt="網站停留在快速預覽狀態截圖">
+            <a href="assets/v0.3b12-10/截圖 2026-06-03 上午10.09.14.png">截圖 2026-06-03 上午10.09.14.png</a>
+            <small>活動紀錄分頁初始化錯誤造成全站功能未載入的參考截圖。</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="asset-version">
+        <h3>v0.3b12-11</h3>
+        <div class="asset-grid">
+          <div class="asset-card">
+            <img src="assets/v0.3b12-11/CleanShot 2026-06-03 at 10.50.44@2x.png" alt="活動紀錄總資訊列位置參考">
+            <a href="assets/v0.3b12-11/CleanShot 2026-06-03 at 10.50.44@2x.png">CleanShot 2026-06-03 at 10.50.44@2x.png</a>
+            <small>活動紀錄總資訊列與排序按鈕跑入第一張活動卡的參考截圖。</small>
+          </div>
+          <div class="asset-card">
+            <img src="assets/v0.3b12-11/CleanShot 2026-06-03 at 10.50.59@2x.png" alt="活動文章展開內文間距參考">
+            <a href="assets/v0.3b12-11/CleanShot 2026-06-03 at 10.50.59@2x.png">CleanShot 2026-06-03 at 10.50.59@2x.png</a>
+            <small>活動文章展開時內文與標題間距、動畫流暢度參考截圖。</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="asset-version">
+        <h3>v0.3b12-12</h3>
+        <div class="asset-grid">
+          <div class="asset-card">
+            <img src="assets/v0.3b12-12/CleanShot 2026-06-03 at 11.59.40@2x.png" alt="活動紀錄今日花語高度與排序參考">
+            <a href="assets/v0.3b12-12/CleanShot 2026-06-03 at 11.59.40@2x.png">CleanShot 2026-06-03 at 11.59.40@2x.png</a>
+            <small>今日花語固定高度、活動紀錄展開間距、排序與補位提示調整參考截圖。</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="asset-version">
+        <h3>v0.3b12a-1</h3>
+        <div class="asset-grid">
+          <div class="asset-card">
+            <img src="assets/v0.3b12a-1/CleanShot 2026-06-03 at 16.44.24@2x.png" alt="活動紀錄箭頭展開與摘要參考">
+            <a href="assets/v0.3b12a-1/CleanShot 2026-06-03 at 16.44.24@2x.png">CleanShot 2026-06-03 at 16.44.24@2x.png</a>
+            <small>活動紀錄改為箭頭展開、收合狀態顯示獨立簡介文字的參考截圖。</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="asset-version">
+        <h3>目前無法存取的附件</h3>
+        <ul class="missing-list">
+          <li>v0.2b1-1：八張舊版花語卡 PNG（blue、gray、green、indigo、orange、purple、red、yellow）原始路徑目前不存在。</li>
+          <li>v0.2b1-2：CleanShot 2026-05-28 at 02.26.50@2x.png，翻開全部按鈕位置參考截圖目前不存在。</li>
+          <li>v0.2b2-2：截圖 2026-05-28 凌晨3.29.35.png，淺色模式文字背景參考截圖目前不存在。</li>
+          <li>v0.2b3-2：CleanShot 2026-05-31 at 23.10.38@2x.png，園丁職位換行參考截圖目前不存在。</li>
+          <li>v0.3b1-2：CleanShot 2026-05-28 at 10.11.03@2x.png，開花中心位置參考截圖目前不存在。</li>
+          <li>v0.3b1-2：music+SFX.zip 原始壓縮檔目前不存在；其中仍可存取的單曲已另收錄於 v0.3b1-4。</li>
+          <li>v0.3b2-6：CleanShot 2026-05-28 at 18.27.05@2x.png，小播放器熱區參考截圖目前不存在。</li>
+          <li>v0.3b2-9：CleanShot 2026-05-29 at 08.16.29@2x.png，曲目花朵顯示範圍參考截圖目前不存在。</li>
+          <li>v0.3b6-7：CleanShot 2026-05-31 at 14.51.44@2x.png，專輯曲目文字不換行參考截圖目前不存在。</li>
+          <li>v0.3b6-7：CleanShot 2026-05-31 at 15.12.36、15.27.44、16.17.50 三張專輯曲目排版參考截圖目前不存在。</li>
+          <li>v0.3b6-7：CleanShot 2026-05-31 at 17.18.08 與 17.22.42，作曲者樣式與主播放器 EQ 位置參考截圖目前不存在。</li>
+          <li>v0.3b6-7：CleanShot 2026-05-31 at 18.04.50、18.04.41、18.06.47，Yellow／Orange 花朵裁切與 EQ 對齊參考截圖目前不存在。</li>
+          <li>v0.3b6-2：CleanShot 2026-05-31 at 21.04.28@2x.png，種子游標需求截圖目前不存在。</li>
+          <li>v0.3b6-5：CleanShot 2026-05-31 at 23.25.32@2x.png，Spotify Coming Soon 參考截圖目前不存在。</li>
+          <li>v0.3b8-3：CleanShot 2026-06-01 at 19.49.28、20.13.49、20.32.45 三張版本紀錄樣式參考截圖目前不存在。</li>
+          <li>v0.3b8-3：CleanShot 2026-06-01 at 22.51.54@2x.png，發布日期顏色參考截圖目前不存在。</li>
+        </ul>
+      </div>
+    </section>
+
+    <p class="note">後續維護規則：除非使用者要求不要記錄，之後每一次新的修改需求完成後，請依照「主版本 vX.XbX」與「修改版 -X」規則追加到此檔案。主版本時間線需優先參考網站本體「活動紀錄」中的版本紀錄；若使用者要求更新網站內版本號，也需同時判斷是否新增主版本群組。若只是同一主版本內的細修，則延續該主版本並增加最後的修改版序號。之後使用者傳來的任何截圖或檔案，若本機路徑可讀，需直接複製到該次修改對應的「更新日誌/assets/vX.XbX-X」資料夾，並同步更新附件索引。</p>
+  </main>
+</body>
+</html>
