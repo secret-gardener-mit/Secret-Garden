@@ -34,7 +34,7 @@
       rel="stylesheet"
     />
     <link rel="preload" as="image" href="assets/light-garden-bg.jpg" fetchpriority="high" />
-    <link rel="stylesheet" href="styles.css?v=20260609-02" />
+    <link rel="stylesheet" href="styles.css?v=20260610-01" />
   </head>
   <body data-theme="light">
     <div class="ambient-layer" aria-hidden="true">
@@ -53,6 +53,7 @@
         <a href="#garden">Seeds</a>
         <a href="#music">Music</a>
         <a href="#flowers">Flowers</a>
+        <a href="#messages">Messages</a>
         <a href="#gardeners">Gardeners</a>
         <a href="#diary">Diary</a>
         <a href="#contact">Contact</a>
@@ -94,11 +95,11 @@
         <div class="hero-shade" aria-hidden="true"></div>
         <div class="hero-content reveal">
           <img class="hero-logo" src="assets/secret-garden-logo-cropped.png" alt="" />
-          <p class="eyebrow">Immersive Experience</p>
+          <p class="eyebrow">A garden grown through music｜以音樂為筆，讓情緒化作花園中的色彩</p>
           <h1 id="hero-title">Secret Garden</h1>
-          <p class="hero-kicker">A garden grown through music.</p>
+          <p class="hero-kicker">Each blossom is a continuation of hope.</p>
           <p class="hero-copy">
-            以音樂為筆，讓情緒化作花園中的色彩。
+            每一朵花的綻放，都是希望的延續。
           </p>
           <div class="hero-actions">
             <a class="primary-action magnetic" href="#bloom">Enter the Garden</a>
@@ -257,8 +258,8 @@
       <section class="music section-panel" id="music" aria-labelledby="music-title">
         <div class="section-heading reveal">
           <p class="eyebrow">Color Music</p>
-          <h2 id="music-title">專輯試聽</h2>
-          <p>十首顏色音樂的聆聽入口。選一首樂曲，讓花園用這種聲音呼吸。</p>
+          <h2 id="music-title">專輯聆聽</h2>
+          <p>十首顏色音樂的試聽入口。選一首歌，讓花園用這種聲音呼吸。</p>
         </div>
         <div class="album-player reveal">
           <div class="album-console">
@@ -450,6 +451,41 @@
         </div>
       </section>
 
+      <section class="messages message-board section-panel" id="messages" aria-labelledby="messages-title">
+        <div class="section-heading reveal">
+          <p class="eyebrow">Garden Messages</p>
+          <h2 id="messages-title">留言板</h2>
+          <p>留下一句 1 至 200 字的心情，讓它在秘密花園裡被溫柔看見。</p>
+        </div>
+        <div class="message-board-layout">
+          <form class="message-form reveal" id="message-form">
+            <label for="message-input">寫下留言</label>
+            <textarea
+              id="message-input"
+              name="message"
+              minlength="1"
+              maxlength="200"
+              required
+              placeholder="把今天想留在花園裡的話寫下來。"
+            ></textarea>
+            <div class="message-form-footer">
+              <span id="message-count">0 / 200</span>
+              <button class="primary-action message-submit" type="submit">送出留言</button>
+            </div>
+            <p class="message-status" id="message-status" aria-live="polite"></p>
+          </form>
+          <div class="message-list-panel reveal">
+            <div class="message-list-heading">
+              <h3>花園留言</h3>
+              <button class="message-refresh" id="message-refresh" type="button">重新整理</button>
+            </div>
+            <div class="message-list" id="message-list" aria-live="polite">
+              <p class="message-empty">留言正在發芽中。</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section class="gardeners section-panel" id="gardeners" aria-labelledby="gardeners-title">
         <div class="section-heading reveal">
           <p class="eyebrow">Secret Gardeners</p>
@@ -496,7 +532,7 @@
                 <span class="version-link-copy">
                   <strong id="version-toggle-title">網站版本</strong>
                   <span class="version-link-inline">
-                    <small id="version-toggle-subtitle">v0.4b4a</small>
+                    <small id="version-toggle-subtitle">v0.5b1</small>
                     <i class="version-link-arrow" aria-hidden="true"></i>
                   </span>
                 </span>
@@ -504,13 +540,13 @@
             </div>
           </div>
           <div class="timeline reveal">
-            <article data-summary="2026 06月 將於醫院進行義演，包含現場演出、音樂聆聽與線上展間體驗。">
-              <time>醫院義演活動</time>
-              <p>「秘密花園」將計畫在醫院場所進行現場演出、音樂聆聽、「秘密花園」線上展間之體驗等等，我們將會持續更新最新消息，期待你的參與。</p>
+            <article data-summary="2026 06/25 將於輔大醫院進行義演，包含現場演出、音樂聆聽與線上展間體驗。">
+              <time>輔大醫院義演</time>
+              <p>「秘密花園」將在 2026 06/25（四）於 天主教輔仁大學附設醫院 進行義演。演出時間從中午12:30至下午13:30，總長一小時。義演包含：現場演出、音樂聆聽、「秘密花園」線上展間之體驗等等，我們將會持續更新最新消息，期待你的參與。</p>
             </article>
             <article data-summary="團隊多次進行義演曲目與技術彩排，持續調整演出流程與聲音細節。">
               <time>演出彩排</time>
-              <p>「秘密花園」團隊為了醫院的義演活動，多次在 國立臺北藝術大學 活動中心一樓B116實驗室 進行演出彩排。
+              <p>「秘密花園」團隊為了輔大醫院的義演活動，多次在 國立臺北藝術大學 活動中心一樓B116實驗室 進行演出彩排。
 
                 - 2026 05/25（15:00 ~ 17:00）：義演當天的曲目安排與時長規劃；演出曲目「Gray｜灰」排練；演出曲目「Near Light」排練。
 
@@ -569,6 +605,6 @@
       </div>
     </div>
     <div class="bloom-toast" id="bloom-toast" aria-live="polite"></div>
-    <script src="script.js?v=20260609-02"></script>
+    <script src="script.js?v=20260610-01"></script>
   </body>
 </html>

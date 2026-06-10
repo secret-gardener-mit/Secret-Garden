@@ -41,7 +41,17 @@ const versionToggleTitle = document.getElementById("version-toggle-title");
 const versionToggleSubtitle = document.getElementById("version-toggle-subtitle");
 const dailyPhrase = document.getElementById("daily-phrase");
 const dailyPhraseRandom = document.getElementById("daily-phrase-random");
-const CURRENT_SITE_VERSION = "v0.4b4a";
+const messageForm = document.getElementById("message-form");
+const messageInput = document.getElementById("message-input");
+const messageCount = document.getElementById("message-count");
+const messageStatus = document.getElementById("message-status");
+const messageList = document.getElementById("message-list");
+const messageRefresh = document.getElementById("message-refresh");
+const CURRENT_SITE_VERSION = "v0.5b1";
+const SUPABASE_URL = "https://suatoixeqmjmaojfuiwg.supabase.co";
+const SUPABASE_KEY = "sb_publishable_aWOjHvsUelALoPTgKgAsbw_VyXJq-YE";
+const SUPABASE_MESSAGES_TABLE = "garden_messages";
+const MESSAGE_LIMIT = 200;
 const albumNowTitle = document.getElementById("album-now-title");
 const albumNowMeta = document.getElementById("album-now-meta");
 const albumCurrentTime = document.getElementById("album-current-time");
@@ -1039,6 +1049,150 @@ function formatTime(seconds = 0) {
   const minutes = Math.floor(seconds / 60);
   const rest = Math.floor(seconds % 60).toString().padStart(2, "0");
   return `${minutes}:${rest}`;
+}
+
+const messageHeaders = {
+  apikey: SUPABASE_KEY,
+  Authorization: `Bearer ${SUPABASE_KEY}`
+};
+
+function setMessageStatus(text = "", type = "") {
+  if (!messageStatus) return;
+  messageStatus.textContent = text;
+  messageStatus.classList.toggle("is-error", type === "error");
+  messageStatus.classList.toggle("is-success", type === "success");
+}
+
+function updateMessageCount() {
+  if (!messageInput || !messageCount) return;
+  const count = messageInput.value.length;
+  messageCount.textContent = `${count} / ${MESSAGE_LIMIT}`;
+  messageCount.classList.toggle("is-over", count > MESSAGE_LIMIT);
+}
+
+function createMessageNotice(text) {
+  const notice = document.createElement("p");
+  notice.className = "message-empty";
+  notice.textContent = text;
+  return notice;
+}
+
+function createMessageCard(message) {
+  const card = document.createElement("article");
+  card.className = "message-card";
+
+  const content = document.createElement("p");
+  content.textContent = message.content || "";
+
+  const time = document.createElement("time");
+  const createdAt = message.created_at ? new Date(message.created_at) : null;
+  time.dateTime = message.created_at || "";
+  time.textContent = createdAt && !Number.isNaN(createdAt.getTime())
+    ? createdAt.toLocaleString("zh-TW", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit"
+      })
+    : "剛剛";
+
+  card.append(content, time);
+  return card;
+}
+
+function renderMessages(messages = []) {
+  if (!messageList) return;
+  if (!messages.length) {
+    messageList.replaceChildren(createMessageNotice("留言正在發芽中。"));
+    return;
+  }
+  messageList.replaceChildren(...messages.map(createMessageCard));
+}
+
+async function fetchGardenMessages() {
+  if (!messageList) return;
+  messageList.replaceChildren(createMessageNotice("正在讀取花園留言..."));
+
+  try {
+    const endpoint = `${SUPABASE_URL}/rest/v1/${SUPABASE_MESSAGES_TABLE}`;
+    const params = new URLSearchParams({
+      select: "id,content,created_at",
+      order: "created_at.desc",
+      limit: "50"
+    });
+    const response = await fetch(`${endpoint}?${params.toString()}`, {
+      headers: messageHeaders
+    });
+
+    if (!response.ok) {
+      throw new Error(`Supabase read failed: ${response.status}`);
+    }
+
+    const messages = await response.json();
+    renderMessages(Array.isArray(messages) ? messages : []);
+    setMessageStatus("");
+  } catch (error) {
+    console.error(error);
+    messageList.replaceChildren(createMessageNotice("暫時無法讀取留言，請稍後再試。"));
+  }
+}
+
+async function submitGardenMessage(event) {
+  event.preventDefault();
+  if (!messageInput) return;
+
+  const content = messageInput.value.trim();
+  if (content.length < 1) {
+    setMessageStatus("請先寫下一句留言。", "error");
+    return;
+  }
+  if (content.length > MESSAGE_LIMIT) {
+    setMessageStatus(`留言最多 ${MESSAGE_LIMIT} 字。`, "error");
+    return;
+  }
+
+  const submitButton = messageForm?.querySelector("button[type='submit']");
+  submitButton?.setAttribute("disabled", "true");
+  setMessageStatus("正在把留言種進花園...", "");
+
+  try {
+    const response = await fetch(`${SUPABASE_URL}/rest/v1/${SUPABASE_MESSAGES_TABLE}`, {
+      method: "POST",
+      headers: {
+        ...messageHeaders,
+        "Content-Type": "application/json",
+        Prefer: "return=representation"
+      },
+      body: JSON.stringify({ content })
+    });
+
+    if (!response.ok) {
+      throw new Error(`Supabase insert failed: ${response.status}`);
+    }
+
+    messageInput.value = "";
+    updateMessageCount();
+    setMessageStatus("留言已經留在花園裡。", "success");
+    await fetchGardenMessages();
+  } catch (error) {
+    console.error(error);
+    setMessageStatus("留言送出失敗，請確認留言資料表與權限設定。", "error");
+  } finally {
+    submitButton?.removeAttribute("disabled");
+  }
+}
+
+function initMessageBoard() {
+  if (!messageForm || !messageInput || !messageList) return;
+  updateMessageCount();
+  messageInput.addEventListener("input", updateMessageCount);
+  messageForm.addEventListener("submit", submitGardenMessage);
+  messageRefresh?.addEventListener("click", () => {
+    playTone(659.25, "#ffd166");
+    fetchGardenMessages();
+  });
+  fetchGardenMessages();
 }
 
 function updateAlbumUI() {
@@ -2259,6 +2413,7 @@ dailyPhraseRandom?.addEventListener("click", () => {
 });
 
 window.addEventListener("resize", fitDailyPhraseFont);
+initMessageBoard();
 
 resizeCanvas();
 drawPetals();

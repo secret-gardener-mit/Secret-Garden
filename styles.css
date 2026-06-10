@@ -1165,6 +1165,7 @@ body[data-theme="light"] .wide-copy span {
 .bloom-experience,
 .music,
 .flowers,
+.messages,
 .gardeners,
 .diary,
 .contact {
@@ -2887,6 +2888,221 @@ body[data-theme="light"] .card-face strong {
   object-fit: cover;
 }
 
+.messages {
+  background:
+    radial-gradient(circle at 18% 18%, rgba(78, 205, 196, 0.13), transparent 30%),
+    radial-gradient(circle at 82% 72%, rgba(255, 175, 204, 0.12), transparent 32%),
+    #081310;
+}
+
+body[data-theme="light"] .messages {
+  background:
+    radial-gradient(circle at 18% 18%, rgba(105, 154, 134, 0.18), transparent 30%),
+    radial-gradient(circle at 82% 72%, rgba(215, 121, 127, 0.16), transparent 32%),
+    #fff8ef;
+}
+
+.message-board-layout {
+  width: min(1120px, 100%);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(280px, 0.86fr) minmax(320px, 1.14fr);
+  gap: 22px;
+  align-items: start;
+}
+
+.message-form,
+.message-list-panel {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 248, 236, 0.06);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(18px);
+}
+
+body[data-theme="light"] .message-form,
+body[data-theme="light"] .message-list-panel {
+  border-color: rgba(71, 83, 63, 0.18);
+  background: rgba(255, 251, 246, 0.72);
+  box-shadow: 0 18px 48px rgba(95, 79, 55, 0.14);
+}
+
+.message-form {
+  padding: 26px;
+}
+
+.message-form label,
+.message-list-heading h3 {
+  margin: 0;
+  color: var(--gold);
+  font-family: "Noto Serif TC", serif;
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.message-form textarea {
+  width: 100%;
+  min-height: 170px;
+  margin-top: 14px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(4, 12, 11, 0.42);
+  color: var(--ink);
+  font: 500 16px/1.8 "Noto Serif TC", serif;
+  resize: vertical;
+  outline: none;
+  transition: border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
+}
+
+body[data-theme="light"] .message-form textarea {
+  background: rgba(255, 255, 255, 0.68);
+  color: var(--ink);
+}
+
+.message-form textarea:focus {
+  border-color: color-mix(in srgb, var(--gold), white 18%);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--gold), transparent 84%);
+}
+
+.message-form textarea::placeholder {
+  color: color-mix(in srgb, var(--muted), transparent 18%);
+}
+
+.message-form-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+#message-count {
+  color: var(--muted);
+  font-family: "Inter", sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+#message-count.is-over,
+.message-status.is-error {
+  color: #ff9d9d;
+}
+
+body[data-theme="light"] #message-count.is-over,
+body[data-theme="light"] .message-status.is-error {
+  color: #9b3b3b;
+}
+
+.message-submit {
+  min-height: 44px;
+  padding: 0 20px;
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.message-submit:disabled {
+  opacity: 0.55;
+  cursor: wait;
+}
+
+.message-status {
+  min-height: 1.5em;
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.message-status.is-success {
+  color: var(--aqua);
+}
+
+.message-list-panel {
+  overflow: hidden;
+}
+
+.message-list-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 22px 24px;
+  border-bottom: 1px solid var(--line);
+}
+
+.message-refresh {
+  min-height: 38px;
+  padding: 0 16px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(255, 248, 236, 0.08);
+  color: var(--ink);
+  cursor: pointer;
+  font-weight: 800;
+  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+}
+
+body[data-theme="light"] .message-refresh {
+  background: rgba(255, 255, 255, 0.64);
+}
+
+.message-refresh:hover,
+.message-refresh:focus-visible {
+  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--gold), transparent 18%);
+  outline: none;
+}
+
+.message-list {
+  display: grid;
+  gap: 12px;
+  max-height: 520px;
+  overflow: auto;
+  padding: 18px;
+}
+
+.message-card {
+  padding: 16px 18px;
+  border: 1px solid color-mix(in srgb, var(--line), transparent 8%);
+  border-radius: 8px;
+  background:
+    radial-gradient(circle at 86% 12%, color-mix(in srgb, var(--gold), transparent 88%), transparent 32%),
+    rgba(255, 248, 236, 0.045);
+}
+
+body[data-theme="light"] .message-card {
+  background:
+    radial-gradient(circle at 86% 12%, rgba(200, 134, 25, 0.12), transparent 32%),
+    rgba(255, 255, 255, 0.54);
+}
+
+.message-card p {
+  margin: 0;
+  color: var(--ink);
+  font-family: "Noto Serif TC", serif;
+  font-size: 17px;
+  line-height: 1.8;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.message-card time {
+  display: block;
+  margin-top: 10px;
+  color: var(--muted);
+  font-family: "Inter", sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.message-empty {
+  margin: 0;
+  color: var(--muted);
+  font-family: "Noto Serif TC", serif;
+  font-size: 17px;
+}
+
 .gardeners {
   background:
     radial-gradient(circle at 72% 12%, rgba(255, 209, 102, 0.13), transparent 28%),
@@ -4155,6 +4371,7 @@ html.performance-lite body.scroll-optimizing .theme-toggle-button::after {
   .bloom-experience,
   .music,
   .flowers,
+  .messages,
   .gardeners,
   .diary,
   .contact {
@@ -4397,6 +4614,7 @@ html.performance-lite body.scroll-optimizing .theme-toggle-button::after {
   .bloom-experience,
   .music,
   .flowers,
+  .messages,
   .gardeners,
   .diary,
   .contact,
@@ -4717,6 +4935,7 @@ html.performance-lite body.scroll-optimizing .theme-toggle-button::after {
   .bloom-experience,
   .music,
   .flowers,
+  .messages,
   .gardeners,
   .diary,
   .contact,
@@ -5068,6 +5287,39 @@ html.performance-lite body.scroll-optimizing .theme-toggle-button::after {
     font-size: 13px;
   }
 
+  .message-board-layout {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .message-form,
+  .message-list-panel {
+    border-radius: 14px;
+  }
+
+  .message-form {
+    padding: 20px;
+  }
+
+  .message-form textarea {
+    min-height: 128px;
+    font-size: 15px;
+  }
+
+  .message-list-heading {
+    padding: 18px;
+  }
+
+  .message-list {
+    max-height: none;
+    padding: 14px;
+  }
+
+  .message-submit,
+  .message-refresh {
+    min-height: 42px;
+  }
+
   .diary-layout {
     gap: 14px;
   }
@@ -5294,8 +5546,8 @@ html.performance-lite body.scroll-optimizing .theme-toggle-button::after {
 
   .nav-links {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    grid-auto-rows: 34px;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-auto-rows: 32px;
     align-items: stretch;
     justify-items: stretch;
     gap: 4px 5px;
@@ -5311,7 +5563,7 @@ html.performance-lite body.scroll-optimizing .theme-toggle-button::after {
     min-width: 0;
     width: 100%;
     padding: 0 4px;
-    font-size: clamp(10px, 2.75vw, 12px);
+    font-size: clamp(9px, 2.45vw, 11px);
     line-height: 1;
   }
 
@@ -6109,6 +6361,9 @@ html.performance-lite body.scroll-optimizing .theme-toggle-button::after {
   .version-item,
   .diary-feature,
   .gardeners article,
+  .message-form,
+  .message-list-panel,
+  .message-card,
   .contact-links a,
   .contact-links button
 ) {
@@ -6122,6 +6377,9 @@ html.performance-lite body.scroll-optimizing .theme-toggle-button::after {
   .version-item,
   .diary-feature,
   .gardeners article,
+  .message-form,
+  .message-list-panel,
+  .message-card,
   .contact-links a,
   .contact-links button
 ) :where(h2, h3, h4, p, strong, small, em, span) {

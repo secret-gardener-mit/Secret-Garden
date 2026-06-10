@@ -22,7 +22,7 @@
     <meta name="theme-color" content="#f6efe4" />
     <title>網站版本紀錄｜Secret Garden</title>
     <link rel="icon" type="image/png" href="assets/favicon.png" />
-    <link rel="stylesheet" href="styles.css?v=20260609-02" />
+    <link rel="stylesheet" href="styles.css?v=20260610-01" />
   </head>
   <body class="version-page" data-theme="light">
     <div class="ambient-layer" aria-hidden="true">
@@ -37,7 +37,7 @@
       <section class="version-page-hero" aria-labelledby="version-page-title">
         <p class="eyebrow">Website Version</p>
         <h1 id="version-page-title">網站版本紀錄</h1>
-        <p>目前版本 <strong>v0.4b4a</strong>。點開箭頭即可查看每一次更新內容。</p>
+        <p>目前版本 <strong>v0.5b1</strong>。點開箭頭即可查看每一次更新內容。</p>
       </section>
 
       <section class="version-archive version-page-archive is-open" id="version-page-archive" aria-label="網站版本紀錄">
@@ -57,11 +57,21 @@
         </div>
         <div class="version-panel" id="version-page-panel">
           <div class="version-panel-inner timeline version-page-list">
-            <article class="version-item"><div class="version-item-heading"><h3>v0.4b4a</h3><time class="version-item-date">2026 06/10</time></div><p>- 將「專輯聆聽」更名為「專輯試聽」
+            <article class="version-item"><div class="version-item-heading"><h3>v0.5b1</h3><time class="version-item-date">2026 06/10</time></div><p>- 新增「留言板」功能區，位置放在「花語圖鑑卡」之後、「花園的園丁們」之前，讓訪客可以在秘密花園中留下 1 至 200 字的留言，也能瀏覽其他使用者留下的內容。
+
+                    - 導覽列新增 Messages 入口，桌機與行動裝置版都可直接跳轉至留言板；手機版導覽列同步調整為可容納新增項目的兩排行動排版。
+
+                    - 串接 Supabase 作為留言儲存端，使用公開 API 讀取最近留言、送出新留言與手動重新整理留言列表。留言送出後會自動清空輸入框並重新載入留言。
+
+                    - 補上留言板的狀態提示、字數計數、送出中狀態與錯誤訊息，若資料表或權限尚未設定完成，使用者會看到明確的送出或讀取失敗提示。
+
+                    - 新增留言板專用視覺樣式：桌機版採左右雙欄，行動裝置版改為上下排列，並讓留言內容保留使用者輸入的換行與自然斷行。
+                  </p></article>
+             <article class="version-item"><div class="version-item-heading"><h3>v0.4b4a</h3><time class="version-item-date">2026 06/10</time></div><p>- 將「專輯聆聽」更名為「專輯試聽」
                    - 將歌曲「Secret Flower（勿忘我）」更名為「Hope Flower（希望之花）」
                    - 修正了「活動紀錄」中的一些資訊錯誤。
                   </p></article>
-            <article class="version-item"><div class="version-item-heading"><h3>v0.4b4</h3><time class="version-item-date">2026 06/09</time></div><p>- 微調行動裝置版右下角深淺色切換小花的位置，讓它更靠近底部，同時保留與底部導覽列之間的安全距離。
+            <article class="version-item"><div class="version-item-heading"><h3>v0.4b4</h3><time class="version-item-date">2026 06/05</time></div><p>- 微調行動裝置版右下角深淺色切換小花的位置，讓它更靠近底部，同時保留與底部導覽列之間的安全距離。
 
                     - 修正手機捲動頁面時，瀏覽器網址列收合與展開造成視窗高度連續變化，進而使落下花瓣被反覆重建、看起來高速亂飛的問題。現在花瓣在 resize 時會保留原本位置並平順縮放。
 
@@ -83,7 +93,6 @@
 
                     - 調整「活動紀錄」中的網站版本入口位置，將傳送門移至今日花語卡片下方，改為無框文字樣式，點擊文字、版本號或箭頭都會以新分頁開啟 version.html。
 
-                    - 將導覽頁面中的「Garden」改為「Seeds」以避免與「Enter Garden」按鍵混淆。
 
                     - 擴充「種下一些花」舞台的可種植範圍，讓原先上方空白區也可以被點擊並種下花朵。
 
