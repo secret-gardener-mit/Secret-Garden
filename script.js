@@ -274,7 +274,7 @@ const albumTracks = [
     flower: "assets/cards/flowers/gray-flower.png"
   },
   {
-    title: "Secret Flower",
+    title: "Hope Flower",
     subtitle: "勿忘我",
     composer: "李岳鴒 ZEROYUEH",
     duration: "4:24",
