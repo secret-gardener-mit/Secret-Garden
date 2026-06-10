@@ -4,8 +4,10 @@ const cursor = document.querySelector(".cursor-orb");
 const soundToggle = document.querySelector(".sound-toggle");
 const brandLabel = document.getElementById("brand-label");
 const bloomToast = document.getElementById("bloom-toast");
+const gardenSection = document.getElementById("garden");
 const livingGarden = document.getElementById("living-garden");
 const gardenWord = document.getElementById("garden-word");
+const gardenExpandToggle = document.getElementById("garden-expand-toggle");
 const themeToggle = document.getElementById("theme-toggle");
 const themeToggleLabel = document.getElementById("theme-toggle-label");
 const themeFlowerVisual = themeToggle?.querySelector(".theme-flower-visual");
@@ -39,7 +41,7 @@ const versionToggleTitle = document.getElementById("version-toggle-title");
 const versionToggleSubtitle = document.getElementById("version-toggle-subtitle");
 const dailyPhrase = document.getElementById("daily-phrase");
 const dailyPhraseRandom = document.getElementById("daily-phrase-random");
-const CURRENT_SITE_VERSION = "v0.4b1";
+const CURRENT_SITE_VERSION = "v0.4b4";
 const albumNowTitle = document.getElementById("album-now-title");
 const albumNowMeta = document.getElementById("album-now-meta");
 const albumCurrentTime = document.getElementById("album-current-time");
@@ -322,6 +324,7 @@ let themeFlowerBoostTimer;
 let themeFlowerFrameLastTime = 0;
 let petalFrameLastTime = 0;
 let scrollOptimizeTimer;
+let resizeFrame = 0;
 let activeColor = "#e94545";
 let activeWord = "勇氣";
 let themeTransitionTimer;
@@ -335,11 +338,16 @@ let flowerMusicActive = false;
 let lastBloomKey = "";
 let bloomInView = false;
 let miniPlayerCloseTimer;
+let miniPlayerMobileCloseTimer;
+let mobileSoundToggleHandledAt = 0;
 let musicHintDismissed = false;
 let brandLabelTimer;
 let brandLabelTarget = "Welcome";
 let brandLabelChanging = false;
 const usesHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+const mobileMediaQuery = window.matchMedia("(max-width: 760px)");
+const MOBILE_BLOOM_ENTRY_SCROLL_OFFSET = -90;
+const MOBILE_NAV_SCROLL_OFFSET = 20;
 const browserUA = navigator.userAgent || "";
 const isChromeBrowser = /Chrome\//.test(browserUA) && !/Edg\/|OPR\/|Opera\//.test(browserUA);
 const visualPerformanceLite = usesHover && !isChromeBrowser;
@@ -544,6 +552,11 @@ function smoothScrollToElement(target, options = {}) {
   const element = typeof target === "string" ? document.querySelector(target) : target;
   if (!element) return;
   beginScrollOptimization();
+  if (Number.isFinite(options.offset)) {
+    const targetTop = element.getBoundingClientRect().top + window.scrollY + options.offset;
+    window.scrollTo({ top: Math.max(0, targetTop), behavior: "smooth" });
+    return;
+  }
   element.scrollIntoView({
     behavior: "smooth",
     block: options.block || "start",
@@ -556,6 +569,21 @@ function smoothScrollToTop(top) {
   window.scrollTo({ top, behavior: "smooth" });
 }
 
+document.querySelectorAll(".nav-links a, .brand").forEach((link) => {
+  link.addEventListener("click", (event) => {
+    const href = link.getAttribute("href");
+    if (!href?.startsWith("#") || href.length <= 1) return;
+    const target = document.querySelector(href);
+    if (!target) return;
+    event.preventDefault();
+    smoothScrollToElement(target, mobileMediaQuery.matches ? { offset: MOBILE_NAV_SCROLL_OFFSET } : {});
+    if (window.location.hash !== href) {
+      history.pushState(null, "", href);
+    }
+    window.setTimeout(scheduleActiveSectionUpdate, 420);
+  });
+});
+
 function getPetalCount() {
   const petalDensity = visualPerformanceLite ? 32 : 18;
   const petalLimit = visualPerformanceLite ? 42 : 80;
@@ -566,7 +594,10 @@ function createPetalSet() {
   return Array.from({ length: getPetalCount() }, createPetal);
 }
 
-function resizeCanvas() {
+function resizeCanvas(options = {}) {
+  const previousWidth = width;
+  const previousHeight = height;
+  const previousPetals = petals;
   const dpr = Math.min(window.devicePixelRatio || 1, visualPerformanceLite ? 1.25 : 2);
   width = window.innerWidth;
   height = window.innerHeight;
@@ -575,7 +606,28 @@ function resizeCanvas() {
   canvas.style.width = `${width}px`;
   canvas.style.height = `${height}px`;
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  if (options.preservePetals && previousWidth && previousHeight && previousPetals.length) {
+    const xScale = width / previousWidth;
+    const yScale = height / previousHeight;
+    petals = previousPetals.map((petal) => ({
+      ...petal,
+      x: petal.x * xScale,
+      y: petal.y * yScale
+    }));
+    const targetCount = getPetalCount();
+    while (petals.length < targetCount) petals.push(createPetal());
+    if (petals.length > targetCount) petals = petals.slice(0, targetCount);
+    return;
+  }
   petals = createPetalSet();
+}
+
+function scheduleCanvasResize() {
+  if (resizeFrame) cancelAnimationFrame(resizeFrame);
+  resizeFrame = requestAnimationFrame(() => {
+    resizeFrame = 0;
+    resizeCanvas({ preservePetals: true });
+  });
 }
 
 function createPetal() {
@@ -736,6 +788,15 @@ function fadeResume(audio, duration = AUDIO_FADE_DURATION) {
       step();
     });
   }).catch(() => {});
+}
+
+function wait(ms = 0) {
+  return new Promise((resolve) => window.setTimeout(resolve, ms));
+}
+
+function playAudioWhenReady(audio) {
+  if (!audio || !audio.src) return Promise.resolve(false);
+  return audio.play().then(() => true).catch(() => false);
 }
 
 function ensureTrackWaveBars() {
@@ -1105,14 +1166,17 @@ function pauseBackgroundForBloom() {
 
 function openMiniPlayer() {
   window.clearTimeout(miniPlayerCloseTimer);
+  window.clearTimeout(miniPlayerMobileCloseTimer);
   dismissMusicHint();
   miniPlayer?.classList.remove("is-click-collapsed");
   miniPlayer?.classList.add("is-open");
   soundToggle?.setAttribute("aria-expanded", "true");
+  scheduleMobileMiniPlayerClose();
 }
 
 function closeMiniPlayer() {
   window.clearTimeout(miniPlayerCloseTimer);
+  window.clearTimeout(miniPlayerMobileCloseTimer);
   miniPlayer?.classList.remove("is-open");
   soundToggle?.setAttribute("aria-expanded", "false");
 }
@@ -1122,6 +1186,31 @@ function scheduleMiniPlayerClose() {
   window.clearTimeout(miniPlayerCloseTimer);
   miniPlayer?.classList.remove("is-click-collapsed");
   closeMiniPlayer();
+}
+
+function isMobileMiniPlayerMode() {
+  return !usesHover || mobileMediaQuery.matches;
+}
+
+function scheduleMobileMiniPlayerClose() {
+  window.clearTimeout(miniPlayerMobileCloseTimer);
+  if (!isMobileMiniPlayerMode() || !miniPlayer?.classList.contains("is-open")) return;
+  miniPlayerMobileCloseTimer = window.setTimeout(closeMiniPlayer, 5000);
+}
+
+function toggleMiniPlayerFromSoundToggle() {
+  if (usesHover && !mobileMediaQuery.matches) {
+    if (miniPlayer?.classList.contains("is-open")) {
+      miniPlayer.classList.add("is-click-collapsed");
+      closeMiniPlayer();
+    } else {
+      miniPlayer?.classList.remove("is-click-collapsed");
+      openMiniPlayer();
+    }
+    return;
+  }
+  if (miniPlayer?.classList.contains("is-open")) closeMiniPlayer();
+  else openMiniPlayer();
 }
 
 function isPlaybackControlTarget(target) {
@@ -1176,6 +1265,7 @@ backgroundAudio.addEventListener("pause", () => {
 backgroundAudio.addEventListener("seeking", () => syncBackgroundAnalysis({ restart: true }));
 
 soundPrevButton?.addEventListener("click", () => {
+  scheduleMobileMiniPlayerClose();
   userActivatedAudio = true;
   backgroundWanted = true;
   primeBackgroundAnalysisFromGesture({ restart: true, anticipatePlay: true });
@@ -1183,6 +1273,7 @@ soundPrevButton?.addEventListener("click", () => {
 });
 
 soundNextButton?.addEventListener("click", () => {
+  scheduleMobileMiniPlayerClose();
   userActivatedAudio = true;
   backgroundWanted = true;
   primeBackgroundAnalysisFromGesture({ restart: true, anticipatePlay: true });
@@ -1204,7 +1295,10 @@ albumNextButton?.addEventListener("click", () => {
 });
 
 albumPlayButton?.addEventListener("click", toggleBackgroundPlayback);
-miniPlayButton?.addEventListener("click", toggleBackgroundPlayback);
+miniPlayButton?.addEventListener("click", () => {
+  scheduleMobileMiniPlayerClose();
+  toggleBackgroundPlayback();
+});
 
 albumProgress?.addEventListener("input", () => {
   const duration = backgroundAudio.duration || 0;
@@ -1215,6 +1309,7 @@ albumProgress?.addEventListener("input", () => {
 });
 
 miniProgress?.addEventListener("input", () => {
+  scheduleMobileMiniPlayerClose();
   const duration = backgroundAudio.duration || 0;
   if (!duration) return;
   backgroundAudio.currentTime = (Number(miniProgress.value) / 1000) * duration;
@@ -1237,26 +1332,40 @@ if (miniPlayer) {
   miniPlayer.addEventListener("pointerleave", scheduleMiniPlayerClose);
 }
 
-soundToggle?.addEventListener("click", () => {
-  if (usesHover) {
-    if (miniPlayer?.classList.contains("is-open")) {
-      miniPlayer.classList.add("is-click-collapsed");
-      closeMiniPlayer();
-    } else {
-      miniPlayer?.classList.remove("is-click-collapsed");
-      openMiniPlayer();
-    }
+soundToggle?.addEventListener("pointerup", (event) => {
+  if (!isMobileMiniPlayerMode()) return;
+  event.preventDefault();
+  event.stopPropagation();
+  mobileSoundToggleHandledAt = Date.now();
+  toggleMiniPlayerFromSoundToggle();
+});
+
+soundToggle?.addEventListener("click", (event) => {
+  event.stopPropagation();
+  if (isMobileMiniPlayerMode() && Date.now() - mobileSoundToggleHandledAt < 450) {
     return;
   }
-  if (miniPlayer?.classList.contains("is-open")) closeMiniPlayer();
-  else openMiniPlayer();
+  toggleMiniPlayerFromSoundToggle();
 });
 
 miniPlayerTitle?.addEventListener("click", () => {
+  scheduleMobileMiniPlayerClose();
   smoothScrollToElement("#music");
   if (!usesHover) closeMiniPlayer();
 });
 musicTouchHint?.addEventListener("animationend", dismissMusicHint);
+
+miniPlayer?.addEventListener("pointerdown", (event) => {
+  if (!isMobileMiniPlayerMode() || !miniPlayer.classList.contains("is-open")) return;
+  event.stopPropagation();
+  scheduleMobileMiniPlayerClose();
+});
+
+document.addEventListener("pointerdown", (event) => {
+  if (!isMobileMiniPlayerMode() || !miniPlayer?.classList.contains("is-open")) return;
+  if (event.target?.closest?.("#mini-player")) return;
+  scheduleMobileMiniPlayerClose();
+});
 
 function openSpotifySoonModal() {
   spotifySoonModal?.classList.add("is-open");
@@ -1425,8 +1534,7 @@ const timelineSortToggle = timelineMeta.querySelector(".timeline-sort-toggle");
 
 if (timeline && timelineEntries.length) {
   timeline.insertBefore(timelineMeta, timeline.firstElementChild);
-  timeline.insertBefore(timelineEmptyNote, versionArchive || null);
-  timeline.insertBefore(timelinePager, versionArchive || null);
+  timeline.append(timelineEmptyNote, timelinePager);
 }
 
 function getOrderedTimelineEntries() {
@@ -1442,7 +1550,7 @@ function setTimelinePage(nextPage, direction = "next") {
   const orderedEntries = getOrderedTimelineEntries();
   const visibleEntries = orderedEntries.slice(start, end);
   const visible = new Set(visibleEntries);
-  const insertBeforeNode = timelineEmptyNote || timelinePager || versionArchive || null;
+  const insertBeforeNode = timelineEmptyNote || timelinePager || null;
 
   orderedEntries.forEach((item) => timeline?.insertBefore(item, insertBeforeNode));
 
@@ -1551,10 +1659,10 @@ function setAllVersionItems(open) {
   versionItems.forEach((item) => setVersionItemOpen(item, open));
 }
 
-function scrollDiaryIntoView() {
-  const diary = document.getElementById("diary");
-  if (!diary) return;
-  const top = Math.max(0, window.scrollY + diary.getBoundingClientRect().top - 12);
+function scrollVersionArchiveIntoView() {
+  const target = versionArchive || document.getElementById("diary");
+  if (!target) return;
+  const top = Math.max(0, window.scrollY + target.getBoundingClientRect().top - 72);
   smoothScrollToTop(top);
   scheduleActiveSectionUpdate();
 }
@@ -1563,7 +1671,7 @@ function setVersionArchiveMode(mode, options = {}) {
   const open = mode !== "closed";
   const allOpen = mode === "all";
   if (!open && options.scroll !== false) {
-    scrollDiaryIntoView();
+    scrollVersionArchiveIntoView();
   }
   versionArchive?.classList.toggle("is-open", open);
   versionArchive?.classList.toggle("is-all-open", allOpen);
@@ -1663,10 +1771,13 @@ document.querySelectorAll(".gate-flower").forEach((button) => {
     button.classList.add("blooming");
     window.setTimeout(() => button.classList.remove("blooming"), 620);
     const color = button.style.getPropertyValue("--tone");
+    const bloomKey = button.dataset.bloom;
     playTone(button.dataset.tone, color);
-    showToast(`${button.dataset.name} entrance opened`);
-    smoothScrollToElement("#garden");
-    window.setTimeout(() => plantFlower(color, button.dataset.name), 680);
+    showToast(`${button.dataset.name} 正在綻放`);
+    smoothScrollToElement(mobileMediaQuery.matches ? document.getElementById("bloom-title") || "#bloom" : "#bloom", mobileMediaQuery.matches ? { offset: MOBILE_BLOOM_ENTRY_SCROLL_OFFSET } : {});
+    window.setTimeout(() => {
+      if (bloomKey) setBloomChoice(bloomKey, { playToneFeedback: false });
+    }, 520);
   });
 });
 
@@ -1682,12 +1793,21 @@ document.querySelectorAll(".seed").forEach((button) => {
   });
 });
 
+gardenExpandToggle?.addEventListener("click", (event) => {
+  event.stopPropagation();
+  const expanded = !gardenSection?.classList.contains("is-garden-expanded");
+  gardenSection?.classList.toggle("is-garden-expanded", expanded);
+  gardenExpandToggle.setAttribute("aria-pressed", String(expanded));
+  gardenExpandToggle.setAttribute("aria-label", expanded ? "縮小種花區域" : "放大種花區域");
+});
+
 livingGarden.addEventListener("pointerdown", (event) => {
+  if (event.target.closest?.("#garden-expand-toggle")) return;
   const rect = livingGarden.getBoundingClientRect();
   const x = ((event.clientX - rect.left) / rect.width) * 100;
   const y = 100 - ((event.clientY - rect.top) / rect.height) * 100;
   playTone(260 + Math.random() * 360, activeColor);
-  plantFlower(activeColor, activeWord, Math.max(5, Math.min(95, x)), Math.max(5, Math.min(72, y)));
+  plantFlower(activeColor, activeWord, Math.max(5, Math.min(95, x)), Math.max(5, Math.min(95, y)));
 });
 
 document.querySelectorAll(".track[data-track]").forEach((track) => {
@@ -1761,7 +1881,7 @@ if (flipAllButton) {
   updateFlipAllButton();
 }
 
-function setBloomChoice(key = "green", { playSfx = true, startTrack = true } = {}) {
+async function setBloomChoice(key = "green", { playSfx = true, startTrack = true, triggerDelay = 0, playToneFeedback = false } = {}) {
   if (!bloomLab || !bloomMessage || !bloomPlant || !bloomCard) return;
   const choice = bloomChoices[key] || bloomChoices.green;
   const bloomPetals = bloomPlant.querySelectorAll(".bloom-flower span");
@@ -1812,6 +1932,19 @@ function setBloomChoice(key = "green", { playSfx = true, startTrack = true } = {
     playBackground({ restart: true });
   };
 
+  const revealBloom = () => {
+    if (lastBloomKey !== key) return;
+    if (playToneFeedback) playTone(choice.tone, choice.color);
+    bloomMessage.style.animation = "";
+    bloomPlant.classList.add("is-blooming");
+    window.setTimeout(() => {
+      if (lastBloomKey !== key) return;
+      bloomCard.classList.add("show");
+      bloomCard.setAttribute("aria-hidden", "false");
+      bloomCard.setAttribute("tabindex", "0");
+    }, 1500);
+  };
+
   if (startTrack && trackIndex !== undefined) {
     userActivatedAudio = true;
     backgroundWanted = true;
@@ -1824,26 +1957,22 @@ function setBloomChoice(key = "green", { playSfx = true, startTrack = true } = {
     if (!backgroundAudio.paused) fadePause(backgroundAudio).then(syncSoundButton);
   }
 
+  if (triggerDelay > 0) {
+    await wait(triggerDelay);
+    if (lastBloomKey !== key) return;
+  }
+
   if (playSfx && choice.bloom) {
     bloomSfxAudio.src = choice.bloom;
     bloomSfxAudio.onended = startSelectedTrack;
-    bloomSfxAudio.play().catch(startSelectedTrack);
+    const started = await playAudioWhenReady(bloomSfxAudio);
+    if (lastBloomKey !== key) return;
+    revealBloom();
+    if (!started) startSelectedTrack();
   } else {
+    revealBloom();
     startSelectedTrack();
   }
-
-  if (playSfx) playTone(choice.tone, choice.color);
-
-  window.setTimeout(() => {
-    bloomMessage.style.animation = "";
-    bloomPlant.classList.add("is-blooming");
-  }, 30);
-
-  window.setTimeout(() => {
-    bloomCard.classList.add("show");
-    bloomCard.setAttribute("aria-hidden", "false");
-    bloomCard.setAttribute("tabindex", "0");
-  }, 1500);
 }
 
 if (bloomLab) {
@@ -1856,7 +1985,7 @@ if (bloomLab) {
 
   document.querySelectorAll(".bloom-seed").forEach((seed) => {
     seed.addEventListener("click", () => {
-      setBloomChoice(seed.dataset.bloom);
+      setBloomChoice(seed.dataset.bloom, { triggerDelay: 200 });
     });
   });
 }
@@ -1950,15 +2079,11 @@ function scheduleInitialBackgroundPlayback() {
   window.setTimeout(start, 900);
 }
 
-scheduleInitialBackgroundPlayback();
-
 window.addEventListener(
   "pointerdown",
   (event) => {
+    if (!backgroundAudio.src && !isPlaybackControlTarget(event.target)) return;
     primeBackgroundAnalysisFromGesture({ anticipatePlay: backgroundAudio.paused });
-    if (backgroundWanted && backgroundAudio.paused && !isPlaybackControlTarget(event.target)) {
-      playBackground();
-    }
   },
   { once: true }
 );
@@ -2053,6 +2178,49 @@ function normalizeDailyPhrase(phrase) {
     .trim();
 }
 
+function fitDailyPhraseFont() {
+  if (!dailyPhrase) return;
+  const feature = dailyPhrase.closest(".diary-feature");
+  if (!feature) return;
+
+  if (!mobileMediaQuery.matches) {
+    feature.style.removeProperty("--diary-quote-font-size");
+    return;
+  }
+
+  const featureStyle = getComputedStyle(feature);
+  const inlinePadding = Number.parseFloat(featureStyle.paddingLeft) + Number.parseFloat(featureStyle.paddingRight);
+  const availableWidth = Math.max(160, feature.clientWidth - inlinePadding);
+  const availableHeight = Math.max(82, dailyPhrase.clientHeight || feature.clientHeight * 0.36);
+  const measuringCanvas = fitDailyPhraseFont.canvas || (fitDailyPhraseFont.canvas = document.createElement("canvas"));
+  const measureContext = measuringCanvas.getContext("2d");
+  const minSize = 24;
+  const maxSize = 42;
+
+  const textFits = (size) => {
+    measureContext.font = `700 ${size}px "Noto Serif TC", "Cormorant Garamond", serif`;
+    if (size * 1.35 * 2 > availableHeight + 3) return false;
+    return dailyPhrases.every((phrase) => {
+      const lines = normalizeDailyPhrase(phrase).split("\n").filter(Boolean);
+      if (lines.length > 2) return false;
+      if (lines.length > 1) {
+        return lines.every((line) => measureContext.measureText(line).width <= availableWidth);
+      }
+      const width = measureContext.measureText(lines[0] || "").width;
+      return width <= availableWidth * 1.92;
+    });
+  };
+
+  let chosenSize = minSize;
+  for (let size = maxSize; size >= minSize; size -= 1) {
+    if (textFits(size)) {
+      chosenSize = size;
+      break;
+    }
+  }
+  feature.style.setProperty("--diary-quote-font-size", `${chosenSize}px`);
+}
+
 function setDailyPhrase(index, animated = false) {
   if (!dailyPhrase || dailyPhrases.length === 0) return;
   dailyPhraseIndex = ((index % dailyPhrases.length) + dailyPhrases.length) % dailyPhrases.length;
@@ -2074,6 +2242,8 @@ function setDailyPhrase(index, animated = false) {
 }
 
 setDailyPhrase(dailyPhraseIndex);
+fitDailyPhraseFont();
+document.fonts?.ready?.then(fitDailyPhraseFont);
 
 dailyPhraseRandom?.addEventListener("click", () => {
   if (dailyPhrases.length < 2) {
@@ -2088,9 +2258,11 @@ dailyPhraseRandom?.addEventListener("click", () => {
   playTone(659.25, "#ffafcc");
 });
 
+window.addEventListener("resize", fitDailyPhraseFont);
+
 resizeCanvas();
 drawPetals();
-window.addEventListener("resize", resizeCanvas);
+window.addEventListener("resize", scheduleCanvasResize, { passive: true });
 
 ensureTrackWaveBars();
 updateTrackWaves();

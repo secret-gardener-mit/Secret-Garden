@@ -85,6 +85,32 @@
       white-space: pre-line;
     }
 
+    .entry-asset-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      width: fit-content;
+      margin-top: 14px;
+      padding: 7px 12px;
+      border: 1px solid rgba(214, 167, 47, 0.48);
+      border-radius: 999px;
+      background: rgba(214, 167, 47, 0.13);
+      color: #111;
+      font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+      font-size: 12px;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .entry-asset-link::after {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-top: 2px solid currentColor;
+      border-right: 2px solid currentColor;
+      transform: rotate(45deg);
+    }
+
     .note {
       margin-top: 40px;
       padding: 18px 20px;
@@ -643,6 +669,107 @@
       </article>
     </section>
 
+    <section class="version-group">
+      <h2 class="major-version">v0.4b2</h2>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.4b2-1</h3>
+        <p class="date">修改時間：2026 06/04</p>
+        <p class="details">進行 v0.4b2 行動裝置版第二階段大型優化。本次修改延續 v0.4b1 的手機專用排版原則，所有版面調整皆集中於窄螢幕 media query 與行動裝置互動邏輯中，避免影響桌面版既有排版。首頁底部八色花朵入口改為單行排列，避免手機直式螢幕中被拆成兩排；底部導覽列改為雙行格狀排列，使 About、Bloom、Garden、Music、Flowers、Gardeners、Diary、Contact 能一次看清楚，不再需要左右滑動。全站加入行動裝置觸控優化與 viewport 限制，停用快速雙擊縮放造成的誤觸放大。</p>
+        <p class="details">音樂播放系統在手機版中進一步調整：播放、暫停、上一首、下一首按鍵改為 CSS 幾何圖示，避免 iOS 或 Android 將控制圖示渲染成系統 emoji；右上角正在播放控制器改為點擊曲名開啟、再次點擊收合，並在手機版中加入 5 秒閒置自動收合邏輯。只要使用者在小播放器內操作按鍵或進度條，計時就會重置；若使用者轉而點擊網站其他位置，播放器會在閒置時間後自動收起。</p>
+        <p class="details">「花朵綻放」區域在手機版中重新配置八色種子與花朵顯示方式。八色種子按鈕改為單行並依欄位寬度縮放，與其同列的暫停／開始按鍵在手機版隱藏，避免擠壓色彩選擇器。使用者選擇顏色後，花朵本體縮小並放置於左側，祝福語與對應花語卡片則放置於右側上下排列，讓花朵、文字與卡片在直式螢幕中能同時呈現且不再讓頁面過度拉長；花語卡片仍保留點擊後前往「花語圖鑑卡」並開啟對應卡牌的互動。</p>
+        <p class="details">「種下一些花」的八色按鈕在手機版改為雙行排列，並同步使用首頁八色花朵的色號，讓 Red、Orange、Yellow、Green、Blue、Indigo、Violet、Gray 的顏色識別一致。「專輯聆聽」中的十首曲目卡在手機版改為雙欄顯示，並調整曲名、中文曲名、作曲者與時間的字級及空間，使曲目資訊能在較窄的卡片中保持可讀。「花語圖鑑卡」在手機版改為雙欄排列，並修正翻開後圖片與卡牌外框之間的空隙，使卡面圖片貼合外框尺寸。</p>
+        <p class="details">「活動紀錄」中的今日花語加入手機版統一字級測量機制：系統會以所有花語中最長的祝福語作為基準，計算出一個能容納全部祝福語的共同字級，避免短句變得過大、長句被裁切或每句文字大小不一致。網站版本紀錄在手機版收合時，頁面回捲位置改為「網站版本／網站版本紀錄」該列，而非整個活動紀錄區塊開頭。最後，「合作與聯絡」四個按鈕在手機版改為橫向排列，使 Email、Instagram、YouTube、Spotify 能在一列中呈現。本次同步將網站內目前版本更新為 v0.4b2，並收錄使用者提供的九張行動版參考截圖。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.4b2-2</h3>
+        <p class="date">修改時間：2026 06/04</p>
+        <p class="details">針對 v0.4b2 手機版進行第二輪細修。手機版左上角品牌區在隱藏 Welcome／Secret Garden 文字後，原本仍保留過寬背景，本次將背景收斂為只包住 Logo 的小型區塊，避免在窄螢幕中遮住頁面標題。首頁音樂提示文字從「觸碰以控制音樂」改為「點按以控制音樂」，移除上方箭頭，並將提示位置上移到右上角正在播放欄位下方，讓提示更貼近實際互動目標。首頁八色花朵入口也向上移動並縮短可用寬度，降低與右下角深淺色切換小花互相遮擋的機率；手機版底部導覽列則由膠囊形改為帶圓角的方形外框，使雙行導覽更穩定。</p>
+        <p class="details">重新整理手機版小音樂控制器與播放按鈕。播放、暫停、上一首、下一首按鍵改以更接近桌機版的純 CSS 幾何圖示呈現，並調整中心定位，避免在部分行動裝置上圖示看起來偏移，且不再依賴系統 emoji。花朵綻放區域進一步壓縮手機版高度：標題、副標與彩色花朵位置上移，副標在手機版會於第一個句號後換行；進入花朵綻放後，花朵、祝福語與花語卡片尺寸都更緊湊，減少下方空白，讓整個體驗更容易在一個手機螢幕內被看見。</p>
+        <p class="details">「種下一些花」區域同步加入手機版與桌機版皆可使用的放大／縮小功能。新按鈕放在 Memory／當前種花字詞旁邊，以全螢幕角落符號表示；點擊後會暫時隱藏該區標題與副標，並把種花舞台放大成主要視覺區域，再次點擊則恢復原本排版。手機版的種花副標同樣在第一個句號後換行，八色種子按鈕縮小並改為未選取時呈現中性外觀，只有選取後才顯示對應顏色，讓目前使用者選擇更明確。本次也收錄使用者提供的八張手機版細修參考截圖至 v0.4b2-2 附件資料夾。</p>
+      </article>
+    </section>
+
+    <section class="version-group">
+      <h2 class="major-version">v0.4b3</h2>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.4b3-1</h3>
+        <p class="date">修改時間：2026 06/04</p>
+        <p class="details">針對 v0.4b3 進行行動裝置版第三輪細修。本次修改仍以手機版為主要範圍，並盡量避免影響桌機版既有排版。手機版右上角正在播放按鈕與展開後的小音樂控制器提高不透明度，底部導覽列也同步提高背景濃度，降低控制器與導覽列在淺色或複雜背景上與文字互相卡住的狀況。右上角正在播放按鈕在小控制器已開啟時，再次點按即可直接收合，讓手機版操作更直覺。手機版右下角深淺色切換小花移除「深色／淺色」文字標籤，首頁八色小花入口則上移到兩個主按鈕下方，避免與深淺色切換小花互相遮擋。</p>
+        <p class="details">重新整理「花朵綻放」手機版中的花朵顯示邏輯。彩色花朵與綻放後的花朵都改為以整體群組方式縮放，花瓣、花蕊與莖不再依不同手機寬度被單獨拉開或位移，降低花朵在不同螢幕比例下解體的問題。選色後的花朵、祝福語與花語小卡位置調整到框內更接近中央的位置，小花卡尺寸放大，並修正圖片與卡框沒有置中的問題。上方八色種子的選取外框距離也縮小，避免外圈超出控制欄邊界。</p>
+        <p class="details">「種下一些花」的放大／縮小按鈕移除圓形外框，保留單純的角落圖示，桌機版與手機版皆同步調整。淺色模式中的「今日花語」祝福大字改為與「今日花語」標題相同的深灰綠色，讓淺色背景下的文字更容易閱讀。本次同步將網站目前版本更新為 v0.4b3，並將使用者提供的五張手機版細修參考截圖歸檔至 v0.4b3-1 附件資料夾。</p>
+      </article>
+    </section>
+
+    <section class="version-group">
+      <h2 class="major-version">v0.4b4</h2>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.4b4-1</h3>
+        <p class="date">修改時間：2026 06/05</p>
+        <p class="details">針對行動裝置版進行第四輪細修。右下角深淺色切換小花的位置再次向下微調，讓它比 v0.4b3 更靠近底部，同時仍避開底部導覽列與系統安全區，減少它遮住頁面內容的情況。</p>
+        <p class="details">修正手機或平板瀏覽器來回捲動時，落下花瓣會突然高速亂飛的問題。原本行動瀏覽器在網址列收合與展開時會連續觸發視窗 resize，而網站每次 resize 都會重新隨機生成全部花瓣，因此視覺上像是花瓣被加速打散。本次改為在 resize 時保留既有花瓣，依照新視窗尺寸平順縮放位置，並透過動畫影格節流 resize 處理，讓捲動期間花瓣維持穩定飄落。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.4b4-2</h3>
+        <p class="date">修改時間：2026 06/07</p>
+        <p class="details">修正網站部分文字在卡片或欄位中靠近邊界時被裁切的問題。依使用者提供的專輯曲目卡截圖，右上角作曲者資訊在某些螢幕寬度下會超出卡片可視範圍，因此本次將曲目卡文字區改為依卡片邊界保留安全範圍：作曲者欄位會在曲目序號與右側邊界之間自動取得可用寬度，必要時允許自然換行；曲名、語言與時間欄位也加入最大寬度與邊界保護，降低其他卡片文字被裁掉的機率。此修改不更動目前主版本號，只作為 v0.4b4 的同版細修紀錄。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.4b4-3</h3>
+        <p class="date">修改時間：2026 06/07</p>
+        <p class="details">修正「種下一些花」放大／縮小按鈕在縮小狀態下，兩個箭頭角標靠得太近、視覺上像是卡在一起的問題。這次將縮小狀態的雙箭頭拉開，讓桌面版與行動裝置版都更容易辨識目前按鈕代表縮回畫面。</p>
+        <p class="details">調整手機版從首頁八色小花入口跳轉到「花朵綻放」時的捲動定位。原本跳到整個 Bloom 章節頂端，手機直式畫面會被標題與副標題吃掉太多高度，導致使用者看不到互動框下半部。現在手機版會優先定位到花朵互動框本身，讓花朵、花語與卡片區域更快進入視野；桌面版仍維持原本跳到章節開頭的行為。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.4b4-4</h3>
+        <p class="date">修改時間：2026 06/07</p>
+        <p class="details">依使用者提供的新參考圖，重新繪製「種下一些花」放大／縮小按鈕的縮小狀態圖示。原本以裁切邊框與位移做出的縮小圖示，在實際顯示時仍容易變成小方框或兩個角標靠得太近。本次改為兩個真正獨立的 L 型角標：上方角標與下方角標都朝向中間，中央保留可見空隙，讓縮小含義更接近參考圖，同時保留既有的金色、hover 狀態與切換動畫。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.4b4-5</h3>
+        <p class="date">修改時間：2026 06/07</p>
+        <p class="details">再次微調「種下一些花」放大／縮小按鈕的縮小狀態圖示。依使用者最新截圖，兩個 L 型角標雖已朝向中間，但距離仍希望更分開；本次加寬圖示畫布並調整角標定位，使兩個角標之間留出更明顯的空隙，同時保留原本的金色與切換動畫。</p>
+        <p class="details">針對手機版「花朵綻放」有花狀態進行高度壓縮。使用者標示出互動框上方與下方留白過多，導致手機直式畫面難以一次看清整個 Bloom 區域；本次降低有花狀態的場景最小高度、縮短上下 padding、壓縮格線列高與間距，並小幅縮放花朵與花語卡尺寸，讓花、祝福語與卡片更集中在同一個畫面中。桌面版排版不受此調整影響。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.4b4-6</h3>
+        <p class="date">修改時間：2026 06/07</p>
+        <p class="details">延續前一版手機版 Bloom 區塊的高度壓縮，將尚未進入花園的介紹狀態、以及進入花園後尚未選色的八色花瓣預覽狀態，都同步套用與已開花狀態相近的緊湊高度。這讓手機版「花朵綻放」區域在進入前、預覽中、實際開花後的高度更一致，不會因狀態不同突然變回舊版較高的互動框。</p>
+        <p class="details">調整手機版首頁八色小花入口的捲動定位。使用者點按首頁底部八色小花後，現在會優先將「花朵綻放」標題對齊到螢幕頂端，讓使用者清楚知道已進入 Bloom 區域，再接續看到下方的種子選擇與花朵互動框。</p>
+        <p class="details">重新校準手機版「花朵綻放」中的花瓣與花蕊中心。前一輪壓縮互動框高度後，花瓣群組在部分比例下又出現與花蕊錯位的情況；本次微調花瓣的旋轉起點與向外展開距離，讓彩色預覽花與實際綻放花都更穩定地以花蕊為中心排列。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.4b4-7</h3>
+        <p class="date">修改時間：2026 06/07</p>
+        <p class="details">微調手機版首頁八色小花入口跳轉至「花朵綻放」時的捲動位置。上一版已改為對齊 Bloom 標題，但在部分手機瀏覽器中仍可能讓標題貼近螢幕頂端而被切到；本次加入上方安全距離，讓跳轉後的標題位置再低一點，提升可讀性。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.4b4-8</h3>
+        <p class="date">修改時間：2026 06/07</p>
+        <p class="details">將手機版底部導覽列與上方導覽列的章節跳轉邏輯改為由網站統一控制，不再依賴瀏覽器預設錨點定位。所有導覽連結現在都會套用與首頁八色小花跳往「花朵綻放」相同的上方安全距離，避免點擊 About、Bloom、Garden、Music、Flowers、Gardeners、Diary、Contact 後，章節標題或重要內容貼到螢幕頂端而被切掉或看不清楚。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.4b4-9</h3>
+        <p class="date">修改時間：2026 06/09</p>
+        <p class="details">依使用者在手機版提供的截圖，微調導覽列章節跳轉的手機版定位。前一版所有導覽都套用與首頁八色入口相同的安全距離，雖可避免切到標題，但部分頁面會讓標題位置偏低、下方內容較難在同一畫面中閱讀；本次將導覽列專用 offset 與首頁八色入口 offset 分開，讓透過導覽進入各頁時，章節標題更靠近螢幕上方，同時保留首頁八色小花跳往 Bloom 時避免切字的安全距離。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.4b4-10</h3>
+        <p class="date">修改時間：2026 06/09</p>
+        <p class="details">依使用者提供的活動紀錄截圖，重新配置「網站版本」傳送門。原本版本入口以卡片形式固定在右側活動列表與分頁控制器下方，容易占用活動紀錄視覺重心；本次將入口移到左側「今日花語」大卡下方，使其底部與右側分頁控制器對齊。視覺上移除版本入口外框與背景，只保留「網站版本」、目前版本號與細箭頭文字型連結；標題色改為與活動標題相同的金黃色，版本號改為活動簡介使用的灰色，且點擊整個文字列都會以新分頁開啟 version.html。將導覽頁面中的「Garden」改為「Seeds」以避免與「Enter Garden」按鍵混淆。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.4b4-11</h3>
+        <p class="date">修改時間：2026 06/09</p>
+        <p class="details">擴充「種下一些花」舞台的可種植範圍。原本舞台上方一段空白區因點擊座標被限制在較低的範圍內，即使視覺上仍屬於種植區，也無法成功種下花朵；本次放寬種植座標上限，讓紅框標示的上方區域也能正常種花。
+
+手機版「種下一些花」區域整體再縮小約 20%，只作用於行動裝置排版，不影響桌面版與其他區塊。此調整壓縮標題、色彩按鈕、舞台高度、文字與花朵尺寸，讓手機直式畫面更容易一次看清楚種花舞台。
+
+更新 version.html 底部，新增「詳細版本紀錄」文字入口與下拉式箭頭風格的小箭頭，點擊後可前往完整的「更新日誌.html」。
+
+優化「更新日誌」附件索引：附件區會依版本號排序，並且若某個修改版已有對應附件，該修改版文字區會自動出現「查看附件」按鈕，方便從更新說明直接跳到參考截圖或檔案。</p>
+      </article>
+    </section>
+
     <section class="asset-section">
       <h2>附件與參考素材索引</h2>
       <p>以下素材已依版本號複製到「更新日誌/assets」中。若檔案顯示為缺失，代表該截圖或素材的原始本機路徑目前已不存在，無法從工作區再次取回。</p>
@@ -906,6 +1033,237 @@
       </div>
 
       <div class="asset-version">
+        <h3>v0.4b2-1</h3>
+        <div class="asset-grid">
+          <div class="asset-card">
+            <img src="assets/v0.4b2-1/IMG_1621.PNG" alt="首頁行動版八色花與播放器參考">
+            <a href="assets/v0.4b2-1/IMG_1621.PNG">IMG_1621.PNG</a>
+            <small>首頁八色花單行、底部導覽雙行與手機播放器控制參考。</small>
+          </div>
+          <div class="asset-card">
+            <img src="assets/v0.4b2-1/IMG_1622.PNG" alt="花朵綻放種子單行參考">
+            <a href="assets/v0.4b2-1/IMG_1622.PNG">IMG_1622.PNG</a>
+            <small>花朵綻放頁八色種子單行與隱藏同列播放鍵參考。</small>
+          </div>
+          <div class="asset-card">
+            <img src="assets/v0.4b2-1/IMG_1623.PNG" alt="花朵祝福與花卡手機排版參考">
+            <a href="assets/v0.4b2-1/IMG_1623.PNG">IMG_1623.PNG</a>
+            <small>花朵、祝福語與花語卡片在手機版中的重新排列參考。</small>
+          </div>
+          <div class="asset-card">
+            <img src="assets/v0.4b2-1/IMG_1624.PNG" alt="線上花園種子雙行參考">
+            <a href="assets/v0.4b2-1/IMG_1624.PNG">IMG_1624.PNG</a>
+            <small>線上花園 Red、Orange 等種子按鈕雙行與色號同步參考。</small>
+          </div>
+          <div class="asset-card">
+            <img src="assets/v0.4b2-1/IMG_1625.PNG" alt="專輯聆聽曲目雙欄參考">
+            <a href="assets/v0.4b2-1/IMG_1625.PNG">IMG_1625.PNG</a>
+            <small>專輯聆聽手機版主播放器與曲目卡雙欄排版參考。</small>
+          </div>
+          <div class="asset-card">
+            <img src="assets/v0.4b2-1/IMG_1626.PNG" alt="花語圖鑑卡雙欄參考">
+            <a href="assets/v0.4b2-1/IMG_1626.PNG">IMG_1626.PNG</a>
+            <small>花語圖鑑卡手機版雙欄與卡片圖片貼合外框參考。</small>
+          </div>
+          <div class="asset-card">
+            <img src="assets/v0.4b2-1/IMG_1627.JPG" alt="今日花語長句顯示參考">
+            <a href="assets/v0.4b2-1/IMG_1627.JPG">IMG_1627.JPG</a>
+            <small>今日花語長祝福語在手機版中的字級與框內顯示參考。</small>
+          </div>
+          <div class="asset-card">
+            <img src="assets/v0.4b2-1/IMG_1628.PNG" alt="網站版本紀錄手機版收合參考">
+            <a href="assets/v0.4b2-1/IMG_1628.PNG">IMG_1628.PNG</a>
+            <small>網站版本紀錄展開後收合回版本列的位置參考。</small>
+          </div>
+          <div class="asset-card">
+            <img src="assets/v0.4b2-1/IMG_1629.PNG" alt="合作聯絡按鈕手機排列參考">
+            <a href="assets/v0.4b2-1/IMG_1629.PNG">IMG_1629.PNG</a>
+            <small>合作與聯絡區四個按鈕在手機版橫向排列的參考。</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="asset-version">
+        <h3>v0.4b2-2</h3>
+        <div class="asset-grid">
+          <div class="asset-card">
+            <img src="assets/v0.4b2-2/CleanShot 2026-06-04 at 16.12.04@2x.png" alt="手機版左上角 Logo 背景修正參考">
+            <a href="assets/v0.4b2-2/CleanShot 2026-06-04 at 16.12.04@2x.png">CleanShot 2026-06-04 at 16.12.04@2x.png</a>
+            <small>手機版左上角 Logo 背景不應延伸到隱藏文字區域的參考。</small>
+          </div>
+          <div class="asset-card">
+            <img src="assets/v0.4b2-2/IMG_1635.PNG" alt="手機版首頁提示文字與八色花位置參考">
+            <a href="assets/v0.4b2-2/IMG_1635.PNG">IMG_1635.PNG</a>
+            <small>首頁音樂提示、八色花朵與底部導覽形狀調整參考。</small>
+          </div>
+          <div class="asset-card">
+            <img src="assets/v0.4b2-2/IMG_1642.PNG" alt="手機版迷你播放器按鈕置中參考">
+            <a href="assets/v0.4b2-2/IMG_1642.PNG">IMG_1642.PNG</a>
+            <small>手機版小音樂控制器按鈕置中與控制圖示樣式參考。</small>
+          </div>
+          <div class="asset-card">
+            <img src="assets/v0.4b2-2/截圖 2026-06-04 下午3.39.34.png" alt="桌機版播放器圖示參考">
+            <a href="assets/v0.4b2-2/截圖 2026-06-04 下午3.39.34.png">截圖 2026-06-04 下午3.39.34.png</a>
+            <small>播放、暫停、上一首與下一首按鈕改回簡潔圖示的參考。</small>
+          </div>
+          <div class="asset-card">
+            <img src="assets/v0.4b2-2/IMG_1637.PNG" alt="花朵綻放手機版高度參考一">
+            <a href="assets/v0.4b2-2/IMG_1637.PNG">IMG_1637.PNG</a>
+            <small>花朵綻放手機版標題、彩色花與內容高度調整參考。</small>
+          </div>
+          <div class="asset-card">
+            <img src="assets/v0.4b2-2/IMG_1638.PNG" alt="花朵綻放手機版高度參考二">
+            <a href="assets/v0.4b2-2/IMG_1638.PNG">IMG_1638.PNG</a>
+            <small>花朵綻放後花朵、祝福語與花語卡片位置調整參考。</small>
+          </div>
+          <div class="asset-card">
+            <img src="assets/v0.4b2-2/IMG_1639.PNG" alt="線上花園手機版種花區高度參考">
+            <a href="assets/v0.4b2-2/IMG_1639.PNG">IMG_1639.PNG</a>
+            <small>種下一些花手機版副標換行、八色按鈕縮小與舞台高度參考。</small>
+          </div>
+          <div class="asset-card">
+            <img src="assets/v0.4b2-2/IMG_1640.PNG" alt="線上花園放大模式參考">
+            <a href="assets/v0.4b2-2/IMG_1640.PNG">IMG_1640.PNG</a>
+            <small>種花區域新增放大／縮小模式的手機版參考。</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="asset-version">
+        <h3>v0.4b3-1</h3>
+        <div class="asset-grid">
+          <div class="asset-card">
+            <img src="assets/v0.4b3-1/IMG_1643.PNG" alt="手機版首頁控制器與導覽透明度參考">
+            <a href="assets/v0.4b3-1/IMG_1643.PNG">IMG_1643.PNG</a>
+            <small>手機版小音樂控制器、底部導覽列透明度與首頁八色小花位置調整參考。</small>
+          </div>
+          <div class="asset-card">
+            <img src="assets/v0.4b3-1/IMG_1644.PNG" alt="手機版彩色花朵置中與整體縮放參考">
+            <a href="assets/v0.4b3-1/IMG_1644.PNG">IMG_1644.PNG</a>
+            <small>花朵綻放中彩色花朵需置中且不解體的手機版參考。</small>
+          </div>
+          <div class="asset-card">
+            <img src="assets/v0.4b3-1/IMG_1646.PNG" alt="手機版花朵祝福與花卡置中參考">
+            <a href="assets/v0.4b3-1/IMG_1646.PNG">IMG_1646.PNG</a>
+            <small>花朵、祝福語與花語小卡在框內置中及花卡放大參考。</small>
+          </div>
+          <div class="asset-card">
+            <img src="assets/v0.4b3-1/IMG_1647.PNG" alt="種下一些花放大按鈕外框移除參考">
+            <a href="assets/v0.4b3-1/IMG_1647.PNG">IMG_1647.PNG</a>
+            <small>種下一些花中的放大／縮小圖示需移除圓形外框的參考。</small>
+          </div>
+          <div class="asset-card">
+            <img src="assets/v0.4b3-1/IMG_1648.PNG" alt="今日花語淺色模式文字顏色參考">
+            <a href="assets/v0.4b3-1/IMG_1648.PNG">IMG_1648.PNG</a>
+            <small>淺色模式今日花語祝福文字需與標題同色的參考。</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="asset-version">
+        <h3>v0.4b4-2</h3>
+        <div class="asset-grid">
+          <div class="asset-card">
+            <img src="assets/v0.4b4-2/PNG影像.PNG" alt="專輯曲目卡文字被裁切回報截圖">
+            <a href="assets/v0.4b4-2/PNG影像.PNG">PNG影像.PNG</a>
+            <small>使用者回報專輯曲目卡右上角作曲者資訊被卡片邊界裁切的參考截圖。</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="asset-version">
+        <h3>v0.4b4-3</h3>
+        <div class="asset-grid">
+          <div class="asset-card">
+            <img src="assets/v0.4b4-3/CleanShot 2026-06-07 at 15.53.53@2x.png" alt="種下一些花縮小按鈕箭頭過近參考截圖">
+            <a href="assets/v0.4b4-3/CleanShot 2026-06-07 at 15.53.53@2x.png">CleanShot 2026-06-07 at 15.53.53@2x.png</a>
+            <small>使用者回報種花區放大／縮小按鈕雙箭頭靠得太近的參考截圖。</small>
+          </div>
+          <div class="asset-card">
+            <img src="assets/v0.4b4-3/IMG_1670.PNG" alt="手機版首頁八色小花跳轉至花朵綻放定位參考截圖">
+            <a href="assets/v0.4b4-3/IMG_1670.PNG">IMG_1670.PNG</a>
+            <small>使用者回報手機版首頁八色小花跳轉後看不到花朵綻放區下半部的參考截圖。</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="asset-version">
+        <h3>v0.4b4-4</h3>
+        <div class="asset-grid">
+          <div class="asset-card">
+            <img src="assets/v0.4b4-4/CleanShot 2026-06-07 at 17.10.46@2x.png" alt="縮小按鈕現況參考截圖">
+            <a href="assets/v0.4b4-4/CleanShot 2026-06-07 at 17.10.46@2x.png">CleanShot 2026-06-07 at 17.10.46@2x.png</a>
+            <small>使用者回報縮小按鈕仍顯示為小方框、未符合預期樣式的參考截圖。</small>
+          </div>
+          <div class="asset-card">
+            <img src="assets/v0.4b4-4/CleanShot 2026-06-07 at 17.15.33@2x.png" alt="縮小按鈕 L 型角標目標樣式參考圖">
+            <a href="assets/v0.4b4-4/CleanShot 2026-06-07 at 17.15.33@2x.png">CleanShot 2026-06-07 at 17.15.33@2x.png</a>
+            <small>縮小按鈕目標樣式：兩個朝向中間且保留空隙的 L 型角標。</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="asset-version">
+        <h3>v0.4b4-5</h3>
+        <div class="asset-grid">
+          <div class="asset-card">
+            <img src="assets/v0.4b4-5/IMG_1672.jpg" alt="手機版花朵綻放區上下留白調整參考">
+            <a href="assets/v0.4b4-5/IMG_1672.jpg">IMG_1672.jpg</a>
+            <small>使用者標示手機版花朵綻放互動框上下空白過多，並要求縮小按鈕角標再分開的參考截圖。</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="asset-version">
+        <h3>v0.4b4-6</h3>
+        <div class="asset-grid">
+          <div class="asset-card">
+            <img src="assets/v0.4b4-6/IMG_1673.PNG" alt="手機版花朵綻放未進入花園狀態高度參考">
+            <a href="assets/v0.4b4-6/IMG_1673.PNG">IMG_1673.PNG</a>
+            <small>使用者指出手機版尚未進入花園的介紹狀態高度仍維持舊版，需要同步壓縮至新版高度的參考截圖。</small>
+          </div>
+          <div class="asset-card">
+            <img src="assets/v0.4b4-6/IMG_1674.PNG" alt="手機版八色花瓣預覽高度與花蕊位移參考">
+            <a href="assets/v0.4b4-6/IMG_1674.PNG">IMG_1674.PNG</a>
+            <small>使用者指出八色花瓣預覽狀態高度仍偏高，且花瓣與花蕊再次位移，需要重新校準的參考截圖。</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="asset-version">
+        <h3>v0.4b4-9</h3>
+        <div class="asset-grid">
+          <div class="asset-card">
+            <img src="assets/v0.4b4-9/IMG_1691.PNG" alt="手機版導覽列跳轉高度調整參考">
+            <a href="assets/v0.4b4-9/IMG_1691.PNG">IMG_1691.PNG</a>
+            <small>使用者指出手機版點擊導覽列後章節標題位置仍偏低，要求讓標題再靠近螢幕上方的參考截圖。</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="asset-version">
+        <h3>v0.4b4-10</h3>
+        <div class="asset-grid">
+          <div class="asset-card">
+            <img src="assets/v0.4b4-10/CleanShot 2026-06-09 at 14.41.54@2x.png" alt="活動紀錄網站版本傳送門移位參考">
+            <a href="assets/v0.4b4-10/CleanShot 2026-06-09 at 14.41.54@2x.png">CleanShot 2026-06-09 at 14.41.54@2x.png</a>
+            <small>使用者標示希望將「網站版本」入口移到今日花語大卡下方，並與右側分頁控制器底部對齊的參考截圖。</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="asset-version">
+        <h3>v0.4b4-11</h3>
+        <div class="asset-grid">
+          <div class="asset-card">
+            <img src="assets/v0.4b4-11/CleanShot 2026-06-09 at 16.48.45@2x.png" alt="種下一些花可種植範圍與手機版縮放參考">
+            <a href="assets/v0.4b4-11/CleanShot 2026-06-09 at 16.48.45@2x.png">CleanShot 2026-06-09 at 16.48.45@2x.png</a>
+            <small>使用者標示「種下一些花」舞台上方不可種植區域，並要求同步調整手機版種花區縮放比例的參考截圖。</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="asset-version">
         <h3>目前無法存取的附件</h3>
         <ul class="missing-list">
           <li>v0.2b1-1：八張舊版花語卡 PNG（blue、gray、green、indigo、orange、purple、red、yellow）原始路徑目前不存在。</li>
@@ -930,5 +1288,62 @@
 
     <p class="note">後續維護規則：除非使用者要求不要記錄，之後每一次新的修改需求完成後，請依照「主版本 vX.XbX」與「修改版 -X」規則追加到此檔案。主版本時間線需優先參考網站本體「活動紀錄」中的版本紀錄；若使用者要求更新網站內版本號，也需同時判斷是否新增主版本群組。若只是同一主版本內的細修，則延續該主版本並增加最後的修改版序號。之後使用者傳來的任何截圖或檔案，若本機路徑可讀，需直接複製到該次修改對應的「更新日誌/assets/vX.XbX-X」資料夾，並同步更新附件索引。</p>
   </main>
+  <script>
+    (() => {
+      const normalizeVersion = (version) => version.trim().replace(/\s+/g, "");
+      const slugVersion = (version) => normalizeVersion(version).replace(/[^a-z0-9]+/gi, "-").replace(/^-|-$/g, "");
+      const letterRank = (value) => value ? value.toLowerCase().charCodeAt(0) - 96 : 0;
+      const parseVersion = (version) => {
+        const text = normalizeVersion(version).replace(/^v/i, "");
+        const [main, minorRaw = "0"] = text.split("-");
+        const match = main.match(/^(\d+)\.(\d+)([a-z]?)(\d+)?([a-z]?)$/i);
+        if (!match) return [999, 999, 999, 999, 999, Number(minorRaw) || 0, text];
+        return [
+          Number(match[1]),
+          Number(match[2]),
+          letterRank(match[3]),
+          Number(match[4] || 0),
+          letterRank(match[5]),
+          Number(minorRaw) || 0,
+          text
+        ];
+      };
+      const compareVersions = (a, b) => {
+        const left = parseVersion(a);
+        const right = parseVersion(b);
+        for (let index = 0; index < left.length - 1; index += 1) {
+          if (left[index] !== right[index]) return left[index] - right[index];
+        }
+        return left[left.length - 1].localeCompare(right[right.length - 1], "zh-Hant", { numeric: true });
+      };
+      const assetSection = document.querySelector(".asset-section");
+      if (assetSection) {
+        const sections = Array.from(assetSection.querySelectorAll(".asset-version"));
+        const missing = sections.find((section) => section.querySelector(".missing-list"));
+        const assetVersions = sections.filter((section) => !section.querySelector(".missing-list"));
+        assetVersions.forEach((section) => {
+          const version = section.querySelector("h3")?.textContent.trim();
+          if (!version) return;
+          section.dataset.version = version;
+          section.id = `assets-${slugVersion(version)}`;
+        });
+        assetVersions
+          .sort((a, b) => compareVersions(a.dataset.version || "", b.dataset.version || ""))
+          .forEach((section) => assetSection.insertBefore(section, missing || null));
+        if (missing) assetSection.appendChild(missing);
+      }
+      document.querySelectorAll(".minor-entry").forEach((entry) => {
+        const version = entry.querySelector(".minor-version")?.textContent.trim();
+        if (!version || entry.querySelector(".entry-asset-link")) return;
+        const asset = document.getElementById(`assets-${slugVersion(version)}`);
+        if (!asset) return;
+        const link = document.createElement("a");
+        link.className = "entry-asset-link";
+        link.href = `#${asset.id}`;
+        link.textContent = "查看附件";
+        entry.appendChild(link);
+      });
+    })();
+  </script>
 </body>
 </html>
