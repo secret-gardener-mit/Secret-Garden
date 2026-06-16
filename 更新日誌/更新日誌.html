@@ -1241,6 +1241,21 @@
         <p class="details">暖身點擊同時會嘗試呼叫 ensureAudio 並 resume AudioContext，提升行動裝置在深連結開花時播放 bloom 音效的成功率。需注意部分瀏覽器只承認真實使用者手勢，程式模擬事件可能仍無法完全解除自動播放限制；既有的第一次互動補播機制仍保留作為後援。</p>
         <p class="details">同步更新 index.html 與 version.html 的資源快取參數為 20260616-b4-3，並在使用者版 version.html 的 v0.5b4 條目補充本次深連結音訊暖身修正。</p>
       </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b4-4</h3>
+        <p class="date">修改時間：2026 06/16</p>
+        <p class="details">依使用者要求暫時取消 v0.5b4 的「花朵綻放」八色直連網址功能，將網站本體退回新增 #red_bloom 等深連結之前的 v0.5b3 狀態。</p>
+        <p class="details">script.js 移除 bloom hash 解析、#色名_bloom 初始自動開花、hashchange 監聽、種子點擊同步改寫網址、深連結音效補播 pending 機制，以及 simulateBloomDeepLinkGesture 暖身點擊。手動點擊首頁八色小花與花朵綻放區種子仍維持原本的捲動、綻放動畫與音效流程。</p>
+        <p class="details">index.html、script.js 與 version.html 的網站版本顯示回復為 v0.5b3，資源快取參數回復為 20260615-b3-7；使用者版 version.html 移除 v0.5b4 條目，只保留到 v0.5b3。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b4-5</h3>
+        <p class="date">修改時間：2026 06/16</p>
+        <p class="details">重新啟用「花朵綻放」八色直連網址功能，但改為符合行動裝置音訊政策的入口流程。#red_bloom、#orange_bloom、#yellow_bloom、#green_bloom、#blue_bloom、#indigo_bloom、#purple_bloom、#violet_bloom 與 #gray_bloom 會先導向花朵綻放區，並停留在「歡迎來到秘密花園」與「進入花園」卡片。</p>
+        <p class="details">script.js 新增 pendingBloomEntryKey、getBloomKeyFromHash、getBloomHashForKey、updateBloomHash 與 prepareBloomDeepLinkEntry。深連結載入時只預選對應花色、清除既有開花狀態並顯示進入卡；真正播放開花音效、背景音樂與綻放動畫的 setBloomChoice 會等使用者點擊「進入花園」後才執行。</p>
+        <p class="details">「進入花園」按鈕現在會判斷 pendingBloomEntryKey：若存在深連結預選花色，就在使用者點擊事件當下直接播放該色綻放動畫，不需使用者再選種子；若沒有深連結，仍維持原本只是進入花園的行為。種子點擊也會同步更新網址 hash，方便複製花色網址。</p>
+        <p class="details">同步將網站目前版本重新提升為 v0.5b4，更新 index.html、script.js 與 version.html 的資源快取參數為 20260616-b4-5，並在使用者版 version.html 新增新版 v0.5b4 說明。</p>
+      </article>
     </section>
 
     <section class="asset-section">

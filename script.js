@@ -413,8 +413,7 @@ let backgroundWanted = true;
 let backgroundResumeTimer;
 let bloomPauseResumeTimer;
 let bloomLeaveTimer;
-let bloomDeepLinkTimer;
-let pendingBloomDeepLinkSfxKey = "";
+let pendingBloomEntryKey = "";
 let flowerMusicActive = false;
 let lastBloomKey = "";
 let bloomInView = false;
@@ -3130,7 +3129,6 @@ document.querySelectorAll(".gate-flower").forEach((button) => {
     playTone(button.dataset.tone, color);
     showToast(`${button.dataset.name} 正在綻放`);
     smoothScrollToElement(mobileMediaQuery.matches ? document.getElementById("bloom-title") || "#bloom" : "#bloom", mobileMediaQuery.matches ? { offset: MOBILE_BLOOM_ENTRY_SCROLL_OFFSET } : {});
-    updateBloomHash(bloomKey);
     window.setTimeout(() => {
       if (bloomKey) setBloomChoice(bloomKey, { playToneFeedback: false });
     }, 520);
@@ -3240,77 +3238,32 @@ function updateBloomHash(key, { replace = false } = {}) {
   history[replace ? "replaceState" : "pushState"](null, "", nextHash);
 }
 
-function simulateBloomDeepLinkGesture() {
-  const target = document.querySelector(".ambient-layer") || document.body || document.documentElement;
-  if (!target) return;
-  const x = Math.max(1, Math.min(window.innerWidth - 1, Math.round(window.innerWidth * 0.08)));
-  const y = Math.max(1, Math.min(window.innerHeight - 1, Math.round(window.innerHeight * 0.08)));
-  const baseOptions = {
-    bubbles: true,
-    cancelable: true,
-    composed: true,
-    clientX: x,
-    clientY: y
-  };
-
-  try {
-    target.dispatchEvent(new PointerEvent("pointerdown", {
-      ...baseOptions,
-      pointerId: 1,
-      pointerType: "touch",
-      isPrimary: true
-    }));
-  } catch {
-    target.dispatchEvent(new MouseEvent("mousedown", baseOptions));
-  }
-
-  target.dispatchEvent(new MouseEvent("mouseup", baseOptions));
-  target.dispatchEvent(new MouseEvent("click", baseOptions));
-
-  const context = ensureAudio();
-  if (context?.state === "suspended") {
-    context.resume().catch(() => {});
-  }
-}
-
-function openBloomDeepLink(key, { replaceHash = false, delay = 520 } = {}) {
-  if (!key || !bloomChoices[key]) return false;
-  simulateBloomDeepLinkGesture();
+function prepareBloomDeepLinkEntry(key, { replaceHash = false } = {}) {
+  if (!key || !bloomChoices[key] || !bloomLab) return false;
+  pendingBloomEntryKey = key;
+  const choice = bloomChoices[key];
   const bloomTarget = mobileMediaQuery.matches ? document.getElementById("bloom-title") || "#bloom" : "#bloom";
   const scrollOptions = mobileMediaQuery.matches ? { offset: MOBILE_BLOOM_ENTRY_SCROLL_OFFSET } : {};
-  smoothScrollToElement(bloomTarget, scrollOptions);
   updateBloomHash(key, { replace: replaceHash });
-  window.clearTimeout(bloomDeepLinkTimer);
-  bloomDeepLinkTimer = window.setTimeout(() => {
-    setBloomChoice(key, { triggerDelay: 160, queueSfxOnBlocked: true });
-  }, delay);
+  window.clearTimeout(bloomPauseResumeTimer);
+  window.clearTimeout(bloomLeaveTimer);
+  lastBloomKey = "";
+  flowerMusicActive = false;
+  bloomLab.classList.remove("entered", "has-bloom");
+  bloomLab.style.setProperty("--bloom-color", choice.color);
+  bloomMessage.textContent = "";
+  bloomMessage.style.animation = "none";
+  bloomPlant?.classList.remove("is-blooming");
+  bloomCard?.classList.remove("show");
+  bloomCard?.setAttribute("aria-hidden", "true");
+  bloomCard?.setAttribute("tabindex", "-1");
+  document.querySelectorAll(".bloom-seed").forEach((seed) => {
+    seed.classList.toggle("active", seed.dataset.bloom === key);
+  });
+  showToast("點擊進入花園，讓花朵綻放");
+  smoothScrollToElement(bloomTarget, scrollOptions);
   return true;
 }
-
-function queueBloomDeepLinkSfx(key) {
-  if (!key || !bloomChoices[key]?.bloom) return;
-  pendingBloomDeepLinkSfxKey = key;
-  showToast("點一下花園，播放開花聲音");
-}
-
-async function playPendingBloomDeepLinkSfx() {
-  const key = pendingBloomDeepLinkSfxKey;
-  const choice = bloomChoices[key];
-  if (!key || !choice?.bloom) return;
-  pendingBloomDeepLinkSfxKey = "";
-  bloomSfxAudio.pause();
-  clearAudioFade(bloomSfxAudio);
-  bloomSfxAudio.currentTime = 0;
-  bloomSfxAudio.onended = null;
-  bloomSfxAudio.src = choice.bloom;
-  setAudioVolume(bloomSfxAudio, 1);
-  const started = await playAudioWhenReady(bloomSfxAudio);
-  if (!started) pendingBloomDeepLinkSfxKey = key;
-}
-
-["pointerdown", "keydown", "touchstart"].forEach((eventName) => {
-  window.addEventListener(eventName, playPendingBloomDeepLinkSfx, { passive: true });
-});
 
 bloomCard?.addEventListener("click", () => {
   openFlowerCardFromBloom(bloomCard.dataset.bloomCard);
@@ -3338,7 +3291,7 @@ if (flipAllButton) {
   updateFlipAllButton();
 }
 
-async function setBloomChoice(key = "green", { playSfx = true, startTrack = true, triggerDelay = 0, playToneFeedback = false, queueSfxOnBlocked = false } = {}) {
+async function setBloomChoice(key = "green", { playSfx = true, startTrack = true, triggerDelay = 0, playToneFeedback = false } = {}) {
   if (!bloomLab || !bloomMessage || !bloomPlant || !bloomCard) return;
   const choice = bloomChoices[key] || bloomChoices.green;
   const bloomPetals = bloomPlant.querySelectorAll(".bloom-flower span");
@@ -3425,11 +3378,6 @@ async function setBloomChoice(key = "green", { playSfx = true, startTrack = true
     const started = await playAudioWhenReady(bloomSfxAudio);
     if (lastBloomKey !== key) return;
     revealBloom();
-    if (started) {
-      pendingBloomDeepLinkSfxKey = "";
-    } else if (queueSfxOnBlocked) {
-      queueBloomDeepLinkSfx(key);
-    }
     if (!started) startSelectedTrack();
   } else {
     revealBloom();
@@ -3440,6 +3388,12 @@ async function setBloomChoice(key = "green", { playSfx = true, startTrack = true
 if (bloomLab) {
   bloomLab.style.setProperty("--bloom-color", bloomChoices.green.color);
   startBloomButton?.addEventListener("click", () => {
+    if (pendingBloomEntryKey) {
+      const key = pendingBloomEntryKey;
+      pendingBloomEntryKey = "";
+      setBloomChoice(key, { playToneFeedback: true });
+      return;
+    }
     bloomLab.classList.add("entered");
     document.querySelectorAll(".bloom-seed").forEach((seed) => seed.classList.remove("active"));
     showToast("秘密花園已開啟");
@@ -3447,6 +3401,7 @@ if (bloomLab) {
 
   document.querySelectorAll(".bloom-seed").forEach((seed) => {
     seed.addEventListener("click", () => {
+      pendingBloomEntryKey = "";
       updateBloomHash(seed.dataset.bloom);
       setBloomChoice(seed.dataset.bloom, { triggerDelay: 200 });
     });
@@ -3455,7 +3410,7 @@ if (bloomLab) {
   const initialBloomDeepLink = getBloomKeyFromHash();
   if (initialBloomDeepLink) {
     window.setTimeout(() => {
-      openBloomDeepLink(initialBloomDeepLink, { replaceHash: true, delay: mobileMediaQuery.matches ? 620 : 500 });
+      prepareBloomDeepLinkEntry(initialBloomDeepLink, { replaceHash: true });
     }, 120);
   }
 }
@@ -3463,7 +3418,7 @@ if (bloomLab) {
 window.addEventListener("hashchange", () => {
   const bloomKey = getBloomKeyFromHash();
   if (!bloomKey) return;
-  openBloomDeepLink(bloomKey, { replaceHash: true });
+  prepareBloomDeepLinkEntry(bloomKey, { replaceHash: true });
 });
 
 bloomAudioToggle?.addEventListener("click", () => {

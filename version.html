@@ -22,7 +22,7 @@
     <meta name="theme-color" content="#f6efe4" />
     <title>網站版本紀錄｜Secret Garden</title>
     <link rel="icon" type="image/png" href="assets/favicon-secret-garden-max.png?v=20260603-01" />
-    <link rel="stylesheet" href="styles.css?v=20260616-b4-3" />
+    <link rel="stylesheet" href="styles.css?v=20260616-b4-5" />
   </head>
   <body class="version-page" data-theme="light">
     <div class="ambient-layer" aria-hidden="true">
@@ -57,11 +57,9 @@
         </div>
         <div class="version-panel" id="version-page-panel">
           <div class="version-panel-inner timeline version-page-list">
-            <article class="version-item"><div class="version-item-heading"><h3>v0.5b4</h3><time class="version-item-date">2026 06/16</time></div><p>- 新增「花朵綻放」八色花朵的獨立網址入口。可使用 #red_bloom、#orange_bloom、#yellow_bloom、#green_bloom、#blue_bloom、#indigo_bloom、#purple_bloom、#violet_bloom、#gray_bloom 直接進入對應花色；訪客開啟連結後會自動前往花朵綻放區域並播放該花色的綻放動畫。
+            <article class="version-item"><div class="version-item-heading"><h3>v0.5b4</h3><time class="version-item-date">2026 06/16</time></div><p>- 重新啟用「花朵綻放」八色花朵的獨立網址入口，可使用 #red_bloom、#orange_bloom、#yellow_bloom、#green_bloom、#blue_bloom、#indigo_bloom、#purple_bloom、#violet_bloom、#gray_bloom 直接進入對應花色。
 
-                    - 強化八色花朵獨立網址的開花音效播放：進入 #red_bloom 等網址時會同步嘗試播放對應開花音效；若瀏覽器限制自動播放，第一次互動時會補播該花色音效。
-
-                    - 深連結進場時會在自動捲動前先對背景空白區送出一次暖身點擊事件，並嘗試喚醒音訊系統，提升行動裝置播放開花音效的成功率。
+                    - 為符合行動瀏覽器的音訊播放限制，深連結不會立刻自動開花，而是先顯示「歡迎來到秘密花園」與「進入花園」按鈕；訪客點擊「進入花園」後，會直接播放對應顏色的開花音效、音樂與綻放動畫，不需要再選擇顏色。
                   </p></article>
             <article class="version-item"><div class="version-item-heading"><h3>v0.5b3</h3><time class="version-item-date">2026 06/14</time></div><p>- 新增「專輯聆聽」各曲目的獨立播放次數統計，串接 Supabase 的 song_plays 資料表，讀取 id、song_id、played_at 與 plays 欄位。
 
