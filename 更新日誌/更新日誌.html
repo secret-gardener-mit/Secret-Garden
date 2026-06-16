@@ -31,16 +31,66 @@
 
     body {
       margin: 0;
-      padding: 48px;
+      padding: 48px 48px 48px 220px;
       color: var(--ink);
       background: var(--paper);
       font-family: "Noto Serif TC", "Microsoft JhengHei", "PingFang TC", serif;
       line-height: 1.85;
     }
 
+    html {
+      scroll-behavior: smooth;
+    }
+
     main {
       max-width: 980px;
       margin: 0 auto;
+    }
+
+    .version-jump {
+      position: fixed;
+      top: 48px;
+      left: 28px;
+      bottom: 32px;
+      z-index: 10;
+      width: 148px;
+      padding: 16px 14px;
+      overflow: auto;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      border-radius: 8px;
+      background: rgba(255, 250, 240, 0.88);
+      box-shadow: 0 18px 38px rgba(61, 45, 18, 0.12);
+      backdrop-filter: blur(16px);
+    }
+
+    .version-jump strong {
+      display: block;
+      margin: 0 0 10px;
+      color: var(--gold);
+      font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+      font-size: 13px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .version-jump a {
+      display: block;
+      margin: 0 0 5px;
+      padding: 5px 8px;
+      border-radius: 6px;
+      color: #1d1d1d;
+      font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+      font-size: 12px;
+      font-weight: 800;
+      line-height: 1.35;
+      text-decoration: none;
+    }
+
+    .version-jump a:hover,
+    .version-jump a:focus-visible {
+      background: rgba(214, 167, 47, 0.16);
+      color: #000;
+      outline: none;
     }
 
     h1 {
@@ -64,6 +114,7 @@
 
     .major-version {
       margin: 0 0 20px;
+      scroll-margin-top: 28px;
       color: var(--gold);
       font-size: 30px;
       font-weight: 800;
@@ -222,15 +273,68 @@
       margin: 0 0 8px;
       word-break: break-word;
     }
+
+    @media (max-width: 1100px) {
+      body {
+        padding: 28px 22px 42px;
+      }
+
+      .version-jump {
+        position: sticky;
+        top: 0;
+        bottom: auto;
+        left: auto;
+        width: auto;
+        max-height: none;
+        margin: 0 0 28px;
+        padding: 12px;
+        white-space: nowrap;
+      }
+
+      .version-jump a {
+        display: inline-block;
+        margin: 0 4px 6px 0;
+      }
+    }
   </style>
 </head>
 <body>
+  <nav class="version-jump" aria-label="大版本快捷欄">
+    <strong>Versions</strong>
+    <a href="#v0-1a1">v0.1a1</a>
+    <a href="#v0-1a2">v0.1a2</a>
+    <a href="#v0-1b">v0.1b</a>
+    <a href="#v0-2b1">v0.2b1</a>
+    <a href="#v0-2b2">v0.2b2</a>
+    <a href="#v0-3b1">v0.3b1</a>
+    <a href="#v0-3b2">v0.3b2</a>
+    <a href="#v0-3b3t">v0.3b3t</a>
+    <a href="#v0-3b4">v0.3b4</a>
+    <a href="#v0-3b5">v0.3b5</a>
+    <a href="#v0-3b6">v0.3b6</a>
+    <a href="#v0-3b7t">v0.3b7t</a>
+    <a href="#v0-3b8">v0.3b8</a>
+    <a href="#v0-3b9">v0.3b9</a>
+    <a href="#v0-3b10">v0.3b10</a>
+    <a href="#v0-3b11">v0.3b11</a>
+    <a href="#v0-3b12">v0.3b12</a>
+    <a href="#v0-3b12a">v0.3b12a</a>
+    <a href="#v0-4b1">v0.4b1</a>
+    <a href="#v0-4b2">v0.4b2</a>
+    <a href="#v0-4b3">v0.4b3</a>
+    <a href="#v0-4b4">v0.4b4</a>
+    <a href="#v0-4b4a">v0.4b4a</a>
+    <a href="#v0-5b1">v0.5b1</a>
+    <a href="#v0-5b2">v0.5b2</a>
+    <a href="#v0-5b3">v0.5b3</a>
+    <a href="#v0-5b4">v0.5b4</a>
+  </nav>
   <main>
     <h1>秘密花園網站版本紀錄日誌</h1>
     <p class="intro">此檔案為獨立版本紀錄，不會影響網站程式碼。版本命名採用「vX.XbX-X」：前半段為網站主版本，最後的「-X」代表該主版本中的第幾次修改需求。每一次使用者提出的一則修改請求，皆視為一個修改版。主版本時間線以網站本體「活動紀錄」中的版本紀錄為校準來源；若對話記憶與網站內紀錄衝突，優先採用網站內紀錄。</p>
 
     <section class="version-group">
-      <h2 class="major-version">v0.1a1</h2>
+      <h2 class="major-version" id="v0-1a1">v0.1a1</h2>
       <article class="minor-entry">
         <h3 class="minor-version">v0.1a1-1</h3>
         <p class="date">修改時間：2026 05/10</p>
@@ -239,7 +343,7 @@
     </section>
 
     <section class="version-group">
-      <h2 class="major-version">v0.1a2</h2>
+      <h2 class="major-version" id="v0-1a2">v0.1a2</h2>
       <article class="minor-entry">
         <h3 class="minor-version">v0.1a2-1</h3>
         <p class="date">修改時間：2026 05/14</p>
@@ -248,7 +352,7 @@
     </section>
 
     <section class="version-group">
-      <h2 class="major-version">v0.1b</h2>
+      <h2 class="major-version" id="v0-1b">v0.1b</h2>
       <article class="minor-entry">
         <h3 class="minor-version">v0.1b-1</h3>
         <p class="date">修改時間：2026 05/27</p>
@@ -257,7 +361,7 @@
     </section>
 
     <section class="version-group">
-      <h2 class="major-version">v0.2b1</h2>
+      <h2 class="major-version" id="v0-2b1">v0.2b1</h2>
       <article class="minor-entry">
         <h3 class="minor-version">v0.2b1-1</h3>
         <p class="date">修改時間：2026 05/27</p>
@@ -276,7 +380,7 @@
     </section>
 
     <section class="version-group">
-      <h2 class="major-version">v0.2b2</h2>
+      <h2 class="major-version" id="v0-2b2">v0.2b2</h2>
       <article class="minor-entry">
         <h3 class="minor-version">v0.2b2-1</h3>
         <p class="date">修改時間：2026 05/28</p>
@@ -290,7 +394,7 @@
     </section>
 
     <section class="version-group">
-      <h2 class="major-version">v0.3b1</h2>
+      <h2 class="major-version" id="v0-3b1">v0.3b1</h2>
       <article class="minor-entry">
         <h3 class="minor-version">v0.3b1-2</h3>
         <p class="date">修改時間：2026 05/28</p>
@@ -334,7 +438,7 @@
     </section>
 
     <section class="version-group">
-      <h2 class="major-version">v0.3b2</h2>
+      <h2 class="major-version" id="v0-3b2">v0.3b2</h2>
       <article class="minor-entry">
         <h3 class="minor-version">v0.3b2-2</h3>
         <p class="date">修改時間：2026 05/28</p>
@@ -388,7 +492,7 @@
     </section>
 
     <section class="version-group">
-      <h2 class="major-version">v0.3b3t</h2>
+      <h2 class="major-version" id="v0-3b3t">v0.3b3t</h2>
       <article class="minor-entry">
         <h3 class="minor-version">v0.3b3t-1</h3>
         <p class="date">修改時間：2026 05/29</p>
@@ -397,7 +501,7 @@
     </section>
 
     <section class="version-group">
-      <h2 class="major-version">v0.3b4</h2>
+      <h2 class="major-version" id="v0-3b4">v0.3b4</h2>
       <article class="minor-entry">
         <h3 class="minor-version">v0.3b4-1</h3>
         <p class="date">修改時間：2026 05/29</p>
@@ -411,7 +515,7 @@
     </section>
 
     <section class="version-group">
-      <h2 class="major-version">v0.3b5</h2>
+      <h2 class="major-version" id="v0-3b5">v0.3b5</h2>
       <article class="minor-entry">
         <h3 class="minor-version">v0.3b5-1</h3>
         <p class="date">修改時間：2026 05/29</p>
@@ -425,7 +529,7 @@
     </section>
 
     <section class="version-group">
-      <h2 class="major-version">v0.3b6</h2>
+      <h2 class="major-version" id="v0-3b6">v0.3b6</h2>
       <article class="minor-entry">
         <h3 class="minor-version">v0.3b6-1</h3>
         <p class="date">修改時間：2026 05/31</p>
@@ -479,7 +583,7 @@
     </section>
 
     <section class="version-group">
-      <h2 class="major-version">v0.3b7t</h2>
+      <h2 class="major-version" id="v0-3b7t">v0.3b7t</h2>
       <article class="minor-entry">
         <h3 class="minor-version">v0.3b7t-1</h3>
         <p class="date">修改時間：2026 06/01</p>
@@ -493,7 +597,7 @@
     </section>
 
     <section class="version-group">
-      <h2 class="major-version">v0.3b8</h2>
+      <h2 class="major-version" id="v0-3b8">v0.3b8</h2>
       <article class="minor-entry">
         <h3 class="minor-version">v0.3b8-1</h3>
         <p class="date">修改時間：2026 06/02</p>
@@ -512,7 +616,7 @@
     </section>
 
     <section class="version-group">
-      <h2 class="major-version">v0.3b9</h2>
+      <h2 class="major-version" id="v0-3b9">v0.3b9</h2>
       <article class="minor-entry">
         <h3 class="minor-version">v0.3b9-1</h3>
         <p class="date">修改時間：2026 06/02</p>
@@ -536,7 +640,7 @@
     </section>
 
     <section class="version-group">
-      <h2 class="major-version">v0.3b10</h2>
+      <h2 class="major-version" id="v0-3b10">v0.3b10</h2>
       <article class="minor-entry">
         <h3 class="minor-version">v0.3b10-1</h3>
         <p class="date">修改時間：2026 06/02</p>
@@ -555,7 +659,7 @@
     </section>
 
     <section class="version-group">
-      <h2 class="major-version">v0.3b11</h2>
+      <h2 class="major-version" id="v0-3b11">v0.3b11</h2>
       <article class="minor-entry">
         <h3 class="minor-version">v0.3b11-1</h3>
         <p class="date">修改時間：2026 06/02</p>
@@ -574,7 +678,7 @@
     </section>
 
     <section class="version-group">
-      <h2 class="major-version">v0.3b12</h2>
+      <h2 class="major-version" id="v0-3b12">v0.3b12</h2>
       <article class="minor-entry">
         <h3 class="minor-version">v0.3b12-1</h3>
         <p class="date">修改時間：2026 06/03</p>
@@ -643,7 +747,7 @@
     </section>
 
     <section class="version-group">
-      <h2 class="major-version">v0.3b12a</h2>
+      <h2 class="major-version" id="v0-3b12a">v0.3b12a</h2>
       <article class="minor-entry">
         <h3 class="minor-version">v0.3b12a-1</h3>
         <p class="date">修改時間：2026 06/03</p>
@@ -677,7 +781,7 @@
     </section>
 
     <section class="version-group">
-      <h2 class="major-version">v0.4b1</h2>
+      <h2 class="major-version" id="v0-4b1">v0.4b1</h2>
       <article class="minor-entry">
         <h3 class="minor-version">v0.4b1-1</h3>
         <p class="date">修改時間：2026 06/03</p>
@@ -686,7 +790,7 @@
     </section>
 
     <section class="version-group">
-      <h2 class="major-version">v0.4b2</h2>
+      <h2 class="major-version" id="v0-4b2">v0.4b2</h2>
       <article class="minor-entry">
         <h3 class="minor-version">v0.4b2-1</h3>
         <p class="date">修改時間：2026 06/04</p>
@@ -706,7 +810,7 @@
     </section>
 
     <section class="version-group">
-      <h2 class="major-version">v0.4b3</h2>
+      <h2 class="major-version" id="v0-4b3">v0.4b3</h2>
       <article class="minor-entry">
         <h3 class="minor-version">v0.4b3-1</h3>
         <p class="date">修改時間：2026 06/04</p>
@@ -717,7 +821,7 @@
     </section>
 
     <section class="version-group">
-      <h2 class="major-version">v0.4b4</h2>
+      <h2 class="major-version" id="v0-4b4">v0.4b4</h2>
       <article class="minor-entry">
         <h3 class="minor-version">v0.4b4-1</h3>
         <p class="date">修改時間：2026 06/05</p>
@@ -789,7 +893,7 @@
     </section>
 
     <section class="version-group">
-      <h2 class="major-version">v0.4b4a</h2>
+      <h2 class="major-version" id="v0-4b4a">v0.4b4a</h2>
       <article class="minor-entry">
         <h3 class="minor-version">v0.4b4a-1</h3>
         <p class="date">修改時間：2026 06/10</p>
@@ -798,7 +902,7 @@
     </section>
 
     <section class="version-group">
-      <h2 class="major-version">v0.5b1</h2>
+      <h2 class="major-version" id="v0-5b1">v0.5b1</h2>
       <article class="minor-entry">
         <h3 class="minor-version">v0.5b1-1</h3>
         <p class="date">修改時間：2026 06/10</p>
@@ -806,6 +910,336 @@
         <p class="details">留言板串接 Supabase 作為資料儲存端，使用公開可發布金鑰透過 REST API 讀取與新增留言。網站目前預設資料表名稱為 garden_messages，留言內容欄位為 content，建立時間欄位為 created_at；前端會一次讀取最新 50 則留言，並依建立時間由新到舊顯示。留言輸入限制同步設定為 1 至 200 字，送出前會先在前端檢查空白留言與超出字數的情況，並提供字數計數、送出中、送出成功、送出失敗與讀取失敗等狀態提示。</p>
         <p class="details">新增留言板的視覺與互動介面。左側為留言輸入卡，包含 textarea、字數計數與送出留言按鈕；右側為花園留言列表，包含重新整理按鈕與留言卡片。留言內容以純文字安全插入頁面，保留使用者輸入中的換行顯示，並避免 HTML 被直接解析。深色與淺色主題都新增對應的半透明卡片、柔和邊框、焦點狀態與錯誤／成功文字色彩；手機版則改為單欄堆疊，確保留言輸入與留言列表在窄螢幕中仍能清楚閱讀。</p>
         <p class="details">因應「器官捐贈」主題，修改了主頁的文字。將原先的副標題改為「Each blossom is a continuation of hope.」「每一朵花的綻放，都是希望的延續。」，並將原先的副標題移至頁面說明處。</p>
+      </article>
+    </section>
+
+    <section class="version-group">
+      <h2 class="major-version" id="v0-5b2">v0.5b2</h2>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b2-1</h3>
+        <p class="date">修改時間：2026 06/10</p>
+        <p class="details">將 v0.5b1 新增的「留言板」整合進「種下一些花」區域，新增「種花／留言花園」雙模式切換。原有的種花功能保留原本操作與視覺；留言花園則改為一塊與種花舞台同尺寸的大草原，讓使用者可以在同一個世界觀裡種下留言花、瀏覽其他訪客留下的花，並透過右下角縮放控制器調整草原視野。</p>
+        <p class="details">新增留言花園的完整種植流程。初始狀態會顯示「種下你的花」入口；點擊後進入留言編輯介面，左側即時預覽花朵，右側提供色相、明暗度、灰階化三組滑桿與 Hex 色號欄位，讓使用者可以調配自己的花色。下方新增選填的 20 字心情欄位，以及必填的留言欄位，留言上限提高為 500 字，並保留隨機提示文字與字數計數。</p>
+        <p class="details">新增留言花的定位與送出流程。使用者完成留言後，草原會縮放到 0% 的小點視野，讓使用者點選想種花的位置；點下後會出現「是否將你的花種在這裡？」確認框，若取消則可重新選點，若確認則會將 content、mood、color、pos_x、pos_y 等資料寫入 Supabase。讀取留言時若缺少座標欄位，前端會自動隱藏該筆資料，避免沒有位置的留言出現在草原中。</p>
+        <p class="details">新增留言花觀看模式與動畫銜接。種下留言花後，網站會先將背景音樂淡出暫停，再隨機播放一個開花音效並呈現使用者所選顏色的綻放動畫，音效結束後再淡入恢復原本背景音樂。動畫完成後會自動切換到查看留言模式，花朵位於畫面左側，右側顯示心情、留言與時間；若心情留空，會以灰色文字隨機顯示一段保留情緒的提示。點擊空白處即可回到草原瀏覽模式。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b2-2</h3>
+        <p class="date">修改時間：2026 06/11</p>
+        <p class="details">修正留言花園的種植與查看流程。開始種花後，草原頂部原本「種下你的花」的入口會替換成置中的「取消」按鈕，使用者可沿用先前設計的取消確認彈窗中止正在編輯或定位中的留言花，避免誤觸造成資料遺失。</p>
+        <p class="details">將留言草原由偏正方形的大畫布調整為更接近「種下一些花」原始舞台的長方形比例，並同步修正世界座標、縮放比例、點擊定位與確認框位置計算，使留言花可種植的區域與畫面中的草原邊界一致。</p>
+        <p class="details">重寫查看留言花的聚焦方式。現在點擊草原中的任一留言花時，不再額外生成一朵複製花作為查看畫面，而是直接將地圖上原本那朵真實留言花放大至 150% 並聚焦到視野中；右側同步顯示該留言花的心情、留言內容與時間。</p>
+        <p class="details">查看留言狀態下會暫時關閉草原捲動，避免使用者滑動時把聚焦花朵與留言內容移出畫面。退出查看狀態後，草原會恢復到進入查看前的縮放比例與捲動位置，例如使用者在 46% 縮放時點開留言，關閉後仍會回到 46% 的瀏覽狀態。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b2-3</h3>
+        <p class="date">修改時間：2026 06/12</p>
+        <p class="details">修正版本顯示規則：網站本體與使用者用 version.html 只顯示主版本 v0.5b2；含修改次數的小版本號改為只保留在開發者用的「更新日誌」中。同步移除 version.html 內原先獨立列出的 v0.5b2-2 項目，避免使用者看到過細的開發修補紀錄。</p>
+        <p class="details">在「更新日誌」左側新增固定顯示的大版本快捷欄，列出每個大版本號並可點擊跳轉到對應區塊。桌面版會固定在左側，行動或較窄螢幕則改為上方橫向快捷列，避免遮擋版本內容。</p>
+        <p class="details">建立後續素材歸檔規則：未來每一次修改若包含使用者提供的照片或其他附件，需依照完整細版本號複製到「更新日誌/assets」對應資料夾；其中照片需先經過壓縮處理後再歸檔，以降低專案體積。</p>
+        <p class="details">壓縮「更新日誌/assets」既有圖片附件，保留足夠閱讀與檢查的畫質，同時降低專案總容量。此次壓縮屬於開發紀錄維護，不新增使用者版 version.html 的主功能說明。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b2-4</h3>
+        <p class="date">修改時間：2026 06/12</p>
+        <p class="details">修正開發者版本日誌中 v0.5b1 與 v0.5b2 的排列順序，改為先顯示 v0.5b1、再顯示 v0.5b2，左側大版本快捷欄也同步調整為相同順序。</p>
+        <p class="details">重寫留言草原縮放邏輯。原本使用 CSS transform 縮放草原，視覺雖然變小，但可捲動區域仍保留原本尺寸，因此 0% 縮放仍可能需要捲動才能看完整張草原。現在 0% 會依照目前留言草原視窗寬高計算實際縮放比例，使使用者在 0% 時一定能綜覽整個區域。</p>
+        <p class="details">新增留言花最小顯示閾值。當視窗很小、草原為了完整顯示而縮得更小時，留言花不會跟著縮到不可辨識，而是維持目前小點檢視的最小尺寸，保留全局瀏覽時的可見性與可點擊辨識度。</p>
+        <p class="details">調整留言花編輯與定位流程。使用者正在編輯花朵顏色、心情與留言時，草原捲動會被鎖定；送出編輯並進入選擇種植位置後，視角會預設切到 0% 全局視野，但使用者仍可自行縮放與捲動來選擇更精準的位置。</p>
+        <p class="details">新增紅色小箭頭作為種植位置提示。使用者在草原上點下預計種植的位置後，該座標會出現紅色箭頭標記，並顯示確認框；若選擇「否」或取消流程，箭頭會同步移除。</p>
+        <p class="details">修正桌機版確認種植後可能只捲動視角、沒有完成種植的問題。確認種植時不再先強制放大並捲動到目標位置，而是先送出資料、重新渲染草原花朵，再播放綻放動畫並進入查看留言狀態。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b2-5</h3>
+        <p class="date">修改時間：2026 06/12</p>
+        <p class="details">調整留言草原 0% 縮放的總覽倍率。原本 0% 是剛好依視窗塞入整片草原，若要讓草原容納更多留言花仍顯得偏近；現在新增總覽縮放係數，讓 0% 會比剛好塞滿再退遠一些，保留更多整體空間感。</p>
+        <p class="details">修正草原縮放時視角偏移的問題。縮放前會先記錄目前視窗中心對應到草原上的百分比座標，套用新縮放尺寸後再把同一個座標放回畫面中心，使使用者拖曳縮放滑桿時視角固定在目前觀看區域，而不是跳到其他位置。</p>
+        <p class="details">維持留言花的最小顯示閾值。即使 0% 縮放比上一版更小，留言花仍會保留既有的小點顯示尺寸，避免因總覽倍率降低而變得難以辨識或點選。</p>
+        <p class="details">縮減留言撰寫面板的間距、內距與 textarea 高度，手機版也同步降低最小高度，避免在編輯留言時因草原捲動被鎖定而讓底部送出／選擇種植位置按鈕被畫面切到。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b2-6</h3>
+        <p class="date">修改時間：2026 06/12</p>
+        <p class="details">根據使用者提供的三張留言草原截圖，修正點選留言花後的觀看構圖。原本花朵會被放大到畫面正中央，右側留言卡可能未能清楚出現；現在點選留言花會將該花定位在畫面左側，並讓右側留言卡以較高圖層顯示心情、留言內容與時間。</p>
+        <p class="details">擴大留言草原的可種植座標世界。草原內部可種植範圍由 1800 × 900 擴大為 3600 × 1800，相當於原本兩倍寬與兩倍高；縮放邏輯同步改為 0% 顯示完整加大後的草原輪廓，100% 則維持原本視覺大小，使可縮放範圍更廣，也讓留言花能分散種植在更大的區域。</p>
+        <p class="details">調整種植完成後的動畫流程。使用者按下確認種植後，若背景音樂正在播放會先淡出暫停；資料寫入後，鏡頭會放大並移動到新花即將長出的位置，構圖維持左側花朵、右側留言卡，接著先啟動開花音效，再播放開花動畫，讓使用者能看見自己的留言花在所選位置附近長出來。</p>
+        <p class="details">修正開花動畫位置。原本動畫固定顯示在畫面中央，容易形成突兀的大色塊；現在動畫位置改到觀看模式的左側花朵焦點附近，與新種下的花及留言卡構圖一致。</p>
+        <p class="details">將「是否將你的花種在這裡？」確認框往上抬，並提高定位計算的上緣保護距離，避免提示框壓到紅色位置提示箭頭。</p>
+        <p class="details">已將本次使用者提供的三張問題截圖壓縮為 JPG，保存於 更新日誌/assets/v0.5b2-6/，作為後續回溯留言草原觀看模式、可種植範圍與開花動畫問題的參考素材。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b2-7</h3>
+        <p class="date">修改時間：2026 06/12</p>
+        <p class="details">根據使用者提供的新截圖，修正查看留言花時花朵與留言卡仍會亂跑的問題。上一版仍依賴草原內原本的留言花 marker 放大顯示，因此當該花位於草原邊緣或視角被捲動限制時，花朵會被擠到左下、右側或畫面外，留言卡也可能跑到非預期位置。</p>
+        <p class="details">改寫觀看模式呈現方式。點選留言花後，草原中的原始 marker 只作為資料來源與狀態標記，不再放大成主要視覺；系統會在固定的 viewer overlay 左欄建立一朵相同顏色的留言花複製預覽，右欄固定顯示留言卡，使構圖永遠維持左側看花、右側看留言。</p>
+        <p class="details">修正 viewer overlay 跟著草原捲動內容位移的根因。由於留言查看層位於可捲動的 meadow viewport 內，當草原被捲動到某個座標時，absolute overlay 會跟著內容座標偏移；現在會同步 meadow viewport 的 scrollLeft / scrollTop 到 CSS 變數，讓 viewer overlay 與開花動畫反向補償捲動量，固定在目前可視框內。</p>
+        <p class="details">調整 viewing 狀態 CSS。原本 .meadow-flower-marker.is-viewing 會直接改變原始 marker 的寬高，造成世界座標、捲動位置與視窗邊界互相影響；現在 viewing 狀態會隱藏原始 marker，並由 .meadow-viewer-flower 負責固定展示花朵。手機版覆蓋規則也同步移除放大 marker 的寬高設定。</p>
+        <p class="details">已將本次三張「查看留言花位置飄移」回報截圖壓縮為 JPG，保存於 更新日誌/assets/v0.5b2-7/，作為本次修正的對照素材。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b2-8</h3>
+        <p class="date">修改時間：2026 06/12</p>
+        <p class="details">依照使用者進一步指定，調整留言花查看模式的視覺邏輯。上一版為了穩定左右構圖，使用 viewer overlay 生成一朵複製花；本版改回使用草原上被點擊的原始留言花，讓使用者看到的左側花朵就是實際點選的那一朵。</p>
+        <p class="details">保留整片草原的放大聚焦行為。點選留言花後，草原仍會縮放到 100% 並將目標座標聚焦到畫面左側，因此其他花也會隨整個草原一起放大；目標花則以 active marker 的方式加大尺寸並提高圖層，形成明確焦點。</p>
+        <p class="details">新增 meadow-focus-backdrop 背景層。該背景層位於其他花朵之上、目標花朵與留言卡之下，並跟 viewer overlay 一樣使用 scrollLeft / scrollTop 反向補償，固定在目前可視框中。這讓畫面能壓暗其他花朵，同時凸顯目標花與右側留言板。</p>
+        <p class="details">移除 viewer overlay 中的複製花展示。showMeadowMessage 現在只清空 meadow-viewer-flower，不再插入 meadow-viewer-flower-shape；實際花朵由原始 .meadow-flower-marker.is-viewing 呈現。手機版 viewing 規則也同步改回顯示原始 active marker。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b2-9</h3>
+        <p class="date">修改時間：2026 06/12</p>
+        <p class="details">調整留言草原縮放倍率定義。使用者指出目前滑桿字面上的 100% 視覺上仍偏小，希望查看留言時的目標花大小可視為 120%，而使用者手動可放大的最大倍率仍維持為真正的 100%。</p>
+        <p class="details">新增 MEADOW_VIEW_ZOOM = 120 作為查看留言專用倍率。一般瀏覽與使用者縮放滑桿仍限制在 0% 至 100%；showMeadowMessage 進入查看模式時則使用 120% 進行草原放大與左側聚焦，使目標花在查看留言時比使用者可手動放大的最大比例再大 20%。</p>
+        <p class="details">調整 getMeadowScale 與 setMeadowZoom 的內部上限，使程式可以接受 120% 的查看模式縮放，但滑桿控制值與輸出文字仍會 clamp 在 0% 至 100%，避免使用者介面出現 120% 這個開發用狀態。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b2-10</h3>
+        <p class="date">修改時間：2026 06/12</p>
+        <p class="details">重新調整留言草原縮放範圍。0% 不再只是剛好塞進加大的草原，而是使用 MEADOW_OVERVIEW_SCALE_FACTOR = 0.42 進一步拉遠視角，使畫面能容納更多留言花；使用者可操作的 100% 則提高至 MEADOW_MAX_SCALE = 0.82，讓最大放大程度更接近查看留言時的 120% 聚焦倍率。</p>
+        <p class="details">調整小圓點與花形的切換規則。新增 MEADOW_DOT_ZOOM_LIMIT = 20，當縮放小於 20% 時，留言花統一顯示為彩色小圓點；約 20% 起恢復一般花朵造型，之後再隨縮放比例線性放大，讓整體縮放過程更連續、可預期。</p>
+        <p class="details">將草原縮放公式維持為線性區間，並把 meadow-world 與 meadow-flower-marker 的寬高轉場改為較短的 linear transition，避免拖曳縮放滑桿時在某些比例後產生明顯放慢或延遲的感覺。</p>
+        <p class="details">重寫草原平移方式。新增 pointer drag 狀態，使用者可在草地空白處按住拖移來移動畫面；草原 viewport 改為 overflow hidden、touch-action none、overscroll-behavior none，並攔截 wheel 事件，停用原生捲動以避免觸控板或瀏覽器左右滑導致返回上一頁。</p>
+        <p class="details">拖移時會以程式控制 scrollLeft / scrollTop，並持續同步 meadow overlay 的 scroll 變數；點擊花朵、留言卡、確認框、輸入欄與按鈕時不會啟動拖移，拖移結束後也會抑制誤觸 click，避免拖動草原時意外種花或關閉留言。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b2-11</h3>
+        <p class="date">修改時間：2026 06/12</p>
+        <p class="details">修正留言草原 0% 縮放時可種植世界只集中在左上角的問題。上一版為了讓 0% 看見更多花，將實際 meadow world 縮得過小，導致背景雖然填滿面板，但真正可種植的座標區域只是一塊小矩形。本版將留言草原座標世界擴大為 7200 × 3600，並改用覆蓋面板的 base scale，使 0% 時可種植世界至少鋪滿整個可視面板。</p>
+        <p class="details">調整小圓點模式的尺寸變化。新增 MEADOW_DOT_MIN_SIZE = 9 與 MEADOW_DOT_MAX_SIZE = 18，並在 setMeadowZoom 時輸出 --meadow-dot-size。當縮放位於 0% 至 19% 的 dot-view 階段時，小圓點會從 9px 線性放大到接近 18px，使小圓點模式本身也能看見縮放效果。</p>
+        <p class="details">同步更新 CSS 初始 meadow world 與 dot size 變數，並讓 .meadow-viewport.is-dot-view .meadow-flower-marker 使用 --meadow-dot-size 控制寬高，不再固定為 18px。</p>
+        <p class="details">已將本次使用者提供的 0% 縮放截圖壓縮為 JPG，保存於 更新日誌/assets/v0.5b2-11/，作為可種植世界偏向左上角問題的修正參考。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b2-12</h3>
+        <p class="date">修改時間：2026 06/12</p>
+        <p class="details">修正 0% 縮放時仍需要左右拖移的問題。上一版為了讓可種植世界覆蓋面板，使用 max(width ratio, height ratio) 計算 base scale，當面板比例與 meadow world 比例略有差異時會產生橫向溢出。本版改為在 getMeadowWorldSize 中直接以目前 meadow viewport 的 clientWidth / clientHeight 作為 0% 的 world 寬高，使 0% 的可種植邊界精準等於當前框框邊界。</p>
+        <p class="details">重寫 world size 插值方式。0% 使用 viewport 實際尺寸，100% 使用 MEADOW_WORLD_WIDTH / MEADOW_WORLD_HEIGHT 乘以最大縮放倍率，120% 查看模式則沿同一條線性區間繼續延伸，讓整個縮放過程仍保持平滑線性。</p>
+        <p class="details">修正縮放錨點與動畫時序。一般縮放會以目前可視框的中心點作為 zoomCenter；setMeadowZoom 套用新尺寸後會先讀取 meadowWorld layout，再立即執行 focusMeadowPoint，使尺寸轉場與 scrollLeft / scrollTop 修正更接近同時啟動，改善點選留言花時先水平移動再放大的卡頓感。</p>
+        <p class="details">調整 meadow-world 與 meadow-flower-marker 的轉場為 520ms cubic-bezier(0.22, 1, 0.36, 1)，讓點選留言花後從原始花朵放大到 120% 聚焦狀態，以及關閉留言後縮回瀏覽狀態時，都更接近同時修正位置與尺寸。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b2-13</h3>
+        <p class="date">修改時間：2026 06/12</p>
+        <p class="details">修正留言草原縮放仍像從左上角放大的問題。上一版仍依賴 meadow-world 的 CSS width / height transition，瀏覽器會以元素左上角作為尺寸變化基準；同時 JS 又更新 scrollLeft / scrollTop，因此容易出現花朵先飛出框外、再被拉回目標位置的視覺抖動。</p>
+        <p class="details">將草原縮放動畫改由 JS 統一控制。新增 meadowZoomAnimation、cancelMeadowZoomAnimation、applyMeadowZoomFrame 與 animateMeadowZoom，每一個動畫 frame 都會同時計算目前縮放倍率、meadow world 寬高、marker scale、dot size，以及對應的 scrollLeft / scrollTop，讓尺寸變化與視角修正同步發生。</p>
+        <p class="details">調整目前視窗中心的偵測方式。getMeadowViewportCenterPoint 現在使用與 scrollLeft / clientWidth 相同座標系的 meadowWorld.offsetWidth / offsetHeight，再換算目前可視框中心位於整片草原中的百分比座標，使手動縮放能以目前視線中心作為錨點，而不是以草原左上角作為放大基準。</p>
+        <p class="details">點選留言花時，showMeadowMessage 會以目標花的座標呼叫 setMeadowZoom(MEADOW_VIEW_ZOOM, center, { animate: true })，讓花朵從原本位置一路平滑放大並移動到左側聚焦位置。關閉留言時，restoreMeadowBrowseView 也會把原先瀏覽 scroll 轉換為中心座標，再用同一套動畫縮回瀏覽狀態。</p>
+        <p class="details">移除 meadow-world 與 meadow-flower-marker 的寬高 CSS transition，避免 CSS 與 JS 同時控制尺寸造成動畫競爭；保留較短的 hover / opacity / filter 視覺轉場。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b2-14</h3>
+        <p class="date">修改時間：2026 06/12</p>
+        <p class="details">補回點選留言花時目標花朵本身的拉近與拉遠動畫。上一版為了修正草原世界從左上角縮放造成的飛出框框問題，移除了 meadow-flower-marker 的寬高 transition；雖然中心縮放與定位變穩定，但 active 花朵切換大小時變成瞬間跳到查看尺寸，缺少原本的拉近過渡。</p>
+        <p class="details">本版維持 meadow-world 寬高由 JS 逐幀同步控制，不恢復世界尺寸的 CSS transition，避免再度產生左上角基準與 scroll 定位互相拉扯。僅在 .meadow-flower-marker 上補回 width / height / transform 的 680ms cubic-bezier 轉場，讓目標花從原本大小平滑變成查看模式尺寸，關閉留言時也能平滑縮回。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b2-15</h3>
+        <p class="date">修改時間：2026 06/12</p>
+        <p class="details">修正點選留言花時，花朵會先在原位放大、再瞬間跳到左側聚焦位置的動畫斷裂感。問題原因是上一版的 animateMeadowZoom 每一幀都直接用目標花座標重新對齊視角，因此動畫第一幀就已經把 scrollLeft / scrollTop 跳到「完成後」的位置，只有縮放倍率還在慢慢變化。</p>
+        <p class="details">本次新增 getMeadowTargetScroll 與 applyMeadowZoomMetrics，將「更新草原世界尺寸」和「移動視角」拆開處理。點擊花朵時會先記錄目前視窗的 scroll 位置，再計算目標花在 120% 聚焦倍率下應該抵達的左側位置，動畫過程中同時補間縮放倍率、草原尺寸、scrollLeft 與 scrollTop，讓目標花從點擊當下的位置一路平滑移動並放大到左側。</p>
+        <p class="details">另外新增 animateMeadowMarkerToViewing，點擊時會先讀取目標花朵當下的實際寬高，將其設為動畫起點，再於下一個 frame 補間到查看模式尺寸。這可以避免套用 .is-viewing 樣式時花朵尺寸被瀏覽器直接重算，確保「移動到左側」與「逐漸放大」同步發生。</p>
+        <p class="details">此修正同時保留前幾版完成的中心縮放行為。手動縮放仍會以目前視窗中央為錨點，關閉留言回到瀏覽狀態時也會使用同一套 scroll 補間邏輯，避免拉近與拉遠時出現先橫移、再放大的不連續感。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b2-16</h3>
+        <p class="date">修改時間：2026 06/12</p>
+        <p class="details">修正開發者用「更新日誌」中 v0.5b2 小版本的排列方向。依照後續維護規則，更新日誌中的同一大版本細項需由低到高排列，也就是由舊至新顯示，方便開發者順著修改歷程閱讀；使用者用 version.html 則維持由高到低排列，也就是由新至舊顯示，方便一般訪客先看到最新版本。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b2-17</h3>
+        <p class="date">修改時間：2026 06/12</p>
+        <p class="details">修正快速拖曳留言草原縮放滑桿時，花朵尺寸會跟不上目前縮放百分比的問題。上一版在 .meadow-flower-marker 上保留 680ms 的 width / height transition，因此當使用者快速縮小時，草原世界已經縮小，但花朵寬高仍在前一個 transition 中追趕，會短暫看見花朵過大；快速放大時也可能因花朵尺寸延遲而產生一瞬間找不到花的感覺。</p>
+        <p class="details">本版將一般留言花 marker 的寬高轉場移除，讓花朵尺寸直接依照目前 --meadow-marker-scale、--meadow-dot-size 與縮放百分比即時更新。保留較短的 hover、filter 與 opacity 過渡，避免一般瀏覽縮放時被 CSS 動畫拖慢。</p>
+        <p class="details">查看留言花時的 .is-viewing 狀態仍保留拉近聚焦動畫，但寬高與 transform 過渡縮短為 320ms，讓點選留言花時仍有必要的視覺過渡，同時降低快速縮放或狀態切換時動畫尚未跑完造成的延遲感。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b2-18</h3>
+        <p class="date">修改時間：2026 06/12</p>
+        <p class="details">補上關閉留言花查看模式時的文字卡離場動畫。原本 closeMeadowViewer 會立即將 meadow-viewer 設為 hidden，因此開啟時雖然能看到留言文字卡淡入，但關閉時文字卡會直接消失，沒有淡出過渡。</p>
+        <p class="details">本版新增 meadowViewerCloseTimer、hideMeadowViewerImmediately 與 .meadow-viewer.is-closing 狀態。關閉留言時會先套用 closing class，讓 .meadow-viewer-card 播放 meadowViewerCardOut 淡出與微位移動畫，約 260ms 後才真正 hidden；重新開啟留言時會清除 closing 狀態，避免快速切換造成卡片被殘留隱藏。</p>
+        <p class="details">新增 meadowViewerCardIn / meadowViewerCardOut keyframes，使文字卡開啟與關閉都有相對應的淡入淡出、輕微位移與縮放過渡。同時將留言草原的預設瀏覽縮放 meadowZoomValue 與 meadowBrowseView.zoom 從 45% 改為 0%，取消留言花編輯回到瀏覽狀態時也改回 0% 總覽視野。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b2-19</h3>
+        <p class="date">修改時間：2026 06/12</p>
+        <p class="details">補上關閉留言花時從 120% 查看比例縮回 100% 的花朵動畫。原本 closeMeadowViewer 會立即移除 active marker 的 .is-viewing 狀態，接著直接呼叫 restoreMeadowBrowseView，因此 120% 查看比例到 100% 一般最大比例之間缺少獨立的縮回過渡，只剩 100% 回到原本瀏覽縮放的動畫。</p>
+        <p class="details">新增 meadowViewerRestoreTimer、getMeadowMarkerSizeAtZoom 與 animateMeadowMarkerFromViewing。關閉留言時若目前仍在 120% 查看比例，會先保留目標花的 is-viewing 狀態，將花朵尺寸從查看模式逐步縮到 100% 一般花尺寸，同時把草原視角從 120% 動畫縮回 100%；約 300ms 後才移除 is-viewing 並接續原本的 restoreMeadowBrowseView，完成 100% 回到使用者原先縮放比例的第二段動畫。</p>
+        <p class="details">調整留言花文字卡排版。將情緒欄位與留言正文改為相同字級與行高，避免情緒文字像標題一樣過大；留言卡外框改為固定寬高，內容過長時在卡片內捲動，不再因留言長短或情緒文字大小改變外框尺寸。手機版也同步套用相同字級邏輯與固定卡片高度。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b2-20</h3>
+        <p class="date">修改時間：2026 06/12</p>
+        <p class="details">調整留言花查看關閉動畫。上一版仍保留 120% 查看比例先縮到 100%、再回復原本瀏覽視角的分段流程，因此關閉時會感覺花朵先縮小，之後視角才移動。本版改為關閉時直接保留 active 花並呼叫 restoreMeadowBrowseView，讓花朵尺寸從查看大小縮回原本瀏覽倍率該有的大小，同時視角也移回使用者關閉前的瀏覽位置；動畫結束後才移除 is-viewing 狀態。</p>
+        <p class="details">重新調整留言草原 0% 到 100% 的縮放幅度。MEADOW_MAX_SCALE 由 0.82 提高為 1.08，使 100% 時草原世界更接近放大查看狀態；同時新增 MEADOW_MARKER_MAX_SCALE 與 getMeadowMarkerScale，讓一般留言花的視覺尺寸依 0% 到 100% 線性斜坡放大，100% 時花朵只比查看留言時小一點，而不是像先前明顯偏小。</p>
+        <p class="details">新增留言草原位置控制條。草原可視框底部新增水平控制條，右側新增垂直控制條，兩者直接控制 meadowViewport 的 scrollLeft / scrollTop，並會在拖移草原、縮放或程式聚焦時同步更新。控制條使用與 viewer 相同的 scroll 補償，固定在目前可視框邊緣。</p>
+        <p class="details">調整草原滾輪行為。水平 wheel 仍會被攔截，避免觸控板左右滑導致瀏覽器返回上一頁；垂直 wheel 不再被強制禁用，讓使用者在草原區域上方也可以繼續捲動整個網站的上下位置。觸控行為也改為允許 pan-y，保留網站垂直捲動能力。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b2-21</h3>
+        <p class="date">修改時間：2026 06/12</p>
+        <p class="details">依照使用者回報截圖，移除上一版新增在留言草原右側與底部的位置控制拉桿，避免草原控制介面過度複雜。同步移除 meadow-pan-x / meadow-pan-y 的 HTML、事件監聽與 CSS。</p>
+        <p class="details">將 100% 縮放時的留言花視覺尺寸稍微縮小，MEADOW_MARKER_MAX_SCALE 由 2.85 調整為 2.38，保留比早期版本更大的最大瀏覽尺寸，但避免 100% 時花朵過度佔滿畫面。</p>
+        <p class="details">修正使用者在非 0% 縮放或草原已被拖移後點擊「種下一朵花」時，留言撰寫介面會跟著草原內容座標偏移、導致整個介面跑掉的問題。meadow-compose 現在和 viewer overlay 一樣使用 --meadow-scroll-left / --meadow-scroll-top 補償，固定在目前可視框內，因此任意縮放比例下都能正常顯示。</p>
+        <p class="details">調整建立留言時的「留言板」文字框。textarea 改為不可手動調整大小，固定為兩行高度；若輸入內容超過兩行，會在文字框內自動捲動。字數計數移到較高位置，選擇種植位置按鈕下移以對齊使用者截圖標示區域。</p>
+        <p class="details">在「留言板」標籤旁新增放大／縮小按鈕，樣式延續「種下一些花」放大按鈕的角標語彙。點擊後右側撰寫面板會切換為幾乎整面文字框，保留使用者原先輸入內容；放大狀態下縮小按鈕位於文字框右下角，再次點擊可平滑恢復原本表單。</p>
+        <p class="details">已將本次使用者提供的留言撰寫介面截圖壓縮為 JPG，保存於 更新日誌/assets/v0.5b2-21/，作為本次修正與排版調整的參考素材。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b2-22</h3>
+        <p class="date">修改時間：2026 06/12</p>
+        <p class="details">調整留言草原小圓點模式門檻。MEADOW_DOT_ZOOM_LIMIT 由 20 改為 10，讓草原縮放到 10% 以下才會切換成彩色小圓點；0% 到 10% 之間仍保留點的大小變化，10% 以上回到一般花朵形狀。</p>
+        <p class="details">再次縮小 100% 縮放時的留言花視覺尺寸。MEADOW_MARKER_MAX_SCALE 由 2.38 調整為 2.05，保留近距離瀏覽感，但避免使用者將縮放拉到 100% 時花朵仍顯得過大。</p>
+        <p class="details">修正選擇種植位置後「是否將你的花種在這裡」確認提示框在非 0% 縮放下明顯偏移的問題。showMeadowPlaceConfirm 改以草原內容座標計算提示框位置，並用目前 meadowViewport 的 scrollLeft / scrollTop 與可視框尺寸作為邊界，避免將視窗座標誤放進可捲動內容座標中。</p>
+        <p class="details">修正關閉留言板並縮回草原時，目標花朵會比其他花朵更早縮小到瀏覽尺寸的不同步問題。關閉過程新增 is-restoring 狀態，讓 is-viewing 花朵的尺寸與 transform 過渡時間延長到 620ms，和草原視角 restoreMeadowBrowseView 的移動／縮放時間一致。</p>
+        <p class="details">重做留言花園新種花後的第一次綻放動畫。confirmMeadowPlanting 不再呼叫 meadow-bloom-focus 中央覆蓋動畫，而是在新留言插入、重新渲染、並自動開啟該留言後，直接對同一個實際 meadow-flower-marker 加上 is-new-bloom，讓花莖、八片花瓣與花蕊從目標花本體長出來；動畫結束後移除暫時 class，該花會保留在草原原位。</p>
+        <p class="details">抽出 playRandomBloomSfx 與 waitForBloomSfxOrTimeout，讓原本 overlay 綻放音效與新留言花本體綻放共用同一組隨機開花音效流程，維持先播放音效、再播放花朵長出動畫的節奏。</p>
+        <p class="details">已將本次使用者提供的留言花開啟後白色方塊覆蓋問題截圖壓縮為 JPG，保存於 更新日誌/assets/v0.5b2-22/，作為本次動畫修正的參考素材。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b2-23</h3>
+        <p class="date">修改時間：2026 06/13</p>
+        <p class="details">優化留言花製作介面的三組顏色控制桿。新增 updateMeadowSliderGradients，會依目前色相、明暗度與灰階值動態設定 --range-gradient：色相控制桿顯示完整彩虹漸層，明暗度控制桿顯示目前色相從暗到亮的漸層，灰階化控制桿顯示目前鮮豔顏色到灰階顏色的漸層。</p>
+        <p class="details">調整 range input 的 CSS，改為使用自訂軌道與圓形 thumb，讓控制桿能穩定呈現對應顏色漸層，同時保留原有的金色操作重點。</p>
+        <p class="details">修正新種下留言花第一次開啟留言板時，花朵會先瞬間出現、再消失並開始綻放動畫的問題。新插入的 marker 現在會先加上 is-awaiting-bloom，讓實際花朵在聚焦定位與音效準備期間保持不可見，直到 playMeadowMarkerBloom 開始時才移除等待狀態並播放長出動畫。</p>
+        <p class="details">調整開花音效與背景音樂銜接。waitForBloomSfxOrTimeout 現在支援不使用 timeout 的完整音效等待；playMeadowMarkerBloom 會同時等待開花音效結束與至少 1900ms 的動畫時間，兩者都完成後才讓外層恢復背景音樂，避免背景音樂過早淡入並與開花音效重疊。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b2-24</h3>
+        <p class="date">修改時間：2026 06/14</p>
+        <p class="details">調整留言花製作介面的顏色控制預設值。新增 setMeadowColorControls，重置或開始製作留言花時會讓色相控制桿隨機落點、明暗度控制桿固定為 50、灰階化程度控制桿固定為 0，並同步更新 Hex 與預覽花顏色。</p>
+        <p class="details">在「顏色控制」標籤旁新增無外框隨機調色圖示按鈕 meadow-color-random，圖示語彙沿用「今日花語」的旋轉隨機按鈕。按下後會隨機排列色相、明暗度與灰階化三支控制桿的位置，並立即更新三支控制桿的漸層與預覽花色。</p>
+        <p class="details">調整「留言板」標籤旁的展開按鈕。一般狀態改為無外框、貼近「留言板」文字，按鈕點擊範圍收斂到圖示本身；展開狀態的縮小圖示改為兩個箭頭朝內的角標樣式，與「種下一些花」區域縮小按鈕一致。</p>
+        <p class="details">修正留言板展開後右下角縮小按鈕遮擋文字框內容的問題。展開模式下，文字框高度會扣除底部 42px 操作區，右下角保留縮小按鈕位置，左側保留目前字數顯示；提交按鈕在展開模式下隱藏，不會與縮小按鈕或字數重疊。</p>
+        <p class="details">調整留言草原 10% 以下的縮放手感。新增 getMeadowWorldProgress，讓 0% 到 10% 的草原世界尺寸使用 1.65 次方緩入曲線，降低遠距離總覽時的感受速度；10% 以上仍維持既有線性縮放銜接。</p>
+        <p class="details">將留言草原小圓點整體縮小 20%。MEADOW_DOT_MIN_SIZE 由 9 調整為 7.2，MEADOW_DOT_MAX_SIZE 由 18 調整為 14.4，讓 0% 到 9% 的點狀顯示更適合總覽大量花朵。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b2-25</h3>
+        <p class="date">修改時間：2026 06/14</p>
+        <p class="details">調整留言板放大撰寫模式的底部操作區。展開後的字數顯示改為與文字輸入框左側對齊，並與右下角縮小按鈕垂直置中；底部操作列保留 40px 右側空間給縮小按鈕，避免文字框、字數與按鈕互相遮擋。</p>
+        <p class="details">修正留言板放大／縮小按鈕的點擊範圍。留言板區塊由包住按鈕的 label 改為普通容器，文字標籤改用 label for="meadow-content"；展開狀態的整條 row 設為 pointer-events: none，只有 meadow-content-expand 按鈕本體保留 pointer-events: auto，避免同一水平線空白區誤觸。</p>
+        <p class="details">補強留言文字框展開與收合動畫。textarea 與 meadow-content-label 現在都使用 420ms cubic-bezier 的 height / min-height / max-height 過渡，讓放大與縮小時更像文字框上下邊緣向外或向內延展。</p>
+        <p class="details">新增隨機調色滑桿動畫。新增 cancelMeadowColorAnimation、animateMeadowColorControls 與 randomizeMeadowColorControlsAnimated；按下隨機按鈕時，色相、明暗度與灰階三支控制桿會在同一段 560ms 動畫中從原位置滑到新位置，不同距離會自動以不同速度完成同一時間的移動。</p>
+        <p class="details">讓花朵顏色跟隨滑桿動畫漸變。隨機調色動畫每一幀都會重新計算 Hex、滑桿漸層與預覽花色，並補上花莖、花瓣與花蕊的 background / box-shadow 過渡，避免花色瞬間跳變。</p>
+        <p class="details">調整留言草原在 0% 到 9% 點擊留言花時的放大速度。showMeadowMessage 會在目前縮放低於 MEADOW_DOT_ZOOM_LIMIT 時，把查看留言的視角動畫 duration 由 680ms 放慢 40% 至 952ms；同時透過 --meadow-view-transition-duration 同步放慢目標花放大的尺寸過渡。關閉留言時的縮小動畫不受影響。</p>
+        <p class="details">已將本次使用者提供的留言板放大撰寫模式截圖壓縮為 JPG，保存於 更新日誌/assets/v0.5b2-25/，作為字數位置與縮小按鈕對齊修正的參考素材。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b2-26</h3>
+        <p class="date">修改時間：2026 06/14</p>
+        <p class="details">重新整理留言板放大撰寫模式的底部佈局。meadow-compose-panel 新增 --meadow-expanded-footer-height 與 --meadow-expanded-panel-height，展開狀態下文字框高度改為面板高度扣除底部操作區，讓左下字數與右下縮小按鈕共用同一條底部軌道並垂直置中。</p>
+        <p class="details">修正展開模式中字數顯示偏低、縮小按鈕偏下的問題。meadow-content-label-row 改為使用底部操作區高度置中縮小按鈕，meadow-content-expand 不再以 absolute bottom 貼底，meadow-compose-actions 也改為貼齊同一個 footer 區域，避免不同裝置上的高度偏移。</p>
+        <p class="details">調整留言文字框放大與縮小動畫。textarea 與 meadow-content-label 的 height / min-height / max-height / transform 過渡由 420ms 放慢到 620ms，並加入 transform-origin，讓展開與收合更接近從原本文字框本體逐步縮放。</p>
+        <p class="details">將留言花隨機顏色滑桿動畫加快 20%。animateMeadowColorControls 預設 duration 由 560ms 調整為 448ms，保留三支滑桿同時抵達新隨機位置、並讓花朵顏色逐幀漸變的效果。</p>
+        <p class="details">已將本次使用者提供的留言板放大撰寫模式底部對齊截圖壓縮為 JPG，保存於 更新日誌/assets/v0.5b2-26/，作為字數與縮小按鈕位置修正的參考素材。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b2-27</h3>
+        <p class="date">修改時間：2026 06/14</p>
+        <p class="details">修正留言花隨機顏色動畫節奏不一致的問題。花莖、花瓣與花蕊的 background / box-shadow / border-color 過渡由 260ms 調整為 448ms cubic-bezier，與 animateMeadowColorControls 的滑桿動畫時間同步，避免滑桿已完成但左側預覽花顏色仍慢半拍。</p>
+        <p class="details">調整「種下一些花」的預設顯示模式。HTML 初始狀態改為留言花園啟用，garden-stage 預設加上 is-message-mode，garden-plant-mode 初始 hidden，garden-meadow-panel 初始顯示；initGardenMeadow 也會讀取目前 active 按鈕作為初始模式，避免初始化時回到舊的種花預設。</p>
+        <p class="details">對調「留言花園」與「種花」切換按鈕位置，讓留言花園作為第一個選項並預設 active，種花移至第二個選項。</p>
+        <p class="details">依使用者標示位置上移「種花／留言花園」切換列與主框。桌機版 garden-mode-switch margin 調整為 -64px auto 10px，窄版覆蓋規則同步調整為更小的負 margin，讓整個互動面板更靠近上方標示位置。</p>
+        <p class="details">已將本次使用者提供的「種下一些花」面板位置與切換按鈕位置參考截圖壓縮為 JPG，保存於 更新日誌/assets/v0.5b2-27/。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b2-28</h3>
+        <p class="date">修改時間：2026 06/14</p>
+        <p class="details">補上取消製作留言花時的退出動畫。新增 meadowComposeCloseTimer 與 meadow-compose.is-closing 狀態；使用者在頂部「取消」並確認取消後，會先保留製作面板 420ms 播放 meadowPanelOut，完成後才 resetMeadowForm、清除目標花與切回 browse。</p>
+        <p class="details">讓留言花製作面板的出現與消失動畫成對。meadowPanelIn 與新增的 meadowPanelOut 都使用同一組 --meadow-scroll-left / --meadow-scroll-top 作為基準，避免動畫時因草原 scroll offset 不同而產生跳動。</p>
+        <p class="details">優化關閉留言卡時目標花縮回與視角恢復的同步。animateMeadowMarkerFromViewing 新增 duration 參數，closeMeadowViewer 會把同一個 620ms duration 同時傳給目標花尺寸過渡與 restoreMeadowBrowseView，讓水平／垂直視角移動與花朵大小縮放使用一致節奏。</p>
+        <p class="details">恢復留言花園區域的整頁滾輪捲動。handleMeadowWheel 不再 preventDefault，wheel 監聽改為 passive；meadow-viewport 改為 overscroll-behavior-y: auto、overscroll-behavior-x: contain，讓垂直滾輪交回整個網站頁面，同時保留草原內按住拖曳移動視線。</p>
+      </article>
+    
+    </section>
+
+    <section class="version-group">
+      <h2 class="major-version" id="v0-5b3">v0.5b3</h2>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b3-1</h3>
+        <p class="date">修改時間：2026 06/14</p>
+        <p class="details">新增「專輯聆聽」各曲目的獨立播放次數功能。albumTracks 現在為 10 首曲目補上 id 與 songId，對應 Supabase song_plays 資料表中的 id、song_id、played_at 與 plays 欄位；網站載入時會讀取 song_plays 並更新本機 songPlayStats。</p>
+        <p class="details">新增播放滿 10 秒才計入一次播放的流程。playBackground 與 backgroundAudio 的 play、pause、ended、seeking、seeked 事件會共同管理 songPlayTimer；切歌或重新載入音源會重設計數門檻，暫停、結束或拖動進度會取消等待中的計數，同一個音源載入期間已計過就不會每 10 秒重複增加。</p>
+        <p class="details">完成 Supabase 寫入流程。incrementSongPlay 會先讀取目前曲目的 plays，再以帶有目前 plays 條件的 PATCH 更新 song_id、played_at 與 plays；若同時有其他訪客更新導致條件失效，會重新讀取並最多重試 3 次，降低多人同時播放時少算的機率。更新成功後同步更新畫面上的播放次數，若讀取或寫入失敗則只輸出 console error，不阻擋播放器本身操作。</p>
+        <p class="details">新增曲目卡播放次數顯示。ensureTrackPlayBadges 會在每個 .track-number 後插入 .track-plays，預設顯示 0 次，Supabase 讀取完成後改為實際次數；樣式採用與分鐘數一致的小字，並以絕對定位放在曲目編號旁，避免擠壓曲名、分鐘與作曲者資訊。</p>
+        <p class="details">調整小曲目卡的作曲者換行規則。原本 track-composer 使用 overflow-wrap: anywhere，容易在還有空間時過早斷行；本次改為 normal 搭配 word-break: keep-all，讓作曲者姓名在真正接近其他資訊時才自然換行。</p>
+        <p class="details">同步將網站目前版本提升為 v0.5b3，更新 index.html、version.html 的資源快取參數與使用者版本紀錄。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b3-2</h3>
+        <p class="date">修改時間：2026 06/15</p>
+        <p class="details">修正專輯曲目卡中播放次數與曲序重疊的問題。track-number 新增穩定 line-height，track-plays 改為曲序下方的灰色小字，並在淺色模式套用較低彩度的灰色文字，避免視覺上被曲目主色誤認為曲序的一部分。</p>
+        <p class="details">修正作曲者姓名仍可能提早換行的問題。track-composer 改為 white-space: nowrap，並搭配 overflow hidden 與 text-overflow ellipsis，讓作曲者資訊維持單行；空間不足時以省略號處理，而不是拆成兩行壓縮曲目卡。</p>
+        <p class="details">強化 Supabase song_plays 串接。新增 normalizeSongPlayRow 統一處理 plays 為 text 或數字的情況；incrementSongPlay 若查不到對應曲目的資料列，會自動 POST 建立 id、song_id、played_at、plays，再更新畫面。既有資料列則維持帶 plays 條件的 PATCH 重試流程。</p>
+        <p class="details">依使用者提供的 Supabase 截圖判斷，目前 song_plays 僅有 id 0 / song_id test 的測試列，與正式曲目 id 1 到 10 不相符；本次程式已能在權限允許時自動補正式曲目列，但仍建議資料表預先建立 10 首曲目的資料列並將 plays 欄位改為數值型別。</p>
+        <p class="details">同步更新 index.html 與 version.html 的資源快取參數為 20260615-b3-2，並在使用者版 version.html 的 v0.5b3 條目補充本次修正。</p>
+        <p class="details">已將本次使用者提供的曲目播放次數重疊截圖與 Supabase 設定截圖壓縮為 JPG，保存於 更新日誌/assets/v0.5b3-2/。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b3-3</h3>
+        <p class="date">修改時間：2026 06/15</p>
+        <p class="details">依使用者已在 Supabase SQL Editor 建立的原子遞增函式調整播放次數寫入方式。incrementSongPlay 不再由前端讀取、INSERT 或 PATCH song_plays，而是 POST 到 /rest/v1/rpc/increment_song_play，並以 p_song_id 傳入目前曲目的 songId；完成後重新 fetchSongPlayStats 更新畫面，避免多人同時播放同一首歌時發生遞增覆蓋。</p>
+        <p class="details">調整專輯曲目卡播放次數位置。track-number 右移讓出左側空間，track-plays 改到曲序左邊並維持灰色小字，避免播放次數卡在曲序下方或與曲名重疊。</p>
+        <p class="details">調整作曲者顯示方式。index.html 的 track-composer 內容改為兩個 span，第一行顯示中文姓名，第二行顯示英文名稱；CSS 讓兩行各自 block 顯示，保留右上角資訊區的穩定排版。</p>
+        <p class="details">同步更新 index.html 與 version.html 的資源快取參數為 20260615-b3-3，並在使用者版 version.html 的 v0.5b3 條目補充本次修正。</p>
+        <p class="details">已將本次使用者提供的曲目卡播放次數位置參考截圖壓縮為 JPG，保存於 更新日誌/assets/v0.5b3-3/。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b3-4</h3>
+        <p class="date">修改時間：2026 06/15</p>
+        <p class="details">修正播放次數累加的 Supabase RPC 接法。index.html 新增 Supabase JS SDK，script.js 透過 createSongPlaySupabaseClient 在 incrementSongPlay 內建立區域 supabase 物件，並呼叫 supabase.rpc("increment_song_play", { p_song_id: track.songId })；若 SDK 未載入，該物件會以同名 rpc 方法退回正確的 REST RPC endpoint /rest/v1/rpc/increment_song_play。同步修掉先前誤寫成 /rpc/song_plays 的錯誤，並避免全域 supabase 名稱衝突讓主程式中斷。</p>
+        <p class="details">調整專輯曲目卡頂部資訊排列。曲序恢復在最左側，播放次數移到曲序右邊，作曲者維持最右側；播放次數與作曲者文字都改為灰色系，降低和曲序主色混淆的可能。</p>
+        <p class="details">同步更新 index.html 與 version.html 的資源快取參數為 20260615-b3-4，並在使用者版 version.html 的 v0.5b3 條目補充本次修正。</p>
+        <p class="details">已將本次使用者提供的曲目卡頂部排版參考截圖壓縮為 JPG，保存於 更新日誌/assets/v0.5b3-4/。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b3-5</h3>
+        <p class="date">修改時間：2026 06/15</p>
+        <p class="details">將播放次數顯示位置從小曲目卡移至大播放器右上角。index.html 新增 album-play-count，script.js 讓 updateSongPlayUI 只更新目前曲目的「播放次數：X」，並讓 ensureTrackPlayBadges 移除舊的小曲目卡 .track-plays，避免小卡重複顯示播放次數。</p>
+        <p class="details">調整大播放器作曲者資訊顏色。#album-now-meta 與 album-play-count 使用灰色系文字，淺色模式也改用低彩度灰色，讓大播放器右上角資訊與作曲者資訊更一致。</p>
+        <p class="details">確認目前 EQ 動態顯示器的分析頻率範圍：程式以 minHz = 32、maxHz = Math.min(18000, Nyquist * 0.92) 做對數分段；一般 44.1kHz 或 48kHz 音訊下顯示範圍約為 32Hz 到 18000Hz。</p>
+        <p class="details">同步更新 index.html 與 version.html 的資源快取參數為 20260615-b3-5，並在使用者版 version.html 的 v0.5b3 條目補充本次修正。</p>
+        <p class="details">已將本次使用者提供的大播放器播放次數位置參考截圖壓縮為 JPG，保存於 更新日誌/assets/v0.5b3-5/。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b3-6</h3>
+        <p class="date">修改時間：2026 06/15</p>
+        <p class="details">微調大播放器右上角播放次數。index.html 將 Now Playing 與 album-play-count 包進 album-top-row；CSS 以 flex align-items: flex-end 讓播放次數與 Now Playing 底部齊平，並將播放次數字級由 14px 降為 11px。</p>
+        <p class="details">修正作曲者文字仍可能顯示為黃色的問題。#album-now-meta 與 .album-player .track .track-composer 的灰色 color 規則加入 !important，淺色模式覆蓋規則也同步提高優先級，避免被曲目主色或金色樣式蓋回。</p>
+        <p class="details">同步更新 index.html 與 version.html 的資源快取參數為 20260615-b3-6，並在使用者版 version.html 的 v0.5b3 條目補充本次修正。</p>
+        <p class="details">已將本次使用者提供的大播放器播放次數對齊與作曲者顏色參考截圖壓縮為 JPG，保存於 更新日誌/assets/v0.5b3-6/。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b3-7</h3>
+        <p class="date">修改時間：2026 06/15</p>
+        <p class="details">修正小曲目卡作曲者姓名仍顯示為黃色的問題。原因是舊版 .track span 通用規則會直接套用 color: var(--gold) 到 track-composer 內部的中文與英文 span，導致父層 track-composer 的灰色設定被子元素覆蓋；本次改為直接指定 .album-player .track .track-composer span 的灰色 color，並在淺色模式同步覆蓋。</p>
+        <p class="details">同步更新 index.html 與 version.html 的資源快取參數為 20260615-b3-7，並在使用者版 version.html 的 v0.5b3 條目補充本次修正。</p>
+        <p class="details">已將本次使用者提供的小曲目卡作曲者仍為黃色的截圖壓縮為 JPG，保存於 更新日誌/assets/v0.5b3-7/。</p>
+      </article>
+    </section>
+
+    <section class="version-group">
+      <h2 class="major-version" id="v0-5b4">v0.5b4</h2>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b4-1</h3>
+        <p class="date">修改時間：2026 06/16</p>
+        <p class="details">新增「花朵綻放」區域的八色花朵深連結功能。script.js 加入 bloom hash 解析與開啟流程，支援 #red_bloom、#orange_bloom、#yellow_bloom、#green_bloom、#blue_bloom、#indigo_bloom、#purple_bloom、#violet_bloom 與 #gray_bloom；其中 violet 會對應既有 purple 花色資料。</p>
+        <p class="details">訪客透過上述網址進入網站時，頁面會自動捲動至「花朵綻放」區域，進入花園狀態，並呼叫既有 setBloomChoice() 播放對應顏色的綻放動畫、祝福文字、花卡與音效流程。若瀏覽器因自動播放限制阻擋音效，綻放動畫仍會正常顯示。</p>
+        <p class="details">首頁八色小花入口與「花朵綻放」區域內的八色種子現在會同步更新網址 hash，方便直接複製對應花色網址製作 QR-Code。</p>
+        <p class="details">同步將網站目前版本提升為 v0.5b4，更新 index.html、version.html 的資源快取參數為 20260616-b4-1，並在使用者版 version.html 新增 v0.5b4 條目。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b4-2</h3>
+        <p class="date">修改時間：2026 06/16</p>
+        <p class="details">強化八色花朵深連結的開花音效播放。openBloomDeepLink 現在呼叫 setBloomChoice 時會帶入 queueSfxOnBlocked，讓 #red_bloom、#orange_bloom 等網址進入時明確嘗試播放對應 bloom 音效。</p>
+        <p class="details">新增 pendingBloomDeepLinkSfxKey 與 playPendingBloomDeepLinkSfx。若瀏覽器因未互動而阻擋自動播放，系統會記住目前深連結花色，並在使用者第一次 pointerdown、keydown 或 touchstart 時補播同一個開花音效，同時以 toast 提醒「點一下花園，播放開花聲音」。</p>
+        <p class="details">同步更新 index.html 與 version.html 的資源快取參數為 20260616-b4-2，並在使用者版 version.html 的 v0.5b4 條目補充本次音效修正。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b4-3</h3>
+        <p class="date">修改時間：2026 06/16</p>
+        <p class="details">依使用者希望讓 #red_bloom 等深連結更全自動播放開花音效的需求，新增 simulateBloomDeepLinkGesture。openBloomDeepLink 會在自動捲動前先對 ambient-layer 或 body 的左上空白位置送出 pointerdown、mouseup 與 click 事件，避免命中種子、卡片或其他互動元件。</p>
+        <p class="details">暖身點擊同時會嘗試呼叫 ensureAudio 並 resume AudioContext，提升行動裝置在深連結開花時播放 bloom 音效的成功率。需注意部分瀏覽器只承認真實使用者手勢，程式模擬事件可能仍無法完全解除自動播放限制；既有的第一次互動補播機制仍保留作為後援。</p>
+        <p class="details">同步更新 index.html 與 version.html 的資源快取參數為 20260616-b4-3，並在使用者版 version.html 的 v0.5b4 條目補充本次深連結音訊暖身修正。</p>
       </article>
     </section>
 
@@ -817,8 +1251,8 @@
         <h3>v0.2b2-1</h3>
         <div class="asset-grid">
           <div class="asset-card">
-            <img src="assets/v0.2b2-1/背景.png" alt="淺色主題背景圖">
-            <a href="assets/v0.2b2-1/背景.png">背景.png</a>
+            <img src="assets/v0.2b2-1/背景.jpg" alt="淺色主題背景圖">
+            <a href="assets/v0.2b2-1/背景.jpg">背景.jpg</a>
             <small>淺色主題入口主視覺背景。</small>
           </div>
         </div>
@@ -828,8 +1262,8 @@
         <h3>v0.2b3-1</h3>
         <div class="asset-grid">
           <div class="asset-card">
-            <img src="assets/v0.2b3-1/李岳鴒_大頭照1.png" alt="李岳鴒大頭照">
-            <a href="assets/v0.2b3-1/李岳鴒_大頭照1.png">李岳鴒_大頭照1.png</a>
+            <img src="assets/v0.2b3-1/李岳鴒_大頭照1.jpg" alt="李岳鴒大頭照">
+            <a href="assets/v0.2b3-1/李岳鴒_大頭照1.jpg">李岳鴒_大頭照1.jpg</a>
             <small>李岳鴒｜專案總召照片。</small>
           </div>
           <div class="asset-card">
@@ -838,8 +1272,8 @@
             <small>陳映里｜專案副召照片。</small>
           </div>
           <div class="asset-card">
-            <img src="assets/v0.2b3-1/林書磊_大頭照 2.jpeg" alt="林書磊大頭照">
-            <a href="assets/v0.2b3-1/林書磊_大頭照 2.jpeg">林書磊_大頭照 2.jpeg</a>
+            <img src="assets/v0.2b3-1/林書磊_大頭照 2.jpg" alt="林書磊大頭照">
+            <a href="assets/v0.2b3-1/林書磊_大頭照 2.jpg">林書磊_大頭照 2.jpg</a>
             <small>林書磊｜執行長照片。</small>
           </div>
         </div>
@@ -859,8 +1293,8 @@
         <h3>v0.3b6-1</h3>
         <div class="asset-grid">
           <div class="asset-card">
-            <img src="assets/v0.3b6-1/secret garden Logo_no text PNG.png" alt="Secret Garden Logo">
-            <a href="assets/v0.3b6-1/secret garden Logo_no text PNG.png">secret garden Logo_no text PNG.png</a>
+            <img src="assets/v0.3b6-1/secret garden Logo_no text PNG.jpg" alt="Secret Garden Logo">
+            <a href="assets/v0.3b6-1/secret garden Logo_no text PNG.jpg">secret garden Logo_no text PNG.jpg</a>
             <small>網站右上角與首頁使用的無文字 Logo。</small>
           </div>
         </div>
@@ -906,33 +1340,33 @@
         <h3>v0.3b10-3</h3>
         <div class="asset-grid">
           <div class="asset-card">
-            <img src="assets/v0.3b10-3/CleanShot 2026-06-02 at 17.04.26@2x.png" alt="Welcome EQ 主播放器截圖">
-            <a href="assets/v0.3b10-3/CleanShot 2026-06-02 at 17.04.26@2x.png">CleanShot 2026-06-02 at 17.04.26@2x.png</a>
+            <img src="assets/v0.3b10-3/CleanShot 2026-06-02 at 17.04.26@2x.jpg" alt="Welcome EQ 主播放器截圖">
+            <a href="assets/v0.3b10-3/CleanShot 2026-06-02 at 17.04.26@2x.jpg">CleanShot 2026-06-02 at 17.04.26@2x.jpg</a>
             <small>Welcome 播放時 EQ 被推出畫面外的參考截圖。</small>
           </div>
           <div class="asset-card">
-            <img src="assets/v0.3b10-3/CleanShot 2026-06-02 at 17.04.46@2x.png" alt="右上角長曲名截圖">
-            <a href="assets/v0.3b10-3/CleanShot 2026-06-02 at 17.04.46@2x.png">CleanShot 2026-06-02 at 17.04.46@2x.png</a>
+            <img src="assets/v0.3b10-3/CleanShot 2026-06-02 at 17.04.46@2x.jpg" alt="右上角長曲名截圖">
+            <a href="assets/v0.3b10-3/CleanShot 2026-06-02 at 17.04.46@2x.jpg">CleanShot 2026-06-02 at 17.04.46@2x.jpg</a>
             <small>右上角正在播放長曲名被裁切的參考截圖。</small>
           </div>
           <div class="asset-card">
-            <img src="assets/v0.3b10-3/截圖 2026-06-02 下午5.12.16.png" alt="小播放器長曲名截圖">
-            <a href="assets/v0.3b10-3/截圖 2026-06-02 下午5.12.16.png">截圖 2026-06-02 下午5.12.16.png</a>
+            <img src="assets/v0.3b10-3/截圖 2026-06-02 下午5.12.16.jpg" alt="小播放器長曲名截圖">
+            <a href="assets/v0.3b10-3/截圖 2026-06-02 下午5.12.16.jpg">截圖 2026-06-02 下午5.12.16.jpg</a>
             <small>小播放器長曲名與跳轉按鈕重疊的參考截圖。</small>
           </div>
           <div class="asset-card">
-            <img src="assets/v0.3b10-3/CleanShot 2026-06-02 at 18.35.48@2x.png" alt="EQ 位置跑偏截圖">
-            <a href="assets/v0.3b10-3/CleanShot 2026-06-02 at 18.35.48@2x.png">CleanShot 2026-06-02 at 18.35.48@2x.png</a>
+            <img src="assets/v0.3b10-3/CleanShot 2026-06-02 at 18.35.48@2x.jpg" alt="EQ 位置跑偏截圖">
+            <a href="assets/v0.3b10-3/CleanShot 2026-06-02 at 18.35.48@2x.jpg">CleanShot 2026-06-02 at 18.35.48@2x.jpg</a>
             <small>Welcome EQ 位置仍跑偏的後續修正參考。</small>
           </div>
           <div class="asset-card">
-            <img src="assets/v0.3b10-3/截圖 2026-06-02 下午6.36.16.png" alt="小播放器暈邊截圖">
-            <a href="assets/v0.3b10-3/截圖 2026-06-02 下午6.36.16.png">截圖 2026-06-02 下午6.36.16.png</a>
+            <img src="assets/v0.3b10-3/截圖 2026-06-02 下午6.36.16.jpg" alt="小播放器暈邊截圖">
+            <a href="assets/v0.3b10-3/截圖 2026-06-02 下午6.36.16.jpg">截圖 2026-06-02 下午6.36.16.jpg</a>
             <small>小播放器曲名暈邊與停靠位置調整參考。</small>
           </div>
           <div class="asset-card">
-            <img src="assets/v0.3b10-3/CleanShot 2026-06-02 at 19.19.34@2x.png" alt="EQ 放到時間右邊截圖">
-            <a href="assets/v0.3b10-3/CleanShot 2026-06-02 at 19.19.34@2x.png">CleanShot 2026-06-02 at 19.19.34@2x.png</a>
+            <img src="assets/v0.3b10-3/CleanShot 2026-06-02 at 19.19.34@2x.jpg" alt="EQ 放到時間右邊截圖">
+            <a href="assets/v0.3b10-3/CleanShot 2026-06-02 at 19.19.34@2x.jpg">CleanShot 2026-06-02 at 19.19.34@2x.jpg</a>
             <small>EQ 移至樂曲時長右側的最終參考。</small>
           </div>
         </div>
@@ -942,7 +1376,7 @@
         <h3>v0.3b6-3</h3>
         <div class="asset-grid">
           <div class="asset-card">
-            <a href="assets/v0.3b6-3/IMG_1589.HEIC">IMG_1589.HEIC</a>
+            <a href="assets/v0.3b6-3/IMG_1589.jpg">IMG_1589.jpg</a>
             <small>種子游標位置偏差回報照片。部分瀏覽器可能無法直接預覽 HEIC。</small>
           </div>
         </div>
@@ -952,18 +1386,18 @@
         <h3>v0.3b8-3</h3>
         <div class="asset-grid">
           <div class="asset-card">
-            <img src="assets/v0.3b8-3/CleanShot 2026-06-02 at 02.10.45@2x.png" alt="版本選單佈局截圖">
-            <a href="assets/v0.3b8-3/CleanShot 2026-06-02 at 02.10.45@2x.png">CleanShot 2026-06-02 at 02.10.45@2x.png</a>
+            <img src="assets/v0.3b8-3/CleanShot 2026-06-02 at 02.10.45@2x.jpg" alt="版本選單佈局截圖">
+            <a href="assets/v0.3b8-3/CleanShot 2026-06-02 at 02.10.45@2x.jpg">CleanShot 2026-06-02 at 02.10.45@2x.jpg</a>
             <small>版本選單文字與箭頭位置調整參考。</small>
           </div>
           <div class="asset-card">
-            <img src="assets/v0.3b8-3/CleanShot 2026-06-02 at 02.34.03@2x.png" alt="導覽列判斷錯誤截圖">
-            <a href="assets/v0.3b8-3/CleanShot 2026-06-02 at 02.34.03@2x.png">CleanShot 2026-06-02 at 02.34.03@2x.png</a>
+            <img src="assets/v0.3b8-3/CleanShot 2026-06-02 at 02.34.03@2x.jpg" alt="導覽列判斷錯誤截圖">
+            <a href="assets/v0.3b8-3/CleanShot 2026-06-02 at 02.34.03@2x.jpg">CleanShot 2026-06-02 at 02.34.03@2x.jpg</a>
             <small>導覽列當前頁判斷錯誤修正參考。</small>
           </div>
           <div class="asset-card">
-            <img src="assets/v0.3b8-3/CleanShot 2026-06-02 at 02.36.03@2x.png" alt="雙層箭頭截圖">
-            <a href="assets/v0.3b8-3/CleanShot 2026-06-02 at 02.36.03@2x.png">CleanShot 2026-06-02 at 02.36.03@2x.png</a>
+            <img src="assets/v0.3b8-3/CleanShot 2026-06-02 at 02.36.03@2x.jpg" alt="雙層箭頭截圖">
+            <a href="assets/v0.3b8-3/CleanShot 2026-06-02 at 02.36.03@2x.jpg">CleanShot 2026-06-02 at 02.36.03@2x.jpg</a>
             <small>雙層箭頭錯位修正參考。</small>
           </div>
         </div>
@@ -973,8 +1407,8 @@
         <h3>v0.3b11-2</h3>
         <div class="asset-grid">
           <div class="asset-card">
-            <img src="assets/v0.3b11-2/截圖 2026-06-02 晚上10.10.15.png" alt="Safari 聯絡按鈕 hover 異常截圖">
-            <a href="assets/v0.3b11-2/截圖 2026-06-02 晚上10.10.15.png">截圖 2026-06-02 晚上10.10.15.png</a>
+            <img src="assets/v0.3b11-2/截圖 2026-06-02 晚上10.10.15.jpg" alt="Safari 聯絡按鈕 hover 異常截圖">
+            <a href="assets/v0.3b11-2/截圖 2026-06-02 晚上10.10.15.jpg">截圖 2026-06-02 晚上10.10.15.jpg</a>
             <small>Safari 中聯絡按鈕 hover 位移異常參考。</small>
           </div>
         </div>
@@ -994,18 +1428,18 @@
         <h3>v0.3b12-8</h3>
         <div class="asset-grid">
           <div class="asset-card">
-            <img src="assets/v0.3b12-8/CleanShot 2026-06-03 at 08.49.57@2x.png" alt="活動文章展開後內文位移參考">
-            <a href="assets/v0.3b12-8/CleanShot 2026-06-03 at 08.49.57@2x.png">CleanShot 2026-06-03 at 08.49.57@2x.png</a>
+            <img src="assets/v0.3b12-8/CleanShot 2026-06-03 at 08.49.57@2x.jpg" alt="活動文章展開後內文位移參考">
+            <a href="assets/v0.3b12-8/CleanShot 2026-06-03 at 08.49.57@2x.jpg">CleanShot 2026-06-03 at 08.49.57@2x.jpg</a>
             <small>活動文章展開後第一行內文往下移的參考截圖。</small>
           </div>
           <div class="asset-card">
-            <img src="assets/v0.3b12-8/CleanShot 2026-06-03 at 08.56.21@2x.png" alt="新版活動格高度參考">
-            <a href="assets/v0.3b12-8/CleanShot 2026-06-03 at 08.56.21@2x.png">CleanShot 2026-06-03 at 08.56.21@2x.png</a>
+            <img src="assets/v0.3b12-8/CleanShot 2026-06-03 at 08.56.21@2x.jpg" alt="新版活動格高度參考">
+            <a href="assets/v0.3b12-8/CleanShot 2026-06-03 at 08.56.21@2x.jpg">CleanShot 2026-06-03 at 08.56.21@2x.jpg</a>
             <small>新增下拉式選單後，活動格總高度偏高的參考截圖。</small>
           </div>
           <div class="asset-card">
-            <img src="assets/v0.3b12-8/CleanShot 2026-06-03 at 08.56.45@2x.png" alt="舊版活動格高度參考">
-            <a href="assets/v0.3b12-8/CleanShot 2026-06-03 at 08.56.45@2x.png">CleanShot 2026-06-03 at 08.56.45@2x.png</a>
+            <img src="assets/v0.3b12-8/CleanShot 2026-06-03 at 08.56.45@2x.jpg" alt="舊版活動格高度參考">
+            <a href="assets/v0.3b12-8/CleanShot 2026-06-03 at 08.56.45@2x.jpg">CleanShot 2026-06-03 at 08.56.45@2x.jpg</a>
             <small>未加入文章下拉式選單前的舊版活動格高度參考。</small>
           </div>
         </div>
@@ -1015,8 +1449,8 @@
         <h3>v0.3b12-9</h3>
         <div class="asset-grid">
           <div class="asset-card">
-            <img src="assets/v0.3b12-9/CleanShot 2026-06-03 at 09.44.04@2x.png" alt="活動紀錄分頁需求參考">
-            <a href="assets/v0.3b12-9/CleanShot 2026-06-03 at 09.44.04@2x.png">CleanShot 2026-06-03 at 09.44.04@2x.png</a>
+            <img src="assets/v0.3b12-9/CleanShot 2026-06-03 at 09.44.04@2x.jpg" alt="活動紀錄分頁需求參考">
+            <a href="assets/v0.3b12-9/CleanShot 2026-06-03 at 09.44.04@2x.jpg">CleanShot 2026-06-03 at 09.44.04@2x.jpg</a>
             <small>活動紀錄改為三則一頁、第四格改為分頁列的需求參考截圖。</small>
           </div>
         </div>
@@ -1026,8 +1460,8 @@
         <h3>v0.3b12-10</h3>
         <div class="asset-grid">
           <div class="asset-card">
-            <img src="assets/v0.3b12-10/截圖 2026-06-03 上午10.09.14.png" alt="網站停留在快速預覽狀態截圖">
-            <a href="assets/v0.3b12-10/截圖 2026-06-03 上午10.09.14.png">截圖 2026-06-03 上午10.09.14.png</a>
+            <img src="assets/v0.3b12-10/截圖 2026-06-03 上午10.09.14.jpg" alt="網站停留在快速預覽狀態截圖">
+            <a href="assets/v0.3b12-10/截圖 2026-06-03 上午10.09.14.jpg">截圖 2026-06-03 上午10.09.14.jpg</a>
             <small>活動紀錄分頁初始化錯誤造成全站功能未載入的參考截圖。</small>
           </div>
         </div>
@@ -1037,13 +1471,13 @@
         <h3>v0.3b12-11</h3>
         <div class="asset-grid">
           <div class="asset-card">
-            <img src="assets/v0.3b12-11/CleanShot 2026-06-03 at 10.50.44@2x.png" alt="活動紀錄總資訊列位置參考">
-            <a href="assets/v0.3b12-11/CleanShot 2026-06-03 at 10.50.44@2x.png">CleanShot 2026-06-03 at 10.50.44@2x.png</a>
+            <img src="assets/v0.3b12-11/CleanShot 2026-06-03 at 10.50.44@2x.jpg" alt="活動紀錄總資訊列位置參考">
+            <a href="assets/v0.3b12-11/CleanShot 2026-06-03 at 10.50.44@2x.jpg">CleanShot 2026-06-03 at 10.50.44@2x.jpg</a>
             <small>活動紀錄總資訊列與排序按鈕跑入第一張活動卡的參考截圖。</small>
           </div>
           <div class="asset-card">
-            <img src="assets/v0.3b12-11/CleanShot 2026-06-03 at 10.50.59@2x.png" alt="活動文章展開內文間距參考">
-            <a href="assets/v0.3b12-11/CleanShot 2026-06-03 at 10.50.59@2x.png">CleanShot 2026-06-03 at 10.50.59@2x.png</a>
+            <img src="assets/v0.3b12-11/CleanShot 2026-06-03 at 10.50.59@2x.jpg" alt="活動文章展開內文間距參考">
+            <a href="assets/v0.3b12-11/CleanShot 2026-06-03 at 10.50.59@2x.jpg">CleanShot 2026-06-03 at 10.50.59@2x.jpg</a>
             <small>活動文章展開時內文與標題間距、動畫流暢度參考截圖。</small>
           </div>
         </div>
@@ -1053,8 +1487,8 @@
         <h3>v0.3b12-12</h3>
         <div class="asset-grid">
           <div class="asset-card">
-            <img src="assets/v0.3b12-12/CleanShot 2026-06-03 at 11.59.40@2x.png" alt="活動紀錄今日花語高度與排序參考">
-            <a href="assets/v0.3b12-12/CleanShot 2026-06-03 at 11.59.40@2x.png">CleanShot 2026-06-03 at 11.59.40@2x.png</a>
+            <img src="assets/v0.3b12-12/CleanShot 2026-06-03 at 11.59.40@2x.jpg" alt="活動紀錄今日花語高度與排序參考">
+            <a href="assets/v0.3b12-12/CleanShot 2026-06-03 at 11.59.40@2x.jpg">CleanShot 2026-06-03 at 11.59.40@2x.jpg</a>
             <small>今日花語固定高度、活動紀錄展開間距、排序與補位提示調整參考截圖。</small>
           </div>
         </div>
@@ -1064,8 +1498,8 @@
         <h3>v0.3b12a-1</h3>
         <div class="asset-grid">
           <div class="asset-card">
-            <img src="assets/v0.3b12a-1/CleanShot 2026-06-03 at 16.44.24@2x.png" alt="活動紀錄箭頭展開與摘要參考">
-            <a href="assets/v0.3b12a-1/CleanShot 2026-06-03 at 16.44.24@2x.png">CleanShot 2026-06-03 at 16.44.24@2x.png</a>
+            <img src="assets/v0.3b12a-1/CleanShot 2026-06-03 at 16.44.24@2x.jpg" alt="活動紀錄箭頭展開與摘要參考">
+            <a href="assets/v0.3b12a-1/CleanShot 2026-06-03 at 16.44.24@2x.jpg">CleanShot 2026-06-03 at 16.44.24@2x.jpg</a>
             <small>活動紀錄改為箭頭展開、收合狀態顯示獨立簡介文字的參考截圖。</small>
           </div>
         </div>
@@ -1075,48 +1509,48 @@
         <h3>v0.4b2-1</h3>
         <div class="asset-grid">
           <div class="asset-card">
-            <img src="assets/v0.4b2-1/IMG_1621.PNG" alt="首頁行動版八色花與播放器參考">
-            <a href="assets/v0.4b2-1/IMG_1621.PNG">IMG_1621.PNG</a>
+            <img src="assets/v0.4b2-1/IMG_1621.jpg" alt="首頁行動版八色花與播放器參考">
+            <a href="assets/v0.4b2-1/IMG_1621.jpg">IMG_1621.jpg</a>
             <small>首頁八色花單行、底部導覽雙行與手機播放器控制參考。</small>
           </div>
           <div class="asset-card">
-            <img src="assets/v0.4b2-1/IMG_1622.PNG" alt="花朵綻放種子單行參考">
-            <a href="assets/v0.4b2-1/IMG_1622.PNG">IMG_1622.PNG</a>
+            <img src="assets/v0.4b2-1/IMG_1622.jpg" alt="花朵綻放種子單行參考">
+            <a href="assets/v0.4b2-1/IMG_1622.jpg">IMG_1622.jpg</a>
             <small>花朵綻放頁八色種子單行與隱藏同列播放鍵參考。</small>
           </div>
           <div class="asset-card">
-            <img src="assets/v0.4b2-1/IMG_1623.PNG" alt="花朵祝福與花卡手機排版參考">
-            <a href="assets/v0.4b2-1/IMG_1623.PNG">IMG_1623.PNG</a>
+            <img src="assets/v0.4b2-1/IMG_1623.jpg" alt="花朵祝福與花卡手機排版參考">
+            <a href="assets/v0.4b2-1/IMG_1623.jpg">IMG_1623.jpg</a>
             <small>花朵、祝福語與花語卡片在手機版中的重新排列參考。</small>
           </div>
           <div class="asset-card">
-            <img src="assets/v0.4b2-1/IMG_1624.PNG" alt="線上花園種子雙行參考">
-            <a href="assets/v0.4b2-1/IMG_1624.PNG">IMG_1624.PNG</a>
+            <img src="assets/v0.4b2-1/IMG_1624.jpg" alt="線上花園種子雙行參考">
+            <a href="assets/v0.4b2-1/IMG_1624.jpg">IMG_1624.jpg</a>
             <small>線上花園 Red、Orange 等種子按鈕雙行與色號同步參考。</small>
           </div>
           <div class="asset-card">
-            <img src="assets/v0.4b2-1/IMG_1625.PNG" alt="專輯聆聽曲目雙欄參考">
-            <a href="assets/v0.4b2-1/IMG_1625.PNG">IMG_1625.PNG</a>
+            <img src="assets/v0.4b2-1/IMG_1625.jpg" alt="專輯聆聽曲目雙欄參考">
+            <a href="assets/v0.4b2-1/IMG_1625.jpg">IMG_1625.jpg</a>
             <small>專輯聆聽手機版主播放器與曲目卡雙欄排版參考。</small>
           </div>
           <div class="asset-card">
-            <img src="assets/v0.4b2-1/IMG_1626.PNG" alt="花語圖鑑卡雙欄參考">
-            <a href="assets/v0.4b2-1/IMG_1626.PNG">IMG_1626.PNG</a>
+            <img src="assets/v0.4b2-1/IMG_1626.jpg" alt="花語圖鑑卡雙欄參考">
+            <a href="assets/v0.4b2-1/IMG_1626.jpg">IMG_1626.jpg</a>
             <small>花語圖鑑卡手機版雙欄與卡片圖片貼合外框參考。</small>
           </div>
           <div class="asset-card">
-            <img src="assets/v0.4b2-1/IMG_1627.JPG" alt="今日花語長句顯示參考">
-            <a href="assets/v0.4b2-1/IMG_1627.JPG">IMG_1627.JPG</a>
+            <img src="assets/v0.4b2-1/IMG_1627-compressed.jpg" alt="今日花語長句顯示參考">
+            <a href="assets/v0.4b2-1/IMG_1627-compressed.jpg">IMG_1627-compressed.jpg</a>
             <small>今日花語長祝福語在手機版中的字級與框內顯示參考。</small>
           </div>
           <div class="asset-card">
-            <img src="assets/v0.4b2-1/IMG_1628.PNG" alt="網站版本紀錄手機版收合參考">
-            <a href="assets/v0.4b2-1/IMG_1628.PNG">IMG_1628.PNG</a>
+            <img src="assets/v0.4b2-1/IMG_1628.jpg" alt="網站版本紀錄手機版收合參考">
+            <a href="assets/v0.4b2-1/IMG_1628.jpg">IMG_1628.jpg</a>
             <small>網站版本紀錄展開後收合回版本列的位置參考。</small>
           </div>
           <div class="asset-card">
-            <img src="assets/v0.4b2-1/IMG_1629.PNG" alt="合作聯絡按鈕手機排列參考">
-            <a href="assets/v0.4b2-1/IMG_1629.PNG">IMG_1629.PNG</a>
+            <img src="assets/v0.4b2-1/IMG_1629.jpg" alt="合作聯絡按鈕手機排列參考">
+            <a href="assets/v0.4b2-1/IMG_1629.jpg">IMG_1629.jpg</a>
             <small>合作與聯絡區四個按鈕在手機版橫向排列的參考。</small>
           </div>
         </div>
@@ -1126,43 +1560,43 @@
         <h3>v0.4b2-2</h3>
         <div class="asset-grid">
           <div class="asset-card">
-            <img src="assets/v0.4b2-2/CleanShot 2026-06-04 at 16.12.04@2x.png" alt="手機版左上角 Logo 背景修正參考">
-            <a href="assets/v0.4b2-2/CleanShot 2026-06-04 at 16.12.04@2x.png">CleanShot 2026-06-04 at 16.12.04@2x.png</a>
+            <img src="assets/v0.4b2-2/CleanShot 2026-06-04 at 16.12.04@2x.jpg" alt="手機版左上角 Logo 背景修正參考">
+            <a href="assets/v0.4b2-2/CleanShot 2026-06-04 at 16.12.04@2x.jpg">CleanShot 2026-06-04 at 16.12.04@2x.jpg</a>
             <small>手機版左上角 Logo 背景不應延伸到隱藏文字區域的參考。</small>
           </div>
           <div class="asset-card">
-            <img src="assets/v0.4b2-2/IMG_1635.PNG" alt="手機版首頁提示文字與八色花位置參考">
-            <a href="assets/v0.4b2-2/IMG_1635.PNG">IMG_1635.PNG</a>
+            <img src="assets/v0.4b2-2/IMG_1635.jpg" alt="手機版首頁提示文字與八色花位置參考">
+            <a href="assets/v0.4b2-2/IMG_1635.jpg">IMG_1635.jpg</a>
             <small>首頁音樂提示、八色花朵與底部導覽形狀調整參考。</small>
           </div>
           <div class="asset-card">
-            <img src="assets/v0.4b2-2/IMG_1642.PNG" alt="手機版迷你播放器按鈕置中參考">
-            <a href="assets/v0.4b2-2/IMG_1642.PNG">IMG_1642.PNG</a>
+            <img src="assets/v0.4b2-2/IMG_1642.jpg" alt="手機版迷你播放器按鈕置中參考">
+            <a href="assets/v0.4b2-2/IMG_1642.jpg">IMG_1642.jpg</a>
             <small>手機版小音樂控制器按鈕置中與控制圖示樣式參考。</small>
           </div>
           <div class="asset-card">
-            <img src="assets/v0.4b2-2/截圖 2026-06-04 下午3.39.34.png" alt="桌機版播放器圖示參考">
-            <a href="assets/v0.4b2-2/截圖 2026-06-04 下午3.39.34.png">截圖 2026-06-04 下午3.39.34.png</a>
+            <img src="assets/v0.4b2-2/截圖 2026-06-04 下午3.39.34.jpg" alt="桌機版播放器圖示參考">
+            <a href="assets/v0.4b2-2/截圖 2026-06-04 下午3.39.34.jpg">截圖 2026-06-04 下午3.39.34.jpg</a>
             <small>播放、暫停、上一首與下一首按鈕改回簡潔圖示的參考。</small>
           </div>
           <div class="asset-card">
-            <img src="assets/v0.4b2-2/IMG_1637.PNG" alt="花朵綻放手機版高度參考一">
-            <a href="assets/v0.4b2-2/IMG_1637.PNG">IMG_1637.PNG</a>
+            <img src="assets/v0.4b2-2/IMG_1637.jpg" alt="花朵綻放手機版高度參考一">
+            <a href="assets/v0.4b2-2/IMG_1637.jpg">IMG_1637.jpg</a>
             <small>花朵綻放手機版標題、彩色花與內容高度調整參考。</small>
           </div>
           <div class="asset-card">
-            <img src="assets/v0.4b2-2/IMG_1638.PNG" alt="花朵綻放手機版高度參考二">
-            <a href="assets/v0.4b2-2/IMG_1638.PNG">IMG_1638.PNG</a>
+            <img src="assets/v0.4b2-2/IMG_1638.jpg" alt="花朵綻放手機版高度參考二">
+            <a href="assets/v0.4b2-2/IMG_1638.jpg">IMG_1638.jpg</a>
             <small>花朵綻放後花朵、祝福語與花語卡片位置調整參考。</small>
           </div>
           <div class="asset-card">
-            <img src="assets/v0.4b2-2/IMG_1639.PNG" alt="線上花園手機版種花區高度參考">
-            <a href="assets/v0.4b2-2/IMG_1639.PNG">IMG_1639.PNG</a>
+            <img src="assets/v0.4b2-2/IMG_1639.jpg" alt="線上花園手機版種花區高度參考">
+            <a href="assets/v0.4b2-2/IMG_1639.jpg">IMG_1639.jpg</a>
             <small>種下一些花手機版副標換行、八色按鈕縮小與舞台高度參考。</small>
           </div>
           <div class="asset-card">
-            <img src="assets/v0.4b2-2/IMG_1640.PNG" alt="線上花園放大模式參考">
-            <a href="assets/v0.4b2-2/IMG_1640.PNG">IMG_1640.PNG</a>
+            <img src="assets/v0.4b2-2/IMG_1640.jpg" alt="線上花園放大模式參考">
+            <a href="assets/v0.4b2-2/IMG_1640.jpg">IMG_1640.jpg</a>
             <small>種花區域新增放大／縮小模式的手機版參考。</small>
           </div>
         </div>
@@ -1172,28 +1606,28 @@
         <h3>v0.4b3-1</h3>
         <div class="asset-grid">
           <div class="asset-card">
-            <img src="assets/v0.4b3-1/IMG_1643.PNG" alt="手機版首頁控制器與導覽透明度參考">
-            <a href="assets/v0.4b3-1/IMG_1643.PNG">IMG_1643.PNG</a>
+            <img src="assets/v0.4b3-1/IMG_1643.jpg" alt="手機版首頁控制器與導覽透明度參考">
+            <a href="assets/v0.4b3-1/IMG_1643.jpg">IMG_1643.jpg</a>
             <small>手機版小音樂控制器、底部導覽列透明度與首頁八色小花位置調整參考。</small>
           </div>
           <div class="asset-card">
-            <img src="assets/v0.4b3-1/IMG_1644.PNG" alt="手機版彩色花朵置中與整體縮放參考">
-            <a href="assets/v0.4b3-1/IMG_1644.PNG">IMG_1644.PNG</a>
+            <img src="assets/v0.4b3-1/IMG_1644.jpg" alt="手機版彩色花朵置中與整體縮放參考">
+            <a href="assets/v0.4b3-1/IMG_1644.jpg">IMG_1644.jpg</a>
             <small>花朵綻放中彩色花朵需置中且不解體的手機版參考。</small>
           </div>
           <div class="asset-card">
-            <img src="assets/v0.4b3-1/IMG_1646.PNG" alt="手機版花朵祝福與花卡置中參考">
-            <a href="assets/v0.4b3-1/IMG_1646.PNG">IMG_1646.PNG</a>
+            <img src="assets/v0.4b3-1/IMG_1646.jpg" alt="手機版花朵祝福與花卡置中參考">
+            <a href="assets/v0.4b3-1/IMG_1646.jpg">IMG_1646.jpg</a>
             <small>花朵、祝福語與花語小卡在框內置中及花卡放大參考。</small>
           </div>
           <div class="asset-card">
-            <img src="assets/v0.4b3-1/IMG_1647.PNG" alt="種下一些花放大按鈕外框移除參考">
-            <a href="assets/v0.4b3-1/IMG_1647.PNG">IMG_1647.PNG</a>
+            <img src="assets/v0.4b3-1/IMG_1647.jpg" alt="種下一些花放大按鈕外框移除參考">
+            <a href="assets/v0.4b3-1/IMG_1647.jpg">IMG_1647.jpg</a>
             <small>種下一些花中的放大／縮小圖示需移除圓形外框的參考。</small>
           </div>
           <div class="asset-card">
-            <img src="assets/v0.4b3-1/IMG_1648.PNG" alt="今日花語淺色模式文字顏色參考">
-            <a href="assets/v0.4b3-1/IMG_1648.PNG">IMG_1648.PNG</a>
+            <img src="assets/v0.4b3-1/IMG_1648.jpg" alt="今日花語淺色模式文字顏色參考">
+            <a href="assets/v0.4b3-1/IMG_1648.jpg">IMG_1648.jpg</a>
             <small>淺色模式今日花語祝福文字需與標題同色的參考。</small>
           </div>
         </div>
@@ -1203,8 +1637,8 @@
         <h3>v0.4b4-2</h3>
         <div class="asset-grid">
           <div class="asset-card">
-            <img src="assets/v0.4b4-2/PNG影像.PNG" alt="專輯曲目卡文字被裁切回報截圖">
-            <a href="assets/v0.4b4-2/PNG影像.PNG">PNG影像.PNG</a>
+            <img src="assets/v0.4b4-2/PNG影像.jpg" alt="專輯曲目卡文字被裁切回報截圖">
+            <a href="assets/v0.4b4-2/PNG影像.jpg">PNG影像.jpg</a>
             <small>使用者回報專輯曲目卡右上角作曲者資訊被卡片邊界裁切的參考截圖。</small>
           </div>
         </div>
@@ -1214,13 +1648,13 @@
         <h3>v0.4b4-3</h3>
         <div class="asset-grid">
           <div class="asset-card">
-            <img src="assets/v0.4b4-3/CleanShot 2026-06-07 at 15.53.53@2x.png" alt="種下一些花縮小按鈕箭頭過近參考截圖">
-            <a href="assets/v0.4b4-3/CleanShot 2026-06-07 at 15.53.53@2x.png">CleanShot 2026-06-07 at 15.53.53@2x.png</a>
+            <img src="assets/v0.4b4-3/CleanShot 2026-06-07 at 15.53.53@2x.jpg" alt="種下一些花縮小按鈕箭頭過近參考截圖">
+            <a href="assets/v0.4b4-3/CleanShot 2026-06-07 at 15.53.53@2x.jpg">CleanShot 2026-06-07 at 15.53.53@2x.jpg</a>
             <small>使用者回報種花區放大／縮小按鈕雙箭頭靠得太近的參考截圖。</small>
           </div>
           <div class="asset-card">
-            <img src="assets/v0.4b4-3/IMG_1670.PNG" alt="手機版首頁八色小花跳轉至花朵綻放定位參考截圖">
-            <a href="assets/v0.4b4-3/IMG_1670.PNG">IMG_1670.PNG</a>
+            <img src="assets/v0.4b4-3/IMG_1670.jpg" alt="手機版首頁八色小花跳轉至花朵綻放定位參考截圖">
+            <a href="assets/v0.4b4-3/IMG_1670.jpg">IMG_1670.jpg</a>
             <small>使用者回報手機版首頁八色小花跳轉後看不到花朵綻放區下半部的參考截圖。</small>
           </div>
         </div>
@@ -1230,13 +1664,13 @@
         <h3>v0.4b4-4</h3>
         <div class="asset-grid">
           <div class="asset-card">
-            <img src="assets/v0.4b4-4/CleanShot 2026-06-07 at 17.10.46@2x.png" alt="縮小按鈕現況參考截圖">
-            <a href="assets/v0.4b4-4/CleanShot 2026-06-07 at 17.10.46@2x.png">CleanShot 2026-06-07 at 17.10.46@2x.png</a>
+            <img src="assets/v0.4b4-4/CleanShot 2026-06-07 at 17.10.46@2x.jpg" alt="縮小按鈕現況參考截圖">
+            <a href="assets/v0.4b4-4/CleanShot 2026-06-07 at 17.10.46@2x.jpg">CleanShot 2026-06-07 at 17.10.46@2x.jpg</a>
             <small>使用者回報縮小按鈕仍顯示為小方框、未符合預期樣式的參考截圖。</small>
           </div>
           <div class="asset-card">
-            <img src="assets/v0.4b4-4/CleanShot 2026-06-07 at 17.15.33@2x.png" alt="縮小按鈕 L 型角標目標樣式參考圖">
-            <a href="assets/v0.4b4-4/CleanShot 2026-06-07 at 17.15.33@2x.png">CleanShot 2026-06-07 at 17.15.33@2x.png</a>
+            <img src="assets/v0.4b4-4/CleanShot 2026-06-07 at 17.15.33@2x.jpg" alt="縮小按鈕 L 型角標目標樣式參考圖">
+            <a href="assets/v0.4b4-4/CleanShot 2026-06-07 at 17.15.33@2x.jpg">CleanShot 2026-06-07 at 17.15.33@2x.jpg</a>
             <small>縮小按鈕目標樣式：兩個朝向中間且保留空隙的 L 型角標。</small>
           </div>
         </div>
@@ -1257,13 +1691,13 @@
         <h3>v0.4b4-6</h3>
         <div class="asset-grid">
           <div class="asset-card">
-            <img src="assets/v0.4b4-6/IMG_1673.PNG" alt="手機版花朵綻放未進入花園狀態高度參考">
-            <a href="assets/v0.4b4-6/IMG_1673.PNG">IMG_1673.PNG</a>
+            <img src="assets/v0.4b4-6/IMG_1673.jpg" alt="手機版花朵綻放未進入花園狀態高度參考">
+            <a href="assets/v0.4b4-6/IMG_1673.jpg">IMG_1673.jpg</a>
             <small>使用者指出手機版尚未進入花園的介紹狀態高度仍維持舊版，需要同步壓縮至新版高度的參考截圖。</small>
           </div>
           <div class="asset-card">
-            <img src="assets/v0.4b4-6/IMG_1674.PNG" alt="手機版八色花瓣預覽高度與花蕊位移參考">
-            <a href="assets/v0.4b4-6/IMG_1674.PNG">IMG_1674.PNG</a>
+            <img src="assets/v0.4b4-6/IMG_1674.jpg" alt="手機版八色花瓣預覽高度與花蕊位移參考">
+            <a href="assets/v0.4b4-6/IMG_1674.jpg">IMG_1674.jpg</a>
             <small>使用者指出八色花瓣預覽狀態高度仍偏高，且花瓣與花蕊再次位移，需要重新校準的參考截圖。</small>
           </div>
         </div>
@@ -1273,8 +1707,8 @@
         <h3>v0.4b4-9</h3>
         <div class="asset-grid">
           <div class="asset-card">
-            <img src="assets/v0.4b4-9/IMG_1691.PNG" alt="手機版導覽列跳轉高度調整參考">
-            <a href="assets/v0.4b4-9/IMG_1691.PNG">IMG_1691.PNG</a>
+            <img src="assets/v0.4b4-9/IMG_1691.jpg" alt="手機版導覽列跳轉高度調整參考">
+            <a href="assets/v0.4b4-9/IMG_1691.jpg">IMG_1691.jpg</a>
             <small>使用者指出手機版點擊導覽列後章節標題位置仍偏低，要求讓標題再靠近螢幕上方的參考截圖。</small>
           </div>
         </div>
@@ -1284,8 +1718,8 @@
         <h3>v0.4b4-10</h3>
         <div class="asset-grid">
           <div class="asset-card">
-            <img src="assets/v0.4b4-10/CleanShot 2026-06-09 at 14.41.54@2x.png" alt="活動紀錄網站版本傳送門移位參考">
-            <a href="assets/v0.4b4-10/CleanShot 2026-06-09 at 14.41.54@2x.png">CleanShot 2026-06-09 at 14.41.54@2x.png</a>
+            <img src="assets/v0.4b4-10/CleanShot 2026-06-09 at 14.41.54@2x.jpg" alt="活動紀錄網站版本傳送門移位參考">
+            <a href="assets/v0.4b4-10/CleanShot 2026-06-09 at 14.41.54@2x.jpg">CleanShot 2026-06-09 at 14.41.54@2x.jpg</a>
             <small>使用者標示希望將「網站版本」入口移到今日花語大卡下方，並與右側分頁控制器底部對齊的參考截圖。</small>
           </div>
         </div>
@@ -1295,9 +1729,188 @@
         <h3>v0.4b4-11</h3>
         <div class="asset-grid">
           <div class="asset-card">
-            <img src="assets/v0.4b4-11/CleanShot 2026-06-09 at 16.48.45@2x.png" alt="種下一些花可種植範圍與手機版縮放參考">
-            <a href="assets/v0.4b4-11/CleanShot 2026-06-09 at 16.48.45@2x.png">CleanShot 2026-06-09 at 16.48.45@2x.png</a>
+            <img src="assets/v0.4b4-11/CleanShot 2026-06-09 at 16.48.45@2x.jpg" alt="種下一些花可種植範圍與手機版縮放參考">
+            <a href="assets/v0.4b4-11/CleanShot 2026-06-09 at 16.48.45@2x.jpg">CleanShot 2026-06-09 at 16.48.45@2x.jpg</a>
             <small>使用者標示「種下一些花」舞台上方不可種植區域，並要求同步調整手機版種花區縮放比例的參考截圖。</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="asset-version">
+        <h3>v0.5b2-6</h3>
+        <div class="asset-grid">
+          <div class="asset-card">
+            <img src="assets/v0.5b2-6/meadow-issue-1.jpg" alt="點選留言花後留言卡消失與花朵置中問題截圖">
+            <a href="assets/v0.5b2-6/meadow-issue-1.jpg">meadow-issue-1.jpg</a>
+            <small>點選留言花後，花朵被放大到畫面中央，但右側留言卡未清楚顯示的問題截圖。</small>
+          </div>
+          <div class="asset-card">
+            <img src="assets/v0.5b2-6/meadow-issue-2.jpg" alt="留言草原可種植範圍不足與 0% 縮放參考截圖">
+            <a href="assets/v0.5b2-6/meadow-issue-2.jpg">meadow-issue-2.jpg</a>
+            <small>0% 縮放時畫面仍有大量空間，但留言花分布被限制在較小區域內的參考截圖。</small>
+          </div>
+          <div class="asset-card">
+            <img src="assets/v0.5b2-6/meadow-issue-3.jpg" alt="種植後開花動畫位置與顯示狀態問題截圖">
+            <a href="assets/v0.5b2-6/meadow-issue-3.jpg">meadow-issue-3.jpg</a>
+            <small>確認種植後，開花動畫顯示成畫面中央突兀色塊，且與實際花朵位置不一致的問題截圖。</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="asset-version">
+        <h3>v0.5b2-7</h3>
+        <div class="asset-grid">
+          <div class="asset-card">
+            <img src="assets/v0.5b2-7/meadow-viewer-drift-1.jpg" alt="查看留言花時留言卡在右上且花朵跑到左下的截圖">
+            <a href="assets/v0.5b2-7/meadow-viewer-drift-1.jpg">meadow-viewer-drift-1.jpg</a>
+            <small>查看留言花時，留言卡出現在右上方、花朵被放大到左下角，沒有形成穩定左右構圖的截圖。</small>
+          </div>
+          <div class="asset-card">
+            <img src="assets/v0.5b2-7/meadow-viewer-drift-2.jpg" alt="查看留言花時留言卡與花朵重疊在左側的截圖">
+            <a href="assets/v0.5b2-7/meadow-viewer-drift-2.jpg">meadow-viewer-drift-2.jpg</a>
+            <small>查看留言花時，留言卡與放大的花朵同時偏向左側，視覺層級與位置互相干擾的截圖。</small>
+          </div>
+          <div class="asset-card">
+            <img src="assets/v0.5b2-7/meadow-viewer-drift-3.jpg" alt="查看留言花時留言卡與花朵被視窗邊界裁切的截圖">
+            <a href="assets/v0.5b2-7/meadow-viewer-drift-3.jpg">meadow-viewer-drift-3.jpg</a>
+            <small>查看留言花時，留言卡與花朵受草原捲動位置影響而被視窗邊界裁切的截圖。</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="asset-version">
+        <h3>v0.5b2-11</h3>
+        <div class="asset-grid">
+          <div class="asset-card">
+            <img src="assets/v0.5b2-11/meadow-zero-percent-top-left.jpg" alt="留言草原 0% 縮放時可種植區域偏向左上角的截圖">
+            <a href="assets/v0.5b2-11/meadow-zero-percent-top-left.jpg">meadow-zero-percent-top-left.jpg</a>
+            <small>0% 縮放時，小圓點集中在左上角，可種植世界沒有鋪滿整個面板的問題截圖。</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="asset-version">
+        <h3>v0.5b2-21</h3>
+        <div class="asset-grid">
+          <div class="asset-card">
+            <img src="assets/v0.5b2-21/meadow-compose-layout-issue.jpg" alt="留言花撰寫介面在放大縮放下排版偏移與按鈕位置參考截圖">
+            <a href="assets/v0.5b2-21/meadow-compose-layout-issue.jpg">meadow-compose-layout-issue.jpg</a>
+            <small>使用者標示留言撰寫介面在非 0% 縮放時偏移、留言框高度、放大撰寫模式、字數與選擇種植位置按鈕對齊需求的參考截圖。</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="asset-version">
+        <h3>v0.5b2-22</h3>
+        <div class="asset-grid">
+          <div class="asset-card">
+            <img src="assets/v0.5b2-22/meadow-bloom-overlap-issue.jpg" alt="留言花第一次開啟時開花動畫白色方塊覆蓋目標花的問題截圖">
+            <a href="assets/v0.5b2-22/meadow-bloom-overlap-issue.jpg">meadow-bloom-overlap-issue.jpg</a>
+            <small>使用者回報新種留言花第一次開啟留言時，開花動畫以白色方塊疊在原花上方的參考截圖。</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="asset-version">
+        <h3>v0.5b2-25</h3>
+        <div class="asset-grid">
+          <div class="asset-card">
+            <img src="assets/v0.5b2-25/meadow-expanded-count-position.jpg" alt="留言板放大撰寫模式中左下字數與右下縮小按鈕位置參考截圖">
+            <a href="assets/v0.5b2-25/meadow-expanded-count-position.jpg">meadow-expanded-count-position.jpg</a>
+            <small>使用者標示留言板放大後字數位置、文字框左側對齊、底部操作區與右下縮小按鈕位置的參考截圖。</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="asset-version">
+        <h3>v0.5b2-26</h3>
+        <div class="asset-grid">
+          <div class="asset-card">
+            <img src="assets/v0.5b2-26/meadow-expanded-footer-alignment.jpg" alt="留言板放大撰寫模式底部字數與縮小按鈕位置參考截圖">
+            <a href="assets/v0.5b2-26/meadow-expanded-footer-alignment.jpg">meadow-expanded-footer-alignment.jpg</a>
+            <small>使用者標示留言板放大後底部非文字框區域、字數位置與右下縮小按鈕置中需求的參考截圖。</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="asset-version">
+        <h3>v0.5b2-27</h3>
+        <div class="asset-grid">
+          <div class="asset-card">
+            <img src="assets/v0.5b2-27/meadow-default-mode-position-reference.jpg" alt="種下一些花區域切換按鈕與主框上移位置參考截圖">
+            <a href="assets/v0.5b2-27/meadow-default-mode-position-reference.jpg">meadow-default-mode-position-reference.jpg</a>
+            <small>使用者標示「種花／留言花園」切換按鈕與整個互動外框需要上移的位置參考截圖。</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="asset-version">
+        <h3>v0.5b3-2</h3>
+        <div class="asset-grid">
+          <div class="asset-card">
+            <img src="assets/v0.5b3-2/song-play-count-overlap.jpg" alt="專輯曲目卡播放次數與曲序重疊、作曲者換行問題截圖">
+            <a href="assets/v0.5b3-2/song-play-count-overlap.jpg">song-play-count-overlap.jpg</a>
+            <small>使用者標示播放次數與曲序重疊、作曲者姓名仍換行的曲目卡截圖。</small>
+          </div>
+          <div class="asset-card">
+            <img src="assets/v0.5b3-2/song-plays-supabase-reference.jpg" alt="Supabase song_plays 資料表設定與測試列截圖">
+            <a href="assets/v0.5b3-2/song-plays-supabase-reference.jpg">song-plays-supabase-reference.jpg</a>
+            <small>使用者提供的 Supabase song_plays 資料表欄位、RLS 與測試資料列參考截圖。</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="asset-version">
+        <h3>v0.5b3-3</h3>
+        <div class="asset-grid">
+          <div class="asset-card">
+            <img src="assets/v0.5b3-3/song-play-count-left-reference.jpg" alt="專輯曲目卡播放次數需移至曲序左側與作曲者分行顯示的參考截圖">
+            <a href="assets/v0.5b3-3/song-play-count-left-reference.jpg">song-play-count-left-reference.jpg</a>
+            <small>使用者標示播放次數仍卡在曲序下方，並要求改至曲序左側、作曲者中文與英文分行顯示的參考截圖。</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="asset-version">
+        <h3>v0.5b3-4</h3>
+        <div class="asset-grid">
+          <div class="asset-card">
+            <img src="assets/v0.5b3-4/song-track-header-layout-reference.jpg" alt="專輯曲目卡頂部曲序、播放次數與作曲者位置調整參考截圖">
+            <a href="assets/v0.5b3-4/song-track-header-layout-reference.jpg">song-track-header-layout-reference.jpg</a>
+            <small>使用者標示曲目卡頂部應改為曲序在最左、播放次數在曲序右側、作曲者在最右側且文字為灰色的參考截圖。</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="asset-version">
+        <h3>v0.5b3-5</h3>
+        <div class="asset-grid">
+          <div class="asset-card">
+            <img src="assets/v0.5b3-5/album-play-count-top-right-reference.jpg" alt="大播放器右上角播放次數位置與作曲者灰色文字調整參考截圖">
+            <a href="assets/v0.5b3-5/album-play-count-top-right-reference.jpg">album-play-count-top-right-reference.jpg</a>
+            <small>使用者標示播放次數需移至大播放器右上角並以「播放次數：X」顯示、作曲者名稱改為灰色的參考截圖。</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="asset-version">
+        <h3>v0.5b3-6</h3>
+        <div class="asset-grid">
+          <div class="asset-card">
+            <img src="assets/v0.5b3-6/album-play-count-alignment-reference.jpg" alt="大播放器播放次數需縮小並與 Now Playing 底部對齊、作曲者改灰色的參考截圖">
+            <a href="assets/v0.5b3-6/album-play-count-alignment-reference.jpg">album-play-count-alignment-reference.jpg</a>
+            <small>使用者標示大播放器播放次數需縮小並與 Now Playing 底部對齊，同時作曲者名稱仍需改為灰色的參考截圖。</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="asset-version">
+        <h3>v0.5b3-7</h3>
+        <div class="asset-grid">
+          <div class="asset-card">
+            <img src="assets/v0.5b3-7/track-composer-still-yellow.jpg" alt="小曲目卡作曲者文字仍顯示黃色的參考截圖">
+            <a href="assets/v0.5b3-7/track-composer-still-yellow.jpg">track-composer-still-yellow.jpg</a>
+            <small>使用者標示小曲目卡作曲者名稱仍顯示為黃色，需要改為灰色的參考截圖。</small>
           </div>
         </div>
       </div>

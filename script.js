@@ -47,13 +47,55 @@ const messageCount = document.getElementById("message-count");
 const messageStatus = document.getElementById("message-status");
 const messageList = document.getElementById("message-list");
 const messageRefresh = document.getElementById("message-refresh");
-const CURRENT_SITE_VERSION = "v0.5b1";
+const gardenModeButtons = Array.from(document.querySelectorAll(".garden-mode-option"));
+const gardenStage = document.getElementById("garden-stage");
+const gardenPlantMode = document.getElementById("garden-plant-mode");
+const gardenMeadowPanel = document.getElementById("garden-meadow-panel");
+const meadowStart = document.getElementById("meadow-start");
+const meadowCancel = document.getElementById("meadow-cancel");
+const meadowViewport = document.getElementById("meadow-viewport");
+const meadowWorld = document.getElementById("meadow-world");
+const meadowCompose = document.getElementById("meadow-compose");
+const meadowPreviewFlower = document.getElementById("meadow-preview-flower");
+const meadowHue = document.getElementById("meadow-hue");
+const meadowLightness = document.getElementById("meadow-lightness");
+const meadowGray = document.getElementById("meadow-gray");
+const meadowColorRandom = document.getElementById("meadow-color-random");
+const meadowHex = document.getElementById("meadow-hex");
+const meadowMood = document.getElementById("meadow-mood");
+const meadowContent = document.getElementById("meadow-content");
+const meadowCount = document.getElementById("meadow-count");
+const meadowStatus = document.getElementById("meadow-status");
+const meadowPlaceConfirm = document.getElementById("meadow-place-confirm");
+const meadowViewer = document.getElementById("meadow-viewer");
+const meadowViewerFlower = document.getElementById("meadow-viewer-flower");
+const meadowViewerMood = document.getElementById("meadow-viewer-mood");
+const meadowViewerContent = document.getElementById("meadow-viewer-content");
+const meadowViewerTime = document.getElementById("meadow-viewer-time");
+const meadowBloomFocus = document.getElementById("meadow-bloom-focus");
+const meadowZoom = document.getElementById("meadow-zoom");
+const meadowZoomOutput = document.getElementById("meadow-zoom-output");
+const meadowContentExpand = document.getElementById("meadow-content-expand");
+const meadowCancelModal = document.getElementById("meadow-cancel-modal");
+const CURRENT_SITE_VERSION = "v0.5b4";
 const SUPABASE_URL = "https://suatoixeqmjmaojfuiwg.supabase.co";
 const SUPABASE_KEY = "sb_publishable_aWOjHvsUelALoPTgKgAsbw_VyXJq-YE";
-const SUPABASE_MESSAGES_TABLE = "garden_messages";
-const MESSAGE_LIMIT = 200;
+const SUPABASE_MESSAGES_TABLE = "garden_messages_beta";
+const SUPABASE_SONG_PLAYS_TABLE = "song_plays";
+const SONG_PLAY_COUNT_DELAY = 10000;
+const MESSAGE_LIMIT = 500;
+const MEADOW_WORLD_WIDTH = 7200;
+const MEADOW_WORLD_HEIGHT = 3600;
+const MEADOW_MAX_SCALE = 1.08;
+const MEADOW_VIEW_ZOOM = 120;
+const MEADOW_DOT_ZOOM_LIMIT = 10;
+const MEADOW_DOT_MIN_SIZE = 7.2;
+const MEADOW_DOT_MAX_SIZE = 14.4;
+const MEADOW_MIN_MARKER_SCALE = 0.24;
+const MEADOW_MARKER_MAX_SCALE = 2.05;
 const albumNowTitle = document.getElementById("album-now-title");
 const albumNowMeta = document.getElementById("album-now-meta");
+const albumPlayCount = document.getElementById("album-play-count");
 const albumCurrentTime = document.getElementById("album-current-time");
 const albumDuration = document.getElementById("album-duration");
 const albumProgress = document.getElementById("album-progress");
@@ -204,6 +246,8 @@ const bloomChoices = {
 
 const albumTracks = [
   {
+    id: 1,
+    songId: "Welcome to the Secret Garden",
     title: "Welcome to the Secret Garden",
     subtitle: "歡迎光臨秘密花園",
     composer: "李岳鴒 ZEROYUEH",
@@ -212,6 +256,8 @@ const albumTracks = [
     src: "assets/audio/welcome-secret-garden.mp3"
   },
   {
+    id: 2,
+    songId: "Red",
     title: "Red",
     subtitle: "紅",
     composer: "林書磊 Aries Lin",
@@ -221,6 +267,8 @@ const albumTracks = [
     flower: "assets/cards/flowers/red-flower.png"
   },
   {
+    id: 3,
+    songId: "Orange",
     title: "Orange",
     subtitle: "橙",
     composer: "林書磊 Aries Lin",
@@ -230,6 +278,8 @@ const albumTracks = [
     flower: "assets/cards/flowers/orange-flower.png"
   },
   {
+    id: 4,
+    songId: "Yellow",
     title: "Yellow",
     subtitle: "黃",
     composer: "林書磊 Aries Lin",
@@ -239,6 +289,8 @@ const albumTracks = [
     flower: "assets/cards/flowers/yellow-flower.png"
   },
   {
+    id: 5,
+    songId: "Green",
     title: "Green",
     subtitle: "綠",
     composer: "林書磊 Aries Lin",
@@ -248,6 +300,8 @@ const albumTracks = [
     flower: "assets/cards/flowers/green-flower.png"
   },
   {
+    id: 6,
+    songId: "Blue",
     title: "Blue",
     subtitle: "藍",
     composer: "陳映里 Osmond Chen",
@@ -257,6 +311,8 @@ const albumTracks = [
     flower: "assets/cards/flowers/blue-flower.png"
   },
   {
+    id: 7,
+    songId: "Indigo",
     title: "Indigo",
     subtitle: "靛",
     composer: "陳映里 Osmond Chen",
@@ -266,6 +322,8 @@ const albumTracks = [
     flower: "assets/cards/flowers/indigo-flower.png"
   },
   {
+    id: 8,
+    songId: "Violet",
     title: "Violet",
     subtitle: "紫",
     composer: "陳映里 Osmond Chen",
@@ -275,6 +333,8 @@ const albumTracks = [
     flower: "assets/cards/flowers/purple-flower.png"
   },
   {
+    id: 9,
+    songId: "Gray",
     title: "Gray",
     subtitle: "灰",
     composer: "陳映里 Osmond Chen",
@@ -284,6 +344,8 @@ const albumTracks = [
     flower: "assets/cards/flowers/gray-flower.png"
   },
   {
+    id: 10,
+    songId: "Hope Flower",
     title: "Hope Flower",
     subtitle: "勿忘我",
     composer: "李岳鴒 ZEROYUEH",
@@ -307,6 +369,13 @@ const bloomTrackByKey = {
 const bloomKeyByTrackIndex = Object.fromEntries(
   Object.entries(bloomTrackByKey).map(([key, index]) => [index, key])
 );
+const BLOOM_DEEP_LINK_SUFFIX = "_bloom";
+const bloomDeepLinkAliases = {
+  violet: "purple"
+};
+const bloomPublicHashKeys = {
+  purple: "violet"
+};
 
 let width = 0;
 let height = 0;
@@ -344,6 +413,8 @@ let backgroundWanted = true;
 let backgroundResumeTimer;
 let bloomPauseResumeTimer;
 let bloomLeaveTimer;
+let bloomDeepLinkTimer;
+let pendingBloomDeepLinkSfxKey = "";
 let flowerMusicActive = false;
 let lastBloomKey = "";
 let bloomInView = false;
@@ -990,9 +1061,9 @@ function updateTrackWaves() {
   }
   const volumeLevel = Math.min(1, Math.max(0, (Math.sqrt(signalEnergy / timeDomainData.length) - 0.004) * 5.6));
 
-  const minHz = 32;
+  const minHz = 100;
   const nyquist = (audioContext?.sampleRate || 44100) / 2;
-  const maxHz = Math.min(18000, nyquist * 0.92);
+  const maxHz = Math.min(8000, nyquist * 0.92);
   const binHz = (audioContext?.sampleRate || 44100) / backgroundAnalyser.fftSize;
   const minDb = backgroundAnalyser.minDecibels;
   const maxDb = backgroundAnalyser.maxDecibels;
@@ -1056,6 +1127,163 @@ const messageHeaders = {
   Authorization: `Bearer ${SUPABASE_KEY}`
 };
 
+function createSongPlaySupabaseClient() {
+  return window.supabase?.createClient?.(SUPABASE_URL, SUPABASE_KEY) || {
+    rpc: async (functionName, payload) => {
+      const response = await fetch(`${SUPABASE_URL}/rest/v1/rpc/${functionName}`, {
+        method: "POST",
+        headers: {
+          ...messageHeaders,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      });
+      if (!response.ok) {
+        return { data: null, error: new Error(`Supabase RPC failed: ${response.status} ${await response.text()}`) };
+      }
+      const text = await response.text();
+      return { data: text ? JSON.parse(text) : null, error: null };
+    }
+  };
+}
+
+const meadowContentPlaceholders = ["你今天還好嗎？", "說說你的故事", "想分享些什麼呢？"];
+const meadowMoodFallbacks = [
+  "他還看不清自己的情緒",
+  "他還不想聊聊他的情緒",
+  "讓他再想一想他的情緒",
+  "他沒留下自己情緒的線索"
+];
+let gardenMessagesCache = [];
+let meadowState = "browse";
+let meadowDraft = null;
+let meadowPendingPosition = null;
+let meadowSelectedMessage = null;
+let meadowZoomValue = 0;
+let meadowDrag = null;
+let meadowSuppressClick = false;
+let meadowZoomAnimation = null;
+let meadowBrowseView = { zoom: 0, scrollLeft: 0, scrollTop: 0 };
+let meadowActiveMarker = null;
+let meadowViewerCloseTimer = null;
+let meadowViewerRestoreTimer = null;
+let meadowColorAnimation = null;
+let meadowComposeCloseTimer = null;
+let songPlayStats = new Map();
+let songPlayTimer = null;
+let songPlayPendingIndex = null;
+let songPlayCountedKey = "";
+
+function formatPlayCount(value) {
+  const count = Number.isFinite(Number(value)) ? Math.max(0, Number(value)) : 0;
+  return `${Math.floor(count).toLocaleString("zh-TW")} 次`;
+}
+
+function formatPlayCountNumber(value) {
+  const count = Number.isFinite(Number(value)) ? Math.max(0, Number(value)) : 0;
+  return Math.floor(count).toLocaleString("zh-TW");
+}
+
+function normalizeSongPlayRow(row) {
+  if (!row) return null;
+  return {
+    id: Number(row.id),
+    songId: row.song_id || "",
+    playedAt: row.played_at || "",
+    plays: Number(row.plays) || 0
+  };
+}
+
+function ensureTrackPlayBadges() {
+  document.querySelectorAll(".track-plays").forEach((badge) => badge.remove());
+}
+
+function updateSongPlayUI() {
+  ensureTrackPlayBadges();
+  const track = backgroundTracks[backgroundTrackIndex];
+  const stats = track ? songPlayStats.get(track.id) : null;
+  if (albumPlayCount) albumPlayCount.textContent = `播放次數：${formatPlayCountNumber(stats?.plays ?? track?.plays ?? 0)}`;
+}
+
+async function fetchSongPlayStats() {
+  try {
+    const endpoint = `${SUPABASE_URL}/rest/v1/${SUPABASE_SONG_PLAYS_TABLE}`;
+    const params = new URLSearchParams({
+      select: "id,song_id,played_at,plays",
+      order: "id.asc"
+    });
+    const response = await fetch(`${endpoint}?${params.toString()}`, {
+      headers: messageHeaders
+    });
+
+    if (!response.ok) {
+      throw new Error(`Supabase song play read failed: ${response.status}`);
+    }
+
+    const rows = await response.json();
+    songPlayStats = new Map(
+      (Array.isArray(rows) ? rows : [])
+        .map(normalizeSongPlayRow)
+        .filter(Boolean)
+        .map((row) => [row.id, row])
+    );
+  } catch (error) {
+    console.error(error);
+  } finally {
+    updateSongPlayUI();
+  }
+}
+
+async function incrementSongPlay(index) {
+  const track = backgroundTracks[index];
+  if (!track?.songId) return;
+
+  try {
+    const supabase = createSongPlaySupabaseClient();
+    const { error } = await supabase.rpc("increment_song_play", {
+      p_song_id: track.songId
+    });
+    if (error) {
+      throw error;
+    }
+
+    await fetchSongPlayStats();
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+function clearSongPlayTimer() {
+  window.clearTimeout(songPlayTimer);
+  songPlayTimer = null;
+  songPlayPendingIndex = null;
+}
+
+function scheduleSongPlayCount() {
+  clearSongPlayTimer();
+  if (!backgroundWanted || backgroundAudio.paused || !backgroundAudio.src) return;
+  const index = backgroundTrackIndex;
+  const track = backgroundTracks[index];
+  if (!track?.id) return;
+  const countKey = `${track.id}:${backgroundAudio.src}`;
+  if (songPlayCountedKey === countKey) return;
+  songPlayPendingIndex = index;
+  songPlayTimer = window.setTimeout(() => {
+    if (
+      songPlayPendingIndex !== index ||
+      backgroundTrackIndex !== index ||
+      backgroundAudio.paused ||
+      !backgroundWanted ||
+      songPlayCountedKey === countKey
+    ) {
+      return;
+    }
+    songPlayCountedKey = countKey;
+    clearSongPlayTimer();
+    incrementSongPlay(index);
+  }, SONG_PLAY_COUNT_DELAY);
+}
+
 function setMessageStatus(text = "", type = "") {
   if (!messageStatus) return;
   messageStatus.textContent = text;
@@ -1110,16 +1338,18 @@ function renderMessages(messages = []) {
   messageList.replaceChildren(...messages.map(createMessageCard));
 }
 
-async function fetchGardenMessages() {
-  if (!messageList) return;
-  messageList.replaceChildren(createMessageNotice("正在讀取花園留言..."));
+async function fetchGardenMessages(options = {}) {
+  const { renderBoard = true } = options;
+  if (renderBoard && messageList) {
+    messageList.replaceChildren(createMessageNotice("正在讀取花園留言..."));
+  }
 
   try {
     const endpoint = `${SUPABASE_URL}/rest/v1/${SUPABASE_MESSAGES_TABLE}`;
     const params = new URLSearchParams({
-      select: "id,content,created_at",
+      select: "id,content,mood,color,pos_x,pos_y,created_at",
       order: "created_at.desc",
-      limit: "50"
+      limit: "200"
     });
     const response = await fetch(`${endpoint}?${params.toString()}`, {
       headers: messageHeaders
@@ -1130,12 +1360,36 @@ async function fetchGardenMessages() {
     }
 
     const messages = await response.json();
-    renderMessages(Array.isArray(messages) ? messages : []);
+    gardenMessagesCache = Array.isArray(messages) ? messages : [];
+    if (renderBoard) renderMessages(gardenMessagesCache);
     setMessageStatus("");
+    return gardenMessagesCache;
   } catch (error) {
     console.error(error);
-    messageList.replaceChildren(createMessageNotice("暫時無法讀取留言，請稍後再試。"));
+    if (renderBoard && messageList) {
+      messageList.replaceChildren(createMessageNotice("暫時無法讀取留言，請稍後再試。"));
+    }
+    return [];
   }
+}
+
+async function insertGardenMessage(payload) {
+  const response = await fetch(`${SUPABASE_URL}/rest/v1/${SUPABASE_MESSAGES_TABLE}`, {
+    method: "POST",
+    headers: {
+      ...messageHeaders,
+      "Content-Type": "application/json",
+      Prefer: "return=representation"
+    },
+    body: JSON.stringify(payload)
+  });
+
+  if (!response.ok) {
+    throw new Error(`Supabase insert failed: ${response.status}`);
+  }
+
+  const rows = await response.json();
+  return Array.isArray(rows) ? rows[0] : rows;
 }
 
 async function submitGardenMessage(event) {
@@ -1157,19 +1411,7 @@ async function submitGardenMessage(event) {
   setMessageStatus("正在把留言種進花園...", "");
 
   try {
-    const response = await fetch(`${SUPABASE_URL}/rest/v1/${SUPABASE_MESSAGES_TABLE}`, {
-      method: "POST",
-      headers: {
-        ...messageHeaders,
-        "Content-Type": "application/json",
-        Prefer: "return=representation"
-      },
-      body: JSON.stringify({ content })
-    });
-
-    if (!response.ok) {
-      throw new Error(`Supabase insert failed: ${response.status}`);
-    }
+    await insertGardenMessage({ content });
 
     messageInput.value = "";
     updateMessageCount();
@@ -1193,6 +1435,954 @@ function initMessageBoard() {
     fetchGardenMessages();
   });
   fetchGardenMessages();
+}
+
+function clamp(value, min, max) {
+  return Math.max(min, Math.min(max, value));
+}
+
+function randomItem(items = []) {
+  return items[Math.floor(Math.random() * items.length)] || "";
+}
+
+function hslToHex(h, s, l) {
+  const hue = (((Number(h) % 360) + 360) % 360) / 360;
+  const sat = clamp(Number(s), 0, 100) / 100;
+  const light = clamp(Number(l), 0, 100) / 100;
+  const channel = (n) => {
+    const k = (n + hue * 12) % 12;
+    const a = sat * Math.min(light, 1 - light);
+    return light - a * Math.max(-1, Math.min(k - 3, Math.min(9 - k, 1)));
+  };
+  return [channel(0), channel(8), channel(4)]
+    .map((value) => Math.round(value * 255).toString(16).padStart(2, "0"))
+    .join("")
+    .replace(/^/, "#");
+}
+
+function normalizeHex(value) {
+  const text = String(value || "").trim();
+  const short = text.match(/^#?([0-9a-f]{3})$/i);
+  if (short) {
+    return `#${short[1].split("").map((part) => part + part).join("")}`.toLowerCase();
+  }
+  const full = text.match(/^#?([0-9a-f]{6})$/i);
+  return full ? `#${full[1]}`.toLowerCase() : "";
+}
+
+function mixHexWithGray(hex, amount = 0) {
+  const color = normalizeHex(hex) || "#ffffff";
+  const gray = clamp(Number(amount), 0, 100) / 100;
+  const parts = [1, 3, 5].map((start) => parseInt(color.slice(start, start + 2), 16));
+  const average = Math.round((parts[0] + parts[1] + parts[2]) / 3);
+  const mixed = parts.map((part) => Math.round(part * (1 - gray) + average * gray));
+  return `#${mixed.map((part) => part.toString(16).padStart(2, "0")).join("")}`;
+}
+
+function getMeadowColorFromControls() {
+  return mixHexWithGray(hslToHex(meadowHue?.value || 0, 82, meadowLightness?.value || 92), meadowGray?.value || 0);
+}
+
+function setMeadowFlowerColor(color) {
+  const hex = normalizeHex(color) || "#ffffff";
+  meadowPreviewFlower?.style.setProperty("--meadow-color", hex);
+  meadowBloomFocus?.style.setProperty("--meadow-color", hex);
+  meadowViewerFlower?.style.setProperty("--meadow-color", hex);
+  if (meadowHex) meadowHex.value = hex;
+  return hex;
+}
+
+function updateMeadowSliderGradients() {
+  const hue = clamp(Number(meadowHue?.value || 0), 0, 360);
+  const lightness = clamp(Number(meadowLightness?.value || 92), 0, 100);
+  const gray = clamp(Number(meadowGray?.value || 0), 0, 100);
+  const hueStops = [0, 60, 120, 180, 240, 300, 360]
+    .map((stop) => `hsl(${stop} 82% ${lightness}%)`)
+    .join(", ");
+  const vividColor = hslToHex(hue, 82, lightness);
+  const lowLight = mixHexWithGray(hslToHex(hue, 82, 24), gray);
+  const midLight = mixHexWithGray(hslToHex(hue, 82, 60), gray);
+  const highLight = mixHexWithGray(hslToHex(hue, 82, 96), gray);
+  const grayColor = mixHexWithGray(vividColor, 100);
+  const setRangeGradient = (control, gradient) => {
+    if (!control) return;
+    control.style.setProperty("--range-gradient", gradient);
+    control.style.background = gradient;
+  };
+  setRangeGradient(meadowHue, `linear-gradient(90deg, ${hueStops})`);
+  setRangeGradient(meadowLightness, `linear-gradient(90deg, ${lowLight}, ${midLight}, ${highLight})`);
+  setRangeGradient(meadowGray, `linear-gradient(90deg, ${vividColor}, ${grayColor})`);
+}
+
+function updateMeadowColorFromSliders() {
+  const color = setMeadowFlowerColor(getMeadowColorFromControls());
+  updateMeadowSliderGradients();
+  return color;
+}
+
+function cancelMeadowColorAnimation() {
+  if (!meadowColorAnimation) return;
+  window.cancelAnimationFrame(meadowColorAnimation);
+  meadowColorAnimation = null;
+}
+
+function setMeadowColorControls(options = {}) {
+  cancelMeadowColorAnimation();
+  const randomizeAll = options.randomizeAll === true;
+  if (meadowHue) meadowHue.value = String(Math.floor(Math.random() * 361));
+  if (meadowLightness) {
+    meadowLightness.value = randomizeAll
+      ? String(Math.round(24 + Math.random() * 68))
+      : "50";
+  }
+  if (meadowGray) {
+    meadowGray.value = randomizeAll
+      ? String(Math.round(Math.random() * 100))
+      : "0";
+  }
+  return updateMeadowColorFromSliders();
+}
+
+function animateMeadowColorControls(targets, duration = 448) {
+  const controls = [
+    { element: meadowHue, target: targets.hue },
+    { element: meadowLightness, target: targets.lightness },
+    { element: meadowGray, target: targets.gray }
+  ].filter((item) => item.element && Number.isFinite(Number(item.target)))
+    .map((item) => ({
+      ...item,
+      start: Number(item.element.value),
+      target: Number(item.target)
+    }));
+  if (!controls.length) return updateMeadowColorFromSliders();
+  cancelMeadowColorAnimation();
+  const startTime = performance.now();
+  const ease = (t) => 1 - Math.pow(1 - t, 3);
+  const step = (now) => {
+    const progress = clamp((now - startTime) / duration, 0, 1);
+    const eased = ease(progress);
+    controls.forEach(({ element, start, target }) => {
+      element.value = String(Math.round(start + (target - start) * eased));
+    });
+    updateMeadowColorFromSliders();
+    if (progress < 1) {
+      meadowColorAnimation = window.requestAnimationFrame(step);
+    } else {
+      controls.forEach(({ element, target }) => {
+        element.value = String(Math.round(target));
+      });
+      meadowColorAnimation = null;
+      updateMeadowColorFromSliders();
+    }
+  };
+  meadowColorAnimation = window.requestAnimationFrame(step);
+}
+
+function randomizeMeadowColorControlsAnimated() {
+  animateMeadowColorControls({
+    hue: Math.floor(Math.random() * 361),
+    lightness: Math.round(24 + Math.random() * 68),
+    gray: Math.round(Math.random() * 100)
+  });
+}
+
+function updateMeadowCount() {
+  if (!meadowContent || !meadowCount) return;
+  const count = meadowContent.value.trim().length;
+  meadowCount.textContent = `${count} / ${MESSAGE_LIMIT}`;
+  meadowCount.classList.toggle("is-over", count > MESSAGE_LIMIT);
+}
+
+function setMeadowStatus(text = "", type = "") {
+  if (!meadowStatus) return;
+  meadowStatus.textContent = text;
+  meadowStatus.classList.toggle("is-error", type === "error");
+  meadowStatus.classList.toggle("is-success", type === "success");
+}
+
+function getMeadowBaseScale() {
+  if (!meadowViewport) return 1;
+  return Math.min(meadowViewport.clientWidth / MEADOW_WORLD_WIDTH, meadowViewport.clientHeight / MEADOW_WORLD_HEIGHT);
+}
+
+function getMeadowDotSize(value = meadowZoomValue) {
+  const progress = clamp(Number(value), 0, MEADOW_DOT_ZOOM_LIMIT) / MEADOW_DOT_ZOOM_LIMIT;
+  return MEADOW_DOT_MIN_SIZE + progress * (MEADOW_DOT_MAX_SIZE - MEADOW_DOT_MIN_SIZE);
+}
+
+function getMeadowWorldProgress(value = meadowZoomValue) {
+  const zoom = clamp(Number(value), 0, MEADOW_VIEW_ZOOM);
+  if (zoom < MEADOW_DOT_ZOOM_LIMIT) {
+    return (Math.pow(zoom / MEADOW_DOT_ZOOM_LIMIT, 1.65) * MEADOW_DOT_ZOOM_LIMIT) / 100;
+  }
+  return zoom / 100;
+}
+
+function getMeadowWorldSize(value = meadowZoomValue) {
+  const progress = getMeadowWorldProgress(value);
+  const baseWidth = meadowViewport?.clientWidth || MEADOW_WORLD_WIDTH * getMeadowBaseScale();
+  const baseHeight = meadowViewport?.clientHeight || MEADOW_WORLD_HEIGHT * getMeadowBaseScale();
+  const maxWidth = MEADOW_WORLD_WIDTH * MEADOW_MAX_SCALE;
+  const maxHeight = MEADOW_WORLD_HEIGHT * MEADOW_MAX_SCALE;
+  const width = baseWidth + (maxWidth - baseWidth) * progress;
+  const height = baseHeight + (maxHeight - baseHeight) * progress;
+  return {
+    scale: Math.min(width / MEADOW_WORLD_WIDTH, height / MEADOW_WORLD_HEIGHT),
+    width,
+    height
+  };
+}
+
+function getMeadowScale(value = meadowZoomValue) {
+  return getMeadowWorldSize(value).scale;
+}
+
+function getMeadowMarkerScale(value = meadowZoomValue) {
+  const progress = clamp(Number(value), 0, 100) / 100;
+  return MEADOW_MIN_MARKER_SCALE + progress * (MEADOW_MARKER_MAX_SCALE - MEADOW_MIN_MARKER_SCALE);
+}
+
+function focusMeadowPoint(center, options = {}) {
+  if (!center || !meadowViewport) return;
+  const { width, height } = options.size || getMeadowWorldSize();
+  const target = getMeadowTargetScroll(center, { width, height }, options);
+  meadowViewport.scrollLeft = target.left;
+  meadowViewport.scrollTop = target.top;
+  syncMeadowViewportOverlays();
+}
+
+function getMeadowTargetScroll(center, size, options = {}) {
+  if (!center || !meadowViewport) return { left: meadowViewport?.scrollLeft || 0, top: meadowViewport?.scrollTop || 0 };
+  const { width, height } = size || getMeadowWorldSize();
+  const alignX = options.alignX ?? 0.5;
+  const alignY = options.alignY ?? 0.5;
+  const maxLeft = Math.max(0, width - meadowViewport.clientWidth);
+  const maxTop = Math.max(0, height - meadowViewport.clientHeight);
+  return {
+    left: clamp((center.x / 100) * width - meadowViewport.clientWidth * alignX, 0, maxLeft),
+    top: clamp((center.y / 100) * height - meadowViewport.clientHeight * alignY, 0, maxTop)
+  };
+}
+
+function syncMeadowViewportOverlays() {
+  if (!meadowViewport) return;
+  meadowViewport.style.setProperty("--meadow-scroll-left", `${meadowViewport.scrollLeft}px`);
+  meadowViewport.style.setProperty("--meadow-scroll-top", `${meadowViewport.scrollTop}px`);
+}
+
+function handleMeadowWheel(event) {
+  syncMeadowViewportOverlays();
+}
+
+function canStartMeadowDrag(event) {
+  if (!meadowViewport || event.button !== 0 || meadowState === "compose" || meadowState === "viewing") return false;
+  return !event.target.closest(".meadow-compose, .meadow-place-confirm, .meadow-cancel-modal, .meadow-viewer-card, .meadow-flower-marker, input, button, textarea, a");
+}
+
+function startMeadowDrag(event) {
+  if (!canStartMeadowDrag(event)) return;
+  meadowDrag = {
+    pointerId: event.pointerId,
+    startX: event.clientX,
+    startY: event.clientY,
+    scrollLeft: meadowViewport.scrollLeft,
+    scrollTop: meadowViewport.scrollTop,
+    moved: false
+  };
+  meadowViewport.classList.add("is-dragging");
+  meadowViewport.setPointerCapture?.(event.pointerId);
+  event.preventDefault();
+}
+
+function moveMeadowDrag(event) {
+  if (!meadowDrag || meadowDrag.pointerId !== event.pointerId || !meadowViewport) return;
+  const deltaX = event.clientX - meadowDrag.startX;
+  const deltaY = event.clientY - meadowDrag.startY;
+  if (Math.abs(deltaX) > 3 || Math.abs(deltaY) > 3) meadowDrag.moved = true;
+  meadowViewport.scrollLeft = meadowDrag.scrollLeft - deltaX;
+  meadowViewport.scrollTop = meadowDrag.scrollTop - deltaY;
+  syncMeadowViewportOverlays();
+  event.preventDefault();
+}
+
+function endMeadowDrag(event) {
+  if (!meadowDrag || meadowDrag.pointerId !== event.pointerId) return;
+  meadowSuppressClick = meadowDrag.moved;
+  meadowViewport?.classList.remove("is-dragging");
+  meadowViewport?.releasePointerCapture?.(event.pointerId);
+  meadowDrag = null;
+  if (meadowSuppressClick) window.setTimeout(() => { meadowSuppressClick = false; }, 0);
+}
+
+function getMeadowViewAlignX() {
+  return window.matchMedia("(max-width: 760px)").matches ? 0.5 : 0.28;
+}
+
+function getMeadowViewportCenterPoint() {
+  if (!meadowViewport) return null;
+  const width = meadowWorld?.offsetWidth || getMeadowWorldSize().width;
+  const height = meadowWorld?.offsetHeight || getMeadowWorldSize().height;
+  if (!width || !height) return { x: 50, y: 50 };
+  return {
+    x: clamp(((meadowViewport.scrollLeft + meadowViewport.clientWidth / 2) / width) * 100, 0, 100),
+    y: clamp(((meadowViewport.scrollTop + meadowViewport.clientHeight / 2) / height) * 100, 0, 100)
+  };
+}
+
+function cancelMeadowZoomAnimation() {
+  if (!meadowZoomAnimation) return;
+  window.cancelAnimationFrame(meadowZoomAnimation);
+  meadowZoomAnimation = null;
+}
+
+function applyMeadowZoomMetrics(value) {
+  meadowZoomValue = clamp(Number(value), 0, MEADOW_VIEW_ZOOM);
+  const { scale, width, height } = getMeadowWorldSize(meadowZoomValue);
+  meadowViewport?.style.setProperty("--meadow-scale", scale.toFixed(3));
+  meadowViewport?.style.setProperty("--meadow-world-width", `${width}px`);
+  meadowViewport?.style.setProperty("--meadow-world-height", `${height}px`);
+  meadowViewport?.style.setProperty("--meadow-marker-scale", getMeadowMarkerScale(meadowZoomValue).toFixed(3));
+  meadowViewport?.style.setProperty("--meadow-dot-size", `${getMeadowDotSize(meadowZoomValue).toFixed(1)}px`);
+  meadowViewport?.classList.toggle("is-dot-view", meadowZoomValue < MEADOW_DOT_ZOOM_LIMIT);
+  const controlValue = clamp(meadowZoomValue, 0, 100);
+  if (meadowZoom) meadowZoom.value = String(Math.round(controlValue));
+  if (meadowZoomOutput) meadowZoomOutput.textContent = `${Math.round(controlValue)}%`;
+  return { scale, width, height };
+}
+
+function applyMeadowZoomFrame(value, center, options = {}) {
+  const { width, height } = applyMeadowZoomMetrics(value);
+  focusMeadowPoint(center, { ...options, size: { width, height } });
+}
+
+function animateMeadowZoom(value, center, options = {}) {
+  const startZoom = meadowZoomValue;
+  const endZoom = clamp(Number(value), 0, MEADOW_VIEW_ZOOM);
+  const duration = options.duration ?? 620;
+  const startTime = performance.now();
+  const startScroll = {
+    left: meadowViewport?.scrollLeft || 0,
+    top: meadowViewport?.scrollTop || 0
+  };
+  const endSize = getMeadowWorldSize(endZoom);
+  const endScroll = getMeadowTargetScroll(center, endSize, options);
+  const ease = (t) => 1 - Math.pow(1 - t, 3);
+  const step = (now) => {
+    const progress = clamp((now - startTime) / duration, 0, 1);
+    const eased = ease(progress);
+    applyMeadowZoomMetrics(startZoom + (endZoom - startZoom) * eased);
+    if (meadowViewport) {
+      meadowViewport.scrollLeft = startScroll.left + (endScroll.left - startScroll.left) * eased;
+      meadowViewport.scrollTop = startScroll.top + (endScroll.top - startScroll.top) * eased;
+      syncMeadowViewportOverlays();
+    }
+    if (progress < 1) {
+      meadowZoomAnimation = window.requestAnimationFrame(step);
+    } else {
+      meadowZoomAnimation = null;
+      applyMeadowZoomMetrics(endZoom);
+      if (meadowViewport) {
+        meadowViewport.scrollLeft = endScroll.left;
+        meadowViewport.scrollTop = endScroll.top;
+        syncMeadowViewportOverlays();
+      }
+    }
+  };
+  cancelMeadowZoomAnimation();
+  meadowZoomAnimation = window.requestAnimationFrame(step);
+}
+
+function setMeadowZoom(value, center, options = {}) {
+  const zoomCenter = center || (options.preserveCenter === false ? null : getMeadowViewportCenterPoint());
+  cancelMeadowZoomAnimation();
+  if (options.animate && zoomCenter) {
+    animateMeadowZoom(value, zoomCenter, options);
+    return;
+  }
+  applyMeadowZoomFrame(value, zoomCenter, options);
+}
+
+function setMeadowPositionCue(point) {
+  if (!meadowWorld) return;
+  let cue = meadowWorld.querySelector(".meadow-position-cue");
+  if (!point) {
+    cue?.remove();
+    return;
+  }
+  if (!cue) {
+    cue = document.createElement("span");
+    cue.className = "meadow-position-cue";
+    cue.setAttribute("aria-hidden", "true");
+    meadowWorld.appendChild(cue);
+  }
+  cue.style.left = `${point.x}%`;
+  cue.style.top = `${point.y}%`;
+}
+
+function setMeadowFocusBackdrop(show) {
+  if (!meadowViewport) return;
+  let backdrop = meadowViewport.querySelector(".meadow-focus-backdrop");
+  if (!show) {
+    backdrop?.remove();
+    return;
+  }
+  if (!backdrop) {
+    backdrop = document.createElement("span");
+    backdrop.className = "meadow-focus-backdrop";
+    backdrop.setAttribute("aria-hidden", "true");
+    meadowViewport.appendChild(backdrop);
+  }
+}
+
+function rememberMeadowBrowseView() {
+  if (!meadowViewport) return;
+  meadowBrowseView = {
+    zoom: clamp(meadowZoomValue, 0, 100),
+    scrollLeft: meadowViewport.scrollLeft,
+    scrollTop: meadowViewport.scrollTop
+  };
+}
+
+function restoreMeadowBrowseView(options = {}) {
+  if (!meadowViewport) return;
+  const { width, height } = getMeadowWorldSize(meadowBrowseView.zoom);
+  const center = {
+    x: width > 0 ? clamp(((meadowBrowseView.scrollLeft + meadowViewport.clientWidth / 2) / width) * 100, 0, 100) : 50,
+    y: height > 0 ? clamp(((meadowBrowseView.scrollTop + meadowViewport.clientHeight / 2) / height) * 100, 0, 100) : 50
+  };
+  setMeadowZoom(meadowBrowseView.zoom, center, { animate: true, duration: options.duration ?? 520 });
+}
+
+function getMeadowMarkerKey(message) {
+  return String(message?.id ?? `${message?.pos_x}-${message?.pos_y}-${message?.created_at || ""}`);
+}
+
+function findMeadowMarker(message) {
+  if (!meadowWorld || !message) return null;
+  const key = getMeadowMarkerKey(message);
+  return Array.from(meadowWorld.querySelectorAll(".meadow-flower-marker")).find((marker) => marker.dataset.messageId === key) || null;
+}
+
+function getMeadowViewingMarkerSize() {
+  return {
+    width: Math.min(340, window.innerWidth * 0.32),
+    height: Math.min(460, window.innerWidth * 0.44)
+  };
+}
+
+function animateMeadowMarkerToViewing(marker, options = {}) {
+  if (!marker) return;
+  const rect = marker.getBoundingClientRect();
+  const target = getMeadowViewingMarkerSize();
+  if (options.duration) marker.style.setProperty("--meadow-view-transition-duration", `${options.duration}ms`);
+  marker.style.width = `${rect.width}px`;
+  marker.style.height = `${rect.height}px`;
+  marker.offsetWidth;
+  marker.classList.add("is-viewing");
+  window.requestAnimationFrame(() => {
+    marker.style.width = `${target.width}px`;
+    marker.style.height = `${target.height}px`;
+  });
+  const clearInlineSize = (event) => {
+    if (event.target !== marker || (event.propertyName !== "width" && event.propertyName !== "height")) return;
+    marker.removeEventListener("transitionend", clearInlineSize);
+    if (marker.classList.contains("is-viewing")) {
+      marker.style.width = "";
+      marker.style.height = "";
+      marker.style.removeProperty("--meadow-view-transition-duration");
+    }
+  };
+  marker.addEventListener("transitionend", clearInlineSize);
+}
+
+function resetMeadowMarkerSize(marker) {
+  if (!marker) return;
+  marker.style.width = "";
+  marker.style.height = "";
+}
+
+function getMeadowMarkerSizeAtZoom(value) {
+  if (Number(value) < MEADOW_DOT_ZOOM_LIMIT) {
+    const dotSize = getMeadowDotSize(value);
+    return { width: dotSize, height: dotSize };
+  }
+  const scale = getMeadowMarkerScale(value);
+  return {
+    width: 110 * scale,
+    height: 164 * scale
+  };
+}
+
+function animateMeadowMarkerFromViewing(marker, value = 100, options = {}) {
+  if (!marker) return;
+  const rect = marker.getBoundingClientRect();
+  const target = getMeadowMarkerSizeAtZoom(value);
+  if (options.duration) marker.style.setProperty("--meadow-view-transition-duration", `${options.duration}ms`);
+  marker.style.width = `${rect.width}px`;
+  marker.style.height = `${rect.height}px`;
+  marker.offsetWidth;
+  window.requestAnimationFrame(() => {
+    marker.style.width = `${target.width}px`;
+    marker.style.height = `${target.height}px`;
+  });
+}
+
+function setMeadowActiveMarker(marker, options = {}) {
+  if (meadowActiveMarker && meadowActiveMarker !== marker) {
+    meadowActiveMarker.classList.remove("is-viewing");
+    resetMeadowMarkerSize(meadowActiveMarker);
+  }
+  meadowActiveMarker = marker || null;
+  if (!meadowActiveMarker) return;
+  resetMeadowMarkerSize(meadowActiveMarker);
+  if (options.animate) {
+    animateMeadowMarkerToViewing(meadowActiveMarker, { duration: options.duration });
+  } else {
+    meadowActiveMarker.classList.add("is-viewing");
+  }
+}
+
+function hideMeadowViewerImmediately() {
+  if (!meadowViewer) return;
+  meadowViewer.classList.remove("is-closing");
+  meadowViewer.hidden = true;
+}
+
+function closeMeadowViewer() {
+  meadowSelectedMessage = null;
+  window.clearTimeout(meadowViewerRestoreTimer);
+  if (meadowViewer) {
+    window.clearTimeout(meadowViewerCloseTimer);
+    meadowViewer.classList.add("is-closing");
+    meadowViewerCloseTimer = window.setTimeout(hideMeadowViewerImmediately, 260);
+  }
+  const activeMarker = meadowActiveMarker;
+  const focusPoint = activeMarker ? {
+    x: parseFloat(activeMarker.style.left) || 50,
+    y: parseFloat(activeMarker.style.top) || 50
+  } : null;
+  if (activeMarker) {
+    const duration = 620;
+    gardenMeadowPanel?.classList.add("is-restoring");
+    animateMeadowMarkerFromViewing(activeMarker, meadowBrowseView.zoom, { duration });
+    restoreMeadowBrowseView({ duration });
+    meadowViewerRestoreTimer = window.setTimeout(() => {
+      setMeadowActiveMarker(null);
+      gardenMeadowPanel?.classList.remove("is-restoring");
+      setMeadowState("browse");
+    }, duration + 40);
+    return;
+  }
+  setMeadowActiveMarker(null);
+  setMeadowState("browse");
+  restoreMeadowBrowseView();
+}
+
+function setMeadowState(nextState) {
+  meadowState = nextState;
+  if (nextState === "compose") {
+    window.clearTimeout(meadowComposeCloseTimer);
+    gardenMeadowPanel?.classList.remove("is-compose-closing");
+    meadowCompose?.classList.remove("is-closing");
+  }
+  gardenMeadowPanel?.setAttribute("data-state", nextState);
+  if (meadowCompose) meadowCompose.hidden = nextState !== "compose";
+  if (meadowCancel) meadowCancel.hidden = !(nextState === "compose" || nextState === "placing");
+  if (nextState !== "placing" && meadowPlaceConfirm) meadowPlaceConfirm.hidden = true;
+  if (nextState !== "viewing" && meadowViewer && !meadowViewer.classList.contains("is-closing")) meadowViewer.hidden = true;
+  if (nextState !== "viewing") {
+    setMeadowActiveMarker(null);
+    setMeadowFocusBackdrop(false);
+  }
+  gardenMeadowPanel?.classList.toggle("is-composing", nextState === "compose");
+  gardenMeadowPanel?.classList.toggle("is-placing", nextState === "placing");
+  gardenMeadowPanel?.classList.toggle("is-viewing", nextState === "viewing");
+  meadowViewport?.classList.toggle("is-scroll-locked", nextState === "compose" || nextState === "viewing");
+  syncMeadowViewportOverlays();
+}
+
+function createMeadowFlowerElement(color = "#ffffff", className = "meadow-flower-shape") {
+  const flower = document.createElement("span");
+  flower.className = className;
+  flower.style.setProperty("--meadow-color", normalizeHex(color) || "#ffffff");
+  flower.innerHTML = `
+    <span class="flower-stem"></span>
+    <span class="flower-petal p1"></span><span class="flower-petal p2"></span><span class="flower-petal p3"></span><span class="flower-petal p4"></span>
+    <span class="flower-petal p5"></span><span class="flower-petal p6"></span><span class="flower-petal p7"></span><span class="flower-petal p8"></span>
+    <span class="flower-core"></span>
+  `;
+  return flower;
+}
+
+function validMeadowMessage(message) {
+  const x = Number(message?.pos_x);
+  const y = Number(message?.pos_y);
+  return Number.isFinite(x) && Number.isFinite(y) && x >= 0 && x <= 100 && y >= 0 && y <= 100;
+}
+
+function renderMeadowMessages(messages = gardenMessagesCache) {
+  if (!meadowWorld) return;
+  meadowWorld.querySelectorAll(".meadow-flower-marker").forEach((node) => node.remove());
+  const flowers = messages.filter(validMeadowMessage);
+  flowers.forEach((message) => {
+    const marker = document.createElement("button");
+    marker.type = "button";
+    marker.className = "meadow-flower-marker";
+    marker.style.left = `${Number(message.pos_x)}%`;
+    marker.style.top = `${Number(message.pos_y)}%`;
+    marker.style.setProperty("--meadow-color", normalizeHex(message.color) || "#ffffff");
+    marker.dataset.messageId = getMeadowMarkerKey(message);
+    marker.setAttribute("aria-label", "查看一朵留言花");
+    marker.append(createMeadowFlowerElement(message.color || "#ffffff"));
+    marker.addEventListener("click", (event) => {
+      event.stopPropagation();
+      showMeadowMessage(message, marker);
+    });
+    meadowWorld.appendChild(marker);
+  });
+}
+
+async function refreshMeadowMessages() {
+  const messages = await fetchGardenMessages({ renderBoard: false });
+  renderMeadowMessages(messages);
+}
+
+function resetMeadowForm() {
+  meadowDraft = null;
+  meadowPendingPosition = null;
+  gardenMeadowPanel?.classList.remove("is-content-expanded");
+  meadowContentExpand?.setAttribute("aria-pressed", "false");
+  meadowContentExpand?.setAttribute("aria-label", "放大留言文字框");
+  setMeadowPositionCue(null);
+  if (meadowMood) meadowMood.value = "";
+  if (meadowContent) {
+    meadowContent.value = "";
+    meadowContent.placeholder = randomItem(meadowContentPlaceholders);
+  }
+  setMeadowColorControls();
+  updateMeadowCount();
+  setMeadowStatus("");
+}
+
+function getMeadowPoint(event) {
+  const rect = meadowWorld?.getBoundingClientRect();
+  if (!rect) return null;
+  return {
+    x: clamp(((event.clientX - rect.left) / rect.width) * 100, 0, 100),
+    y: clamp(((event.clientY - rect.top) / rect.height) * 100, 0, 100)
+  };
+}
+
+function beginMeadowPlacement(event) {
+  event.preventDefault();
+  if (!meadowContent) return;
+  const content = meadowContent.value.trim();
+  if (!content) {
+    setMeadowStatus("請先寫下一段留言。", "error");
+    return;
+  }
+  if (content.length > MESSAGE_LIMIT) {
+    setMeadowStatus(`留言最多 ${MESSAGE_LIMIT} 字。`, "error");
+    return;
+  }
+  meadowDraft = {
+    color: normalizeHex(meadowHex?.value) || updateMeadowColorFromSliders(),
+    mood: (meadowMood?.value || "").trim().slice(0, 20),
+    content
+  };
+  setMeadowState("placing");
+  window.requestAnimationFrame(() => {
+    setMeadowZoom(0, null, { behavior: "auto" });
+  });
+  showToast("請選擇想種下的位置");
+}
+
+function showMeadowPlaceConfirm(point) {
+  if (!meadowPlaceConfirm || !meadowViewport) return;
+  meadowPendingPosition = point;
+  setMeadowPositionCue(point);
+  const { width, height } = getMeadowWorldSize();
+  const left = (point.x / 100) * width;
+  const top = (point.y / 100) * height;
+  const minLeft = meadowViewport.scrollLeft + 126;
+  const maxLeft = meadowViewport.scrollLeft + meadowViewport.clientWidth - 126;
+  const minTop = meadowViewport.scrollTop + 142;
+  const maxTop = meadowViewport.scrollTop + meadowViewport.clientHeight - 36;
+  meadowPlaceConfirm.hidden = false;
+  meadowPlaceConfirm.style.left = `${clamp(left, minLeft, maxLeft)}px`;
+  meadowPlaceConfirm.style.top = `${clamp(top, minTop, maxTop)}px`;
+}
+
+async function playRandomBloomSfx() {
+  const randomBloom = randomItem(Object.values(bloomChoices).map((choice) => choice.bloom));
+  if (!randomBloom) return false;
+  bloomSfxAudio.pause();
+  clearAudioFade(bloomSfxAudio);
+  bloomSfxAudio.currentTime = 0;
+  bloomSfxAudio.src = randomBloom;
+  setAudioVolume(bloomSfxAudio, 1);
+  return playAudioWhenReady(bloomSfxAudio);
+}
+
+async function waitForBloomSfxOrTimeout(started, timeout = 2600) {
+  if (!started) {
+    await wait(980);
+    return;
+  }
+  if (bloomSfxAudio.ended) return;
+  await new Promise((resolve) => {
+    let timer = null;
+    const done = () => {
+      if (timer) window.clearTimeout(timer);
+      bloomSfxAudio.removeEventListener("ended", done);
+      bloomSfxAudio.removeEventListener("error", done);
+      resolve();
+    };
+    bloomSfxAudio.addEventListener("ended", done, { once: true });
+    bloomSfxAudio.addEventListener("error", done, { once: true });
+    if (Number.isFinite(timeout) && timeout > 0) {
+      timer = window.setTimeout(done, timeout);
+    }
+  });
+}
+
+async function playMeadowBloomSequence(color, options = {}) {
+  if (!meadowBloomFocus) return;
+  const manageBackground = options.manageBackground !== false;
+  const wasPlaying = manageBackground && backgroundWanted && !backgroundAudio.paused;
+  if (wasPlaying) await fadePause(backgroundAudio, 300);
+  meadowBloomFocus.hidden = false;
+  meadowBloomFocus.style.setProperty("--meadow-color", color);
+  meadowBloomFocus.classList.remove("is-blooming");
+  const started = await playRandomBloomSfx();
+  if (started) await wait(160);
+  window.requestAnimationFrame(() => meadowBloomFocus.classList.add("is-blooming"));
+  await waitForBloomSfxOrTimeout(started);
+  meadowBloomFocus.classList.remove("is-blooming");
+  await wait(260);
+  meadowBloomFocus.hidden = true;
+  if (wasPlaying && backgroundWanted) await fadeResume(backgroundAudio, 300);
+}
+
+async function playMeadowMarkerBloom(marker, options = {}) {
+  if (!marker) return;
+  const manageBackground = options.manageBackground !== false;
+  const wasPlaying = manageBackground && backgroundWanted && !backgroundAudio.paused;
+  if (wasPlaying) await fadePause(backgroundAudio, 300);
+  const started = await playRandomBloomSfx();
+  if (started) await wait(160);
+  marker.classList.remove("is-awaiting-bloom");
+  marker.classList.remove("is-new-bloom");
+  void marker.offsetWidth;
+  marker.classList.add("is-new-bloom");
+  await Promise.all([
+    waitForBloomSfxOrTimeout(started, 0),
+    wait(1900)
+  ]);
+  marker.classList.remove("is-new-bloom");
+  if (wasPlaying && backgroundWanted) await fadeResume(backgroundAudio, 300);
+}
+
+function formatMeadowTime(value) {
+  const createdAt = value ? new Date(value) : null;
+  if (!createdAt || Number.isNaN(createdAt.getTime())) return "剛剛";
+  return createdAt.toLocaleString("zh-TW", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit"
+  });
+}
+
+function showMeadowMessage(message, marker = null, options = {}) {
+  if (!validMeadowMessage(message)) return;
+  if (options.remember !== false && meadowState !== "viewing") rememberMeadowBrowseView();
+  meadowSelectedMessage = message;
+  const x = Number(message.pos_x);
+  const y = Number(message.pos_y);
+  const targetMarker = marker || findMeadowMarker(message);
+  const wasDotOverview = meadowZoomValue < MEADOW_DOT_ZOOM_LIMIT;
+  const viewDuration = options.duration ?? (wasDotOverview ? Math.round(680 * 1.4) : 680);
+  gardenMeadowPanel?.classList.remove("is-restoring");
+  setMeadowState("viewing");
+  setMeadowFocusBackdrop(true);
+  if (meadowViewer) {
+    window.clearTimeout(meadowViewerCloseTimer);
+    window.clearTimeout(meadowViewerRestoreTimer);
+    meadowViewer.classList.remove("is-closing");
+  }
+  setMeadowActiveMarker(targetMarker, { animate: options.animate !== false, duration: viewDuration });
+  setMeadowZoom(MEADOW_VIEW_ZOOM, { x, y }, {
+    alignX: getMeadowViewAlignX(),
+    alignY: 0.5,
+    animate: options.animate !== false,
+    duration: viewDuration
+  });
+  if (meadowViewerFlower) meadowViewerFlower.replaceChildren();
+  if (meadowViewerMood) {
+    const mood = (message.mood || "").trim();
+    meadowViewerMood.textContent = mood || randomItem(meadowMoodFallbacks);
+    meadowViewerMood.classList.toggle("is-empty", !mood);
+  }
+  if (meadowViewerContent) meadowViewerContent.textContent = message.content || "";
+  if (meadowViewerTime) meadowViewerTime.textContent = formatMeadowTime(message.created_at);
+  if (meadowViewer) meadowViewer.hidden = false;
+}
+
+async function confirmMeadowPlanting() {
+  if (!meadowDraft || !meadowPendingPosition) return;
+  setMeadowStatus("正在把你的花種進草原...", "");
+  const position = {
+    pos_x: Number(meadowPendingPosition.x.toFixed(3)),
+    pos_y: Number(meadowPendingPosition.y.toFixed(3))
+  };
+  let inserted = null;
+  const wasPlaying = backgroundWanted && !backgroundAudio.paused;
+  try {
+    if (meadowPlaceConfirm) meadowPlaceConfirm.hidden = true;
+    setMeadowPositionCue(null);
+    if (wasPlaying) await fadePause(backgroundAudio, 300);
+    inserted = await insertGardenMessage({ ...meadowDraft, ...position });
+    gardenMessagesCache = [inserted, ...gardenMessagesCache];
+    renderMeadowMessages(gardenMessagesCache);
+    const insertedMarker = findMeadowMarker(inserted);
+    insertedMarker?.classList.add("is-awaiting-bloom");
+    showMeadowMessage(inserted, insertedMarker, { remember: false, behavior: "smooth" });
+    await wait(520);
+    await playMeadowMarkerBloom(insertedMarker, { manageBackground: false });
+    resetMeadowForm();
+    setMeadowStatus("");
+    if (wasPlaying && backgroundWanted) await fadeResume(backgroundAudio, 300);
+  } catch (error) {
+    console.error(error);
+    if (wasPlaying && backgroundWanted) await fadeResume(backgroundAudio, 300);
+    setMeadowStatus("留言花送出失敗，請確認 Supabase 欄位與權限設定。", "error");
+    setMeadowState("placing");
+  }
+}
+
+function cancelMeadowDraft() {
+  window.clearTimeout(meadowComposeCloseTimer);
+  const shouldAnimateCompose = Boolean(meadowCompose && !meadowCompose.hidden);
+  const finishCancel = () => {
+    gardenMeadowPanel?.classList.remove("is-compose-closing");
+    meadowCompose?.classList.remove("is-closing");
+    resetMeadowForm();
+    setMeadowActiveMarker(null);
+    setMeadowZoom(0);
+    setMeadowState("browse");
+  };
+  if (!shouldAnimateCompose) {
+    finishCancel();
+    return;
+  }
+  gardenMeadowPanel?.classList.add("is-compose-closing");
+  meadowCompose.classList.add("is-closing");
+  meadowComposeCloseTimer = window.setTimeout(finishCancel, 420);
+}
+
+function toggleMeadowContentExpand() {
+  if (!gardenMeadowPanel || !meadowContentExpand) return;
+  const expanded = !gardenMeadowPanel.classList.contains("is-content-expanded");
+  gardenMeadowPanel.classList.toggle("is-content-expanded", expanded);
+  meadowContentExpand.setAttribute("aria-pressed", String(expanded));
+  meadowContentExpand.setAttribute("aria-label", expanded ? "縮小留言文字框" : "放大留言文字框");
+  meadowContent?.focus({ preventScroll: true });
+}
+
+function setGardenMode(mode) {
+  const showMessages = mode === "messages";
+  gardenStage?.classList.toggle("is-message-mode", showMessages);
+  if (gardenPlantMode) gardenPlantMode.hidden = showMessages;
+  if (gardenMeadowPanel) gardenMeadowPanel.hidden = !showMessages;
+  gardenModeButtons.forEach((button) => {
+    const active = button.dataset.gardenMode === mode;
+    button.classList.toggle("active", active);
+    button.setAttribute("aria-pressed", String(active));
+  });
+  if (showMessages) {
+    refreshMeadowMessages();
+    setMeadowZoom(meadowZoomValue);
+  }
+}
+
+function initGardenMeadow() {
+  if (!gardenMeadowPanel || !meadowViewport || !meadowWorld) return;
+  resetMeadowForm();
+  setMeadowZoom(meadowZoomValue);
+  const initialMode = gardenModeButtons.find((button) => button.classList.contains("active"))?.dataset.gardenMode || "messages";
+  setGardenMode(initialMode);
+  gardenModeButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      playTone(520, activeColor);
+      setGardenMode(button.dataset.gardenMode || "plant");
+    });
+  });
+  meadowStart?.addEventListener("click", () => {
+    resetMeadowForm();
+    setMeadowState("compose");
+  });
+  meadowCompose?.addEventListener("submit", beginMeadowPlacement);
+  meadowContent?.addEventListener("input", updateMeadowCount);
+  [meadowHue, meadowLightness, meadowGray].forEach((control) => control?.addEventListener("input", updateMeadowColorFromSliders));
+  meadowColorRandom?.addEventListener("click", () => {
+    randomizeMeadowColorControlsAnimated();
+    playTone(420 + Math.random() * 220, getMeadowColorFromControls());
+  });
+  meadowHex?.addEventListener("dblclick", () => meadowHex.removeAttribute("readonly"));
+  meadowHex?.addEventListener("change", () => {
+    const hex = normalizeHex(meadowHex.value);
+    if (hex) setMeadowFlowerColor(hex);
+    else updateMeadowColorFromSliders();
+  });
+  meadowZoom?.addEventListener("input", () => setMeadowZoom(meadowZoom.value));
+  meadowContentExpand?.addEventListener("click", toggleMeadowContentExpand);
+  meadowViewport.addEventListener("wheel", handleMeadowWheel, { passive: true });
+  meadowViewport.addEventListener("scroll", syncMeadowViewportOverlays, { passive: true });
+  meadowViewport.addEventListener("pointerdown", startMeadowDrag);
+  meadowViewport.addEventListener("pointermove", moveMeadowDrag);
+  meadowViewport.addEventListener("pointerup", endMeadowDrag);
+  meadowViewport.addEventListener("pointercancel", endMeadowDrag);
+  meadowViewport.addEventListener("click", (event) => {
+    if (meadowSuppressClick) {
+      event.preventDefault();
+      event.stopPropagation();
+      return;
+    }
+    if (event.target.closest(".meadow-compose, .meadow-place-confirm, .meadow-cancel-modal, .meadow-viewer-card, .meadow-flower-marker")) return;
+    if (meadowState === "placing") {
+      const point = getMeadowPoint(event);
+      if (point) showMeadowPlaceConfirm(point);
+      return;
+    }
+    if (meadowState === "viewing") {
+      closeMeadowViewer();
+    }
+  });
+  meadowPlaceConfirm?.addEventListener("click", (event) => {
+    const answer = event.target.closest("[data-place-answer]")?.dataset.placeAnswer;
+    if (!answer) return;
+    if (answer === "yes") confirmMeadowPlanting();
+    else {
+      meadowPendingPosition = null;
+      setMeadowPositionCue(null);
+      meadowPlaceConfirm.hidden = true;
+    }
+  });
+  meadowCancel?.addEventListener("click", () => {
+    if (meadowCancelModal) meadowCancelModal.hidden = false;
+  });
+  meadowCancelModal?.addEventListener("click", (event) => {
+    const answer = event.target.closest("[data-cancel-answer]")?.dataset.cancelAnswer;
+    if (!answer && !event.target.classList.contains("meadow-cancel-modal")) return;
+    meadowCancelModal.hidden = true;
+    if (answer === "yes") cancelMeadowDraft();
+  });
+  refreshMeadowMessages();
+  window.addEventListener("resize", () => {
+    if (!gardenMeadowPanel.hidden) setMeadowZoom(meadowZoomValue);
+  });
 }
 
 function updateAlbumUI() {
@@ -1222,6 +2412,7 @@ function updateAlbumUI() {
     button.classList.toggle("active", active);
     button.classList.toggle("is-playing", active && !backgroundAudio.paused && backgroundWanted);
   });
+  updateSongPlayUI();
   syncSoundButton();
 }
 
@@ -1255,6 +2446,8 @@ async function playBackground({ direction = 0, restart = false } = {}) {
   }
   const track = backgroundTracks[backgroundTrackIndex];
   if (restart || !backgroundAudio.src) {
+    clearSongPlayTimer();
+    songPlayCountedKey = "";
     backgroundAudio.src = track.src;
     backgroundAudio.currentTime = 0;
     setAudioVolume(backgroundAudio, 1);
@@ -1272,6 +2465,7 @@ async function playBackground({ direction = 0, restart = false } = {}) {
   backgroundAudio.play().then(() => {
     syncBackgroundAnalysis({ restart });
     backgroundWanted = true;
+    scheduleSongPlayCount();
     updateAlbumUI();
   }).catch(updateAlbumUI);
 }
@@ -1397,6 +2591,7 @@ function toggleBackgroundPlayback() {
 }
 
 backgroundAudio.addEventListener("ended", () => {
+  clearSongPlayTimer();
   if (!backgroundWanted) return;
   const nextIndex = (backgroundTrackIndex + 1) % backgroundTracks.length;
   const nextBloomKey = bloomKeyByTrackIndex[nextIndex];
@@ -1410,13 +2605,19 @@ backgroundAudio.addEventListener("timeupdate", updateProgressUI);
 backgroundAudio.addEventListener("loadedmetadata", updateProgressUI);
 backgroundAudio.addEventListener("play", () => {
   if (userActivatedAudio) syncBackgroundAnalysis({ anticipatePlay: true });
+  scheduleSongPlayCount();
   updateAlbumUI();
 });
 backgroundAudio.addEventListener("pause", () => {
+  clearSongPlayTimer();
   backgroundAnalysisAudio.pause();
   updateAlbumUI();
 });
-backgroundAudio.addEventListener("seeking", () => syncBackgroundAnalysis({ restart: true }));
+backgroundAudio.addEventListener("seeking", () => {
+  clearSongPlayTimer();
+  syncBackgroundAnalysis({ restart: true });
+});
+backgroundAudio.addEventListener("seeked", scheduleSongPlayCount);
 
 soundPrevButton?.addEventListener("click", () => {
   scheduleMobileMiniPlayerClose();
@@ -1929,6 +3130,7 @@ document.querySelectorAll(".gate-flower").forEach((button) => {
     playTone(button.dataset.tone, color);
     showToast(`${button.dataset.name} 正在綻放`);
     smoothScrollToElement(mobileMediaQuery.matches ? document.getElementById("bloom-title") || "#bloom" : "#bloom", mobileMediaQuery.matches ? { offset: MOBILE_BLOOM_ENTRY_SCROLL_OFFSET } : {});
+    updateBloomHash(bloomKey);
     window.setTimeout(() => {
       if (bloomKey) setBloomChoice(bloomKey, { playToneFeedback: false });
     }, 520);
@@ -1976,6 +3178,9 @@ document.querySelectorAll(".track[data-track]").forEach((track) => {
   });
 });
 
+ensureTrackPlayBadges();
+fetchSongPlayStats();
+
 document.querySelectorAll(".flower-card").forEach((card) => {
   card.addEventListener("click", () => {
     card.classList.toggle("flipped");
@@ -2009,6 +3214,104 @@ function openFlowerCardFromBloom(key) {
   playTone(392, getComputedStyle(targetCard).getPropertyValue("--card-color"));
 }
 
+function getBloomKeyFromHash(hash = window.location.hash) {
+  let rawHash = String(hash || "").replace(/^#/, "");
+  try {
+    rawHash = decodeURIComponent(rawHash);
+  } catch {
+    return null;
+  }
+  rawHash = rawHash.trim().toLowerCase();
+  if (!rawHash.endsWith(BLOOM_DEEP_LINK_SUFFIX)) return null;
+  const rawKey = rawHash.slice(0, -BLOOM_DEEP_LINK_SUFFIX.length);
+  const key = bloomDeepLinkAliases[rawKey] || rawKey;
+  return bloomChoices[key] ? key : null;
+}
+
+function getBloomHashForKey(key) {
+  const publicKey = bloomPublicHashKeys[key] || key;
+  return `#${publicKey}${BLOOM_DEEP_LINK_SUFFIX}`;
+}
+
+function updateBloomHash(key, { replace = false } = {}) {
+  if (!key || !bloomChoices[key]) return;
+  const nextHash = getBloomHashForKey(key);
+  if (window.location.hash === nextHash) return;
+  history[replace ? "replaceState" : "pushState"](null, "", nextHash);
+}
+
+function simulateBloomDeepLinkGesture() {
+  const target = document.querySelector(".ambient-layer") || document.body || document.documentElement;
+  if (!target) return;
+  const x = Math.max(1, Math.min(window.innerWidth - 1, Math.round(window.innerWidth * 0.08)));
+  const y = Math.max(1, Math.min(window.innerHeight - 1, Math.round(window.innerHeight * 0.08)));
+  const baseOptions = {
+    bubbles: true,
+    cancelable: true,
+    composed: true,
+    clientX: x,
+    clientY: y
+  };
+
+  try {
+    target.dispatchEvent(new PointerEvent("pointerdown", {
+      ...baseOptions,
+      pointerId: 1,
+      pointerType: "touch",
+      isPrimary: true
+    }));
+  } catch {
+    target.dispatchEvent(new MouseEvent("mousedown", baseOptions));
+  }
+
+  target.dispatchEvent(new MouseEvent("mouseup", baseOptions));
+  target.dispatchEvent(new MouseEvent("click", baseOptions));
+
+  const context = ensureAudio();
+  if (context?.state === "suspended") {
+    context.resume().catch(() => {});
+  }
+}
+
+function openBloomDeepLink(key, { replaceHash = false, delay = 520 } = {}) {
+  if (!key || !bloomChoices[key]) return false;
+  simulateBloomDeepLinkGesture();
+  const bloomTarget = mobileMediaQuery.matches ? document.getElementById("bloom-title") || "#bloom" : "#bloom";
+  const scrollOptions = mobileMediaQuery.matches ? { offset: MOBILE_BLOOM_ENTRY_SCROLL_OFFSET } : {};
+  smoothScrollToElement(bloomTarget, scrollOptions);
+  updateBloomHash(key, { replace: replaceHash });
+  window.clearTimeout(bloomDeepLinkTimer);
+  bloomDeepLinkTimer = window.setTimeout(() => {
+    setBloomChoice(key, { triggerDelay: 160, queueSfxOnBlocked: true });
+  }, delay);
+  return true;
+}
+
+function queueBloomDeepLinkSfx(key) {
+  if (!key || !bloomChoices[key]?.bloom) return;
+  pendingBloomDeepLinkSfxKey = key;
+  showToast("點一下花園，播放開花聲音");
+}
+
+async function playPendingBloomDeepLinkSfx() {
+  const key = pendingBloomDeepLinkSfxKey;
+  const choice = bloomChoices[key];
+  if (!key || !choice?.bloom) return;
+  pendingBloomDeepLinkSfxKey = "";
+  bloomSfxAudio.pause();
+  clearAudioFade(bloomSfxAudio);
+  bloomSfxAudio.currentTime = 0;
+  bloomSfxAudio.onended = null;
+  bloomSfxAudio.src = choice.bloom;
+  setAudioVolume(bloomSfxAudio, 1);
+  const started = await playAudioWhenReady(bloomSfxAudio);
+  if (!started) pendingBloomDeepLinkSfxKey = key;
+}
+
+["pointerdown", "keydown", "touchstart"].forEach((eventName) => {
+  window.addEventListener(eventName, playPendingBloomDeepLinkSfx, { passive: true });
+});
+
 bloomCard?.addEventListener("click", () => {
   openFlowerCardFromBloom(bloomCard.dataset.bloomCard);
 });
@@ -2035,7 +3338,7 @@ if (flipAllButton) {
   updateFlipAllButton();
 }
 
-async function setBloomChoice(key = "green", { playSfx = true, startTrack = true, triggerDelay = 0, playToneFeedback = false } = {}) {
+async function setBloomChoice(key = "green", { playSfx = true, startTrack = true, triggerDelay = 0, playToneFeedback = false, queueSfxOnBlocked = false } = {}) {
   if (!bloomLab || !bloomMessage || !bloomPlant || !bloomCard) return;
   const choice = bloomChoices[key] || bloomChoices.green;
   const bloomPetals = bloomPlant.querySelectorAll(".bloom-flower span");
@@ -2122,6 +3425,11 @@ async function setBloomChoice(key = "green", { playSfx = true, startTrack = true
     const started = await playAudioWhenReady(bloomSfxAudio);
     if (lastBloomKey !== key) return;
     revealBloom();
+    if (started) {
+      pendingBloomDeepLinkSfxKey = "";
+    } else if (queueSfxOnBlocked) {
+      queueBloomDeepLinkSfx(key);
+    }
     if (!started) startSelectedTrack();
   } else {
     revealBloom();
@@ -2139,10 +3447,24 @@ if (bloomLab) {
 
   document.querySelectorAll(".bloom-seed").forEach((seed) => {
     seed.addEventListener("click", () => {
+      updateBloomHash(seed.dataset.bloom);
       setBloomChoice(seed.dataset.bloom, { triggerDelay: 200 });
     });
   });
+
+  const initialBloomDeepLink = getBloomKeyFromHash();
+  if (initialBloomDeepLink) {
+    window.setTimeout(() => {
+      openBloomDeepLink(initialBloomDeepLink, { replaceHash: true, delay: mobileMediaQuery.matches ? 620 : 500 });
+    }, 120);
+  }
 }
+
+window.addEventListener("hashchange", () => {
+  const bloomKey = getBloomKeyFromHash();
+  if (!bloomKey) return;
+  openBloomDeepLink(bloomKey, { replaceHash: true });
+});
 
 bloomAudioToggle?.addEventListener("click", () => {
   toggleBackgroundPlayback();
@@ -2414,6 +3736,7 @@ dailyPhraseRandom?.addEventListener("click", () => {
 
 window.addEventListener("resize", fitDailyPhraseFont);
 initMessageBoard();
+initGardenMeadow();
 
 resizeCanvas();
 drawPetals();

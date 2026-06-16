@@ -34,7 +34,7 @@
       rel="stylesheet"
     />
     <link rel="preload" as="image" href="assets/light-garden-bg.jpg" fetchpriority="high" />
-    <link rel="stylesheet" href="styles.css?v=20260610-01" />
+    <link rel="stylesheet" href="styles.css?v=20260616-b4-3" />
   </head>
   <body data-theme="light">
     <div class="ambient-layer" aria-hidden="true">
@@ -53,7 +53,6 @@
         <a href="#garden">Seeds</a>
         <a href="#music">Music</a>
         <a href="#flowers">Flowers</a>
-        <a href="#messages">Messages</a>
         <a href="#gardeners">Gardeners</a>
         <a href="#diary">Diary</a>
         <a href="#contact">Contact</a>
@@ -230,26 +229,126 @@
           <h2 id="garden-title">種下一些花</h2>
           <p>選一種顏色，留下今天的心情。<span class="mobile-line-break"></span>花會在同一片夜色裡慢慢長出來。</p>
         </div>
-        <div class="garden-stage reveal">
-          <div class="garden-toolbar" aria-label="Garden color choices">
-            <button class="seed active" type="button" style="--seed-color: #e94545" data-color="#e94545" data-word="勇氣">Red</button>
-            <button class="seed" type="button" style="--seed-color: #ff7b59" data-color="#ff7b59" data-word="溫暖">Orange</button>
-            <button class="seed" type="button" style="--seed-color: #ffd166" data-color="#ffd166" data-word="夢想">Yellow</button>
-            <button class="seed" type="button" style="--seed-color: #60d394" data-color="#60d394" data-word="平靜">Green</button>
-            <button class="seed" type="button" style="--seed-color: #4d96ff" data-color="#4d96ff" data-word="真心">Blue</button>
-            <button class="seed" type="button" style="--seed-color: #5048f4" data-color="#5048f4" data-word="信仰">Indigo</button>
-            <button class="seed" type="button" style="--seed-color: #9b5de5" data-color="#9b5de5" data-word="療癒">Violet</button>
-            <button class="seed" type="button" style="--seed-color: #acbe9a" data-color="#acbe9a" data-word="沈澱">Gray</button>
-          </div>
-          <div class="living-garden" id="living-garden" aria-live="polite">
-            <div class="garden-message">
-              <div class="garden-message-heading">
-                <span id="garden-word">勇氣</span>
-                <button class="garden-expand-toggle" id="garden-expand-toggle" type="button" aria-label="放大種花區域" aria-pressed="false">
-                  <i aria-hidden="true"></i>
-                </button>
+        <div class="garden-mode-switch reveal" aria-label="種花區顯示模式">
+          <button class="garden-mode-option active" type="button" data-garden-mode="messages" aria-pressed="true">留言花園</button>
+          <button class="garden-mode-option" type="button" data-garden-mode="plant" aria-pressed="false">種花</button>
+        </div>
+        <div class="garden-stage reveal is-message-mode" id="garden-stage">
+          <div class="garden-plant-mode" id="garden-plant-mode" hidden>
+            <div class="garden-toolbar" aria-label="Garden color choices">
+              <button class="seed active" type="button" style="--seed-color: #e94545" data-color="#e94545" data-word="勇氣">Red</button>
+              <button class="seed" type="button" style="--seed-color: #ff7b59" data-color="#ff7b59" data-word="溫暖">Orange</button>
+              <button class="seed" type="button" style="--seed-color: #ffd166" data-color="#ffd166" data-word="夢想">Yellow</button>
+              <button class="seed" type="button" style="--seed-color: #60d394" data-color="#60d394" data-word="平靜">Green</button>
+              <button class="seed" type="button" style="--seed-color: #4d96ff" data-color="#4d96ff" data-word="真心">Blue</button>
+              <button class="seed" type="button" style="--seed-color: #5048f4" data-color="#5048f4" data-word="信仰">Indigo</button>
+              <button class="seed" type="button" style="--seed-color: #9b5de5" data-color="#9b5de5" data-word="療癒">Violet</button>
+              <button class="seed" type="button" style="--seed-color: #acbe9a" data-color="#acbe9a" data-word="沈澱">Gray</button>
+            </div>
+            <div class="living-garden" id="living-garden" aria-live="polite">
+              <div class="garden-message">
+                <div class="garden-message-heading">
+                  <span id="garden-word">勇氣</span>
+                  <button class="garden-expand-toggle" id="garden-expand-toggle" type="button" aria-label="放大種花區域" aria-pressed="false">
+                    <i aria-hidden="true"></i>
+                  </button>
+                </div>
+                <small>Blooming</small>
               </div>
-              <small>Blooming</small>
+            </div>
+          </div>
+          <div class="garden-message-mode message-meadow" id="garden-meadow-panel">
+            <div class="meadow-toolbar">
+              <button class="meadow-start" id="meadow-start" type="button">
+                <span class="meadow-seed-icon" aria-hidden="true"></span>
+                <span>種下你的花</span>
+              </button>
+              <button class="meadow-cancel" id="meadow-cancel" type="button" hidden>取消</button>
+            </div>
+            <div class="meadow-viewport" id="meadow-viewport" aria-live="polite">
+              <div class="meadow-world" id="meadow-world"></div>
+              <form class="meadow-compose" id="meadow-compose" hidden>
+                <div class="meadow-preview" aria-label="留言花預覽">
+                  <div class="meadow-preview-flower" id="meadow-preview-flower" aria-hidden="true">
+                    <span class="flower-stem"></span>
+                    <span class="flower-petal p1"></span>
+                    <span class="flower-petal p2"></span>
+                    <span class="flower-petal p3"></span>
+                    <span class="flower-petal p4"></span>
+                    <span class="flower-petal p5"></span>
+                    <span class="flower-petal p6"></span>
+                    <span class="flower-petal p7"></span>
+                    <span class="flower-petal p8"></span>
+                    <span class="flower-core"></span>
+                  </div>
+                </div>
+                <div class="meadow-compose-panel">
+                  <label>
+                    <span class="meadow-control-label-row">
+                      <span>顏色控制</span>
+                      <button class="meadow-color-random" id="meadow-color-random" type="button" aria-label="隨機排列花朵顏色控制桿" title="隨機排列花朵顏色"></button>
+                    </span>
+                    <input id="meadow-hue" type="range" min="0" max="360" value="0" />
+                  </label>
+                  <label>明暗度控制
+                    <input id="meadow-lightness" type="range" min="24" max="92" value="50" />
+                  </label>
+                  <label>灰階化程度控制
+                    <input id="meadow-gray" type="range" min="0" max="100" value="0" />
+                  </label>
+                  <label class="meadow-hex-label">Hex
+                    <input id="meadow-hex" type="text" value="#ffffff" maxlength="7" spellcheck="false" aria-label="花朵色號" />
+                  </label>
+                  <label>心情
+                    <input id="meadow-mood" type="text" maxlength="20" placeholder="分享你的心情、或是留空" />
+                  </label>
+                  <div class="meadow-content-label">
+                    <span class="meadow-content-label-row">
+                      <label for="meadow-content">留言板</label>
+                      <button class="meadow-content-expand" id="meadow-content-expand" type="button" aria-label="放大留言文字框" aria-pressed="false">
+                        <i aria-hidden="true"></i>
+                      </button>
+                    </span>
+                    <textarea id="meadow-content" minlength="1" maxlength="500" required></textarea>
+                  </div>
+                  <div class="meadow-compose-actions">
+                    <span id="meadow-count">0 / 500</span>
+                    <button class="primary-action" type="submit">選擇種植位置</button>
+                  </div>
+                  <p class="meadow-status" id="meadow-status" aria-live="polite"></p>
+                </div>
+              </form>
+              <div class="meadow-place-confirm" id="meadow-place-confirm" hidden>
+                <p>是否將你的花種在這裡？</p>
+                <div>
+                  <button type="button" data-place-answer="yes">是</button>
+                  <button type="button" data-place-answer="no">否</button>
+                </div>
+              </div>
+              <div class="meadow-viewer" id="meadow-viewer" hidden>
+                <div class="meadow-viewer-flower" id="meadow-viewer-flower" aria-hidden="true"></div>
+                <article class="meadow-viewer-card">
+                  <p class="meadow-viewer-mood" id="meadow-viewer-mood"></p>
+                  <p class="meadow-viewer-content" id="meadow-viewer-content"></p>
+                  <time id="meadow-viewer-time"></time>
+                </article>
+              </div>
+              <div class="meadow-bloom-focus" id="meadow-bloom-focus" hidden aria-hidden="true"></div>
+            </div>
+            <label class="meadow-zoom-control" id="meadow-zoom-control">
+              <span>縮放</span>
+              <input id="meadow-zoom" type="range" min="0" max="100" value="0" />
+              <output id="meadow-zoom-output">0%</output>
+            </label>
+            <div class="meadow-cancel-modal" id="meadow-cancel-modal" hidden>
+              <div class="meadow-cancel-dialog" role="dialog" aria-modal="true" aria-labelledby="meadow-cancel-title">
+                <h3 id="meadow-cancel-title">確定要取消嗎？</h3>
+                <p>這將無法復原</p>
+                <div>
+                  <button type="button" data-cancel-answer="yes">確定取消</button>
+                  <button type="button" data-cancel-answer="no">繼續種花</button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -269,7 +368,10 @@
               <i></i>
             </div>
             <div class="album-now">
-              <p class="eyebrow">Now Playing</p>
+              <div class="album-top-row">
+                <p class="eyebrow">Now Playing</p>
+                <p class="album-play-count" id="album-play-count">播放次數：0</p>
+              </div>
               <div class="album-title-row">
                 <h3 id="album-now-title">Welcome to the Secret Garden</h3>
                 <div class="album-eq album-eq-title petal-wave" id="album-eq" aria-hidden="true"></div>
@@ -293,70 +395,70 @@
           <div class="track-list" id="album-track-list">
             <button class="track active" type="button" data-track="0" style="--track-color: #8fa780">
               <span class="track-number">1</span>
-              <span class="track-composer">李岳鴒 ZEROYUEH</span>
+              <span class="track-composer"><span>李岳鴒</span><span>ZEROYUEH</span></span>
               <strong>Welcome to the<br />Secret Garden</strong>
               <small>歡迎光臨秘密花園</small>
               <em>2:49</em>
             </button>
             <button class="track" type="button" data-track="1" style="--track-color: #e94545; --track-flower: url('assets/cards/flowers/red-flower.png')">
               <span class="track-number">2</span>
-              <span class="track-composer">林書磊 Aries Lin</span>
+              <span class="track-composer"><span>林書磊</span><span>Aries Lin</span></span>
               <strong>Red</strong>
               <small>紅</small>
               <em>3:28</em>
             </button>
             <button class="track" type="button" data-track="2" style="--track-color: #ff7b59; --track-flower: url('assets/cards/flowers/orange-flower.png')">
               <span class="track-number">3</span>
-              <span class="track-composer">林書磊 Aries Lin</span>
+              <span class="track-composer"><span>林書磊</span><span>Aries Lin</span></span>
               <strong>Orange</strong>
               <small>橙</small>
               <em>3:28</em>
             </button>
             <button class="track" type="button" data-track="3" style="--track-color: #ffd166; --track-flower: url('assets/cards/flowers/yellow-flower.png')">
               <span class="track-number">4</span>
-              <span class="track-composer">林書磊 Aries Lin</span>
+              <span class="track-composer"><span>林書磊</span><span>Aries Lin</span></span>
               <strong>Yellow</strong>
               <small>黃</small>
               <em>3:28</em>
             </button>
             <button class="track" type="button" data-track="4" style="--track-color: #60d394; --track-flower: url('assets/cards/flowers/green-flower.png')">
               <span class="track-number">5</span>
-              <span class="track-composer">林書磊 Aries Lin</span>
+              <span class="track-composer"><span>林書磊</span><span>Aries Lin</span></span>
               <strong>Green</strong>
               <small>綠</small>
               <em>3:28</em>
             </button>
             <button class="track" type="button" data-track="5" style="--track-color: #4d96ff; --track-flower: url('assets/cards/flowers/blue-flower.png')">
               <span class="track-number">6</span>
-              <span class="track-composer">陳映里 Osmond Chen</span>
+              <span class="track-composer"><span>陳映里</span><span>Osmond Chen</span></span>
               <strong>Blue</strong>
               <small>藍</small>
               <em>4:10</em>
             </button>
             <button class="track" type="button" data-track="6" style="--track-color: #5542a1; --track-flower: url('assets/cards/flowers/indigo-flower.png')">
               <span class="track-number">7</span>
-              <span class="track-composer">陳映里 Osmond Chen</span>
+              <span class="track-composer"><span>陳映里</span><span>Osmond Chen</span></span>
               <strong>Indigo</strong>
               <small>靛</small>
               <em>5:02</em>
             </button>
             <button class="track" type="button" data-track="7" style="--track-color: #8b62c7; --track-flower: url('assets/cards/flowers/purple-flower.png')">
               <span class="track-number">8</span>
-              <span class="track-composer">陳映里 Osmond Chen</span>
+              <span class="track-composer"><span>陳映里</span><span>Osmond Chen</span></span>
               <strong>Violet</strong>
               <small>紫</small>
               <em>3:28</em>
             </button>
             <button class="track" type="button" data-track="8" style="--track-color: #acbe9a; --track-flower: url('assets/cards/flowers/gray-flower.png')">
               <span class="track-number">9</span>
-              <span class="track-composer">陳映里 Osmond Chen</span>
+              <span class="track-composer"><span>陳映里</span><span>Osmond Chen</span></span>
               <strong>Gray</strong>
               <small>灰</small>
               <em>5:11</em>
             </button>
             <button class="track" type="button" data-track="9" style="--track-color: #ffafcc">
               <span class="track-number">10</span>
-              <span class="track-composer">李岳鴒 ZEROYUEH</span>
+              <span class="track-composer"><span>李岳鴒</span><span>ZEROYUEH</span></span>
               <strong>Hope Flower</strong>
               <small>希望之花</small>
               <em>4:24</em>
@@ -451,11 +553,11 @@
         </div>
       </section>
 
-      <section class="messages message-board section-panel" id="messages" aria-labelledby="messages-title">
+      <section class="messages message-board section-panel" id="messages" aria-labelledby="messages-title" hidden>
         <div class="section-heading reveal">
           <p class="eyebrow">Garden Messages</p>
           <h2 id="messages-title">留言板</h2>
-          <p>留下一句 1 至 200 字的心情，讓它在秘密花園裡被溫柔看見。</p>
+          <p>留下一句 1 至 500 字的心情，讓它在秘密花園裡被溫柔看見。</p>
         </div>
         <div class="message-board-layout">
           <form class="message-form reveal" id="message-form">
@@ -464,12 +566,12 @@
               id="message-input"
               name="message"
               minlength="1"
-              maxlength="200"
+              maxlength="500"
               required
               placeholder="把今天想留在花園裡的話寫下來。"
             ></textarea>
             <div class="message-form-footer">
-              <span id="message-count">0 / 200</span>
+              <span id="message-count">0 / 500</span>
               <button class="primary-action message-submit" type="submit">送出留言</button>
             </div>
             <p class="message-status" id="message-status" aria-live="polite"></p>
@@ -532,7 +634,7 @@
                 <span class="version-link-copy">
                   <strong id="version-toggle-title">網站版本</strong>
                   <span class="version-link-inline">
-                    <small id="version-toggle-subtitle">v0.5b1</small>
+                    <small id="version-toggle-subtitle">v0.5b4</small>
                     <i class="version-link-arrow" aria-hidden="true"></i>
                   </span>
                 </span>
@@ -605,6 +707,7 @@
       </div>
     </div>
     <div class="bloom-toast" id="bloom-toast" aria-live="polite"></div>
-    <script src="script.js?v=20260610-01"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="script.js?v=20260616-b4-3"></script>
   </body>
 </html>
