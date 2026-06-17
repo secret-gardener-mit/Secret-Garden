@@ -1256,6 +1256,56 @@
         <p class="details">「進入花園」按鈕現在會判斷 pendingBloomEntryKey：若存在深連結預選花色，就在使用者點擊事件當下直接播放該色綻放動畫，不需使用者再選種子；若沒有深連結，仍維持原本只是進入花園的行為。種子點擊也會同步更新網址 hash，方便複製花色網址。</p>
         <p class="details">同步將網站目前版本重新提升為 v0.5b4，更新 index.html、script.js 與 version.html 的資源快取參數為 20260616-b4-5，並在使用者版 version.html 新增新版 v0.5b4 說明。</p>
       </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b4-6</h3>
+        <p class="date">修改時間：2026 06/17</p>
+        <p class="details">新增隱藏版 Hope Flower。一般使用者第一次進入「花朵綻放」後，彩色初始花改為只顯示中央花蕊；點擊花蕊時會依序露出八片迷你彩色花瓣，第九次點擊才會觸發隱藏版希望之花綻放。其祝福語為「只要還有呼吸，一切都還有希望」。</p>
+        <p class="details">新增 #hope_bloom 深連結，與八色深連結一樣會先停在「歡迎來到秘密花園」與「進入花園」卡片；點擊「進入花園」後會直接播放 Hope Flower 的開花音效、背景音樂與八色花瓣綻放動畫。</p>
+        <p class="details">新增 Hope Flower 花卡素材流程：原始 hope.png 複製至 assets/cards/hope.png，網站使用的壓縮版輸出至 assets/cards/web/hope.jpg 與 hope.png；主花去背圖輸出為 assets/cards/flowers/hope-flower.png，供「專輯聆聽」第 10 首 Hope Flower 小曲目卡與大播放器背景使用。</p>
+        <p class="details">「花語圖鑑卡」新增隱藏 Hope 卡，預設不顯示；只有從 Hope Flower 綻放後右下角花卡入口前往圖鑑時才會解除 hidden 並翻開。正面文字為 Hope｜希望，四瓣圖示分別使用紅、黃、藍、紫，底色為對應位置的四色漸層暈染。</p>
+        <p class="details">同步更新 index.html、script.js 與 version.html 的資源快取參數為 20260617-b4-6，並在使用者版 version.html 的 v0.5b4 條目補充本次隱藏花功能。</p>
+        <p class="details">已將本次使用者提供的 Hope Flower 花卡壓縮為 JPG，保存於 更新日誌/assets/v0.5b4-6/。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b4-7</h3>
+        <p class="date">修改時間：2026 06/17</p>
+        <p class="details">修正隱藏 Hope Flower 花蕊的點擊範圍。原本整個 bloom-palette 外層都會接收點擊，導致碰撞箱與視覺上的黃色花蕊不一致；現在改由中央花蕊 i 元素接收滑鼠、觸控與鍵盤操作，外層只保留花瓣定位與動畫。</p>
+        <p class="details">優化「花朵綻放」右下角花卡入口的跳轉行為。點擊花卡後會直接定位到「花語圖鑑卡」中對應的花卡本身，並在翻開後再次置中，避免較後排序或隱藏解鎖後的花卡只跳到圖鑑區頂部而看不見。</p>
+        <p class="details">同步更新 index.html 與 version.html 的資源快取參數為 20260617-b4-7。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b4-8</h3>
+        <p class="date">修改時間：2026 06/17</p>
+        <p class="details">細修 Hope Flower 彩色花的花瓣疊放順序。原本灰色花瓣因為是最後一片而顯得最高、最突出；現在將灰色花瓣調整為高於紫色、低於紅色，讓八色花瓣形成更接近循環的視覺層次。</p>
+        <p class="details">在「花朵綻放」顏色種子列最左側新增回到入口按鈕，圖示沿用隨機按鈕的旋轉箭頭風格。點擊後會清除目前花朵、花卡、花瓣進度、花朵音效與花朵背景音樂，回到「歡迎來到秘密花園」與「進入花園」頁面。</p>
+        <p class="details">同步更新 index.html、script.js 與 version.html 的資源快取參數為 20260617-b4-8，並在使用者版 version.html 的 v0.5b4 條目補充本次新增的入口重置功能。</p>
+        <p class="details">已將本次使用者提供的兩張參考截圖壓縮保存於 更新日誌/assets/v0.5b4-8/。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b4-9</h3>
+        <p class="date">修改時間：2026 06/17</p>
+        <p class="details">重新調整 Hope Flower 彩色花的循環疊放邏輯。紅色完整花瓣改回底層，另新增一片只覆蓋左半部的紅色補片，讓紅色右半可被橘色遮住、紅色左半可遮住灰色，形成順時鐘每瓣高於上一瓣、又被下一瓣壓住的閉環。</p>
+        <p class="details">同步將花蕊圖層提高到所有花瓣之上，避免彩色花綻放後中央花蕊被花瓣遮住；同時補齊行動版各斷點的紅色補片尺寸與動畫定位。</p>
+        <p class="details">同步更新 index.html、script.js 與 version.html 的資源快取參數為 20260617-b4-9。</p>
+        <p class="details">已將本次使用者提供的參考截圖壓縮保存於 更新日誌/assets/v0.5b4-9/。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b4-10</h3>
+        <p class="date">修改時間：2026 06/17</p>
+        <p class="details">細修 Hope Flower 彩色花的紅色花瓣拼接。底層紅色花瓣改為只保留右半部，上層紅色補片則只保留左半部，避免左側因上下兩層紅色重疊而出現透明度變深與可見分界線。</p>
+        <p class="details">新增單次瀏覽的 Hope Flower 解鎖狀態 hopeBloomUnlocked。未觸發彩色花綻放前，即使專輯播放系統切到 Hope Flower，也不會自動把「花朵綻放」區域切成彩色花，會停留在上一朵花，保留彩蛋的隱藏性；刷新網站後狀態會重置。</p>
+        <p class="details">手動點擊花蕊九次觸發 Hope Flower 時，網址會同步更新為 #hope_bloom。只要 Hope Flower 被觸發，隱藏的希望花卡就會自動解除 hidden 並出現在「花語圖鑑卡」區域，不再需要先點擊綻放區右下角小花卡才解鎖。</p>
+        <p class="details">同步更新 index.html、script.js 與 version.html 的資源快取參數為 20260617-b4-10，並在使用者版 version.html 的 v0.5b4 條目補充本次彩蛋解鎖規則。</p>
+        <p class="details">已將本次使用者提供的參考截圖壓縮保存於 更新日誌/assets/v0.5b4-10/。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b4-11</h3>
+        <p class="date">修改時間：2026 06/17</p>
+        <p class="details">修正專輯播放系統換歌時「花朵綻放」區域不再重播換花動畫的問題。setBloomChoice 現在會先讓既有花朵進入退場狀態，等待退場完成後再套用下一首歌對應的花色、祝福與花卡，接著重新觸發長花動畫。</p>
+        <p class="details">修正右下角小花卡內容過早切換的 Bug。原本程式在退卡動畫前就更新圖片 src 與 alt，造成卡片尚未退場時已顯示下一張內容；現在會等舊卡退場後才替換成下一張卡，再播放入場動畫。</p>
+        <p class="details">新增 bloomCardRevealTimer 與 bloom-plant.is-changing 狀態，避免連續切歌時舊計時器誤觸發卡片顯示，並讓花朵淡出與新花長出維持穩定時序。</p>
+        <p class="details">同步更新 index.html、script.js 與 version.html 的資源快取參數為 20260617-b4-11，並在使用者版 version.html 的 v0.5b4 條目補充本次換花動畫修正。</p>
+      </article>
     </section>
 
     <section class="asset-section">
@@ -1926,6 +1976,55 @@
             <img src="assets/v0.5b3-7/track-composer-still-yellow.jpg" alt="小曲目卡作曲者文字仍顯示黃色的參考截圖">
             <a href="assets/v0.5b3-7/track-composer-still-yellow.jpg">track-composer-still-yellow.jpg</a>
             <small>使用者標示小曲目卡作曲者名稱仍顯示為黃色，需要改為灰色的參考截圖。</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="asset-version">
+        <h3>v0.5b4-6</h3>
+        <div class="asset-grid">
+          <div class="asset-card">
+            <img src="assets/v0.5b4-6/hope-card-reference.jpg" alt="Hope Flower 希望之花花卡參考圖">
+            <a href="assets/v0.5b4-6/hope-card-reference.jpg">hope-card-reference.jpg</a>
+            <small>使用者提供的 Hope Flower 花卡，已壓縮作為本次隱藏版希望之花功能的參考素材紀錄。</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="asset-version">
+        <h3>v0.5b4-8</h3>
+        <div class="asset-grid">
+          <div class="asset-card">
+            <img src="assets/v0.5b4-8/hope-petal-layer-reference.jpg" alt="Hope Flower 彩色花瓣灰色花瓣層級調整參考截圖">
+            <a href="assets/v0.5b4-8/hope-petal-layer-reference.jpg">hope-petal-layer-reference.jpg</a>
+            <small>使用者標示 Hope Flower 彩色花瓣中灰色花瓣太高，希望改為高於紫色、低於紅色的參考截圖。</small>
+          </div>
+          <div class="asset-card">
+            <img src="assets/v0.5b4-8/bloom-reset-button-reference.jpg" alt="花朵綻放種子列左側新增回到入口按鈕參考截圖">
+            <a href="assets/v0.5b4-8/bloom-reset-button-reference.jpg">bloom-reset-button-reference.jpg</a>
+            <small>使用者標示希望在顏色種子列左側新增回到入口按鈕的參考截圖。</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="asset-version">
+        <h3>v0.5b4-9</h3>
+        <div class="asset-grid">
+          <div class="asset-card">
+            <img src="assets/v0.5b4-9/hope-cyclic-petal-layer-reference.jpg" alt="Hope Flower 彩色花瓣循環疊放與花蕊圖層參考截圖">
+            <a href="assets/v0.5b4-9/hope-cyclic-petal-layer-reference.jpg">hope-cyclic-petal-layer-reference.jpg</a>
+            <small>使用者標示紅色花瓣需右半被橘色遮住、左半遮住灰色，並要求花蕊高於所有花瓣的參考截圖。</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="asset-version">
+        <h3>v0.5b4-10</h3>
+        <div class="asset-grid">
+          <div class="asset-card">
+            <img src="assets/v0.5b4-10/hope-petal-split-reference.jpg" alt="Hope Flower 紅色花瓣分割與彩蛋解鎖規則參考截圖">
+            <a href="assets/v0.5b4-10/hope-petal-split-reference.jpg">hope-petal-split-reference.jpg</a>
+            <small>使用者標示紅色花瓣左右半拼接仍有透明度分界，並提出 Hope Flower 音樂同步與花卡解鎖規則的參考截圖。</small>
           </div>
         </div>
       </div>

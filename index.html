@@ -34,7 +34,7 @@
       rel="stylesheet"
     />
     <link rel="preload" as="image" href="assets/light-garden-bg.jpg" fetchpriority="high" />
-    <link rel="stylesheet" href="styles.css?v=20260616-b4-5" />
+    <link rel="stylesheet" href="styles.css?v=20260617-b4-11" />
   </head>
   <body data-theme="light">
     <div class="ambient-layer" aria-hidden="true">
@@ -177,6 +177,7 @@
             <button class="primary-action magnetic" id="start-bloom" type="button">進入花園</button>
           </div>
           <div class="bloom-controls" aria-label="Bloom color choices">
+            <button class="bloom-reset-toggle" id="bloom-reset-toggle" type="button" aria-label="回到花朵綻放入口" title="回到花朵綻放入口"></button>
             <button class="bloom-seed" type="button" style="--seed-color: #e94545" data-bloom="red" aria-label="紅色種子"></button>
             <button class="bloom-seed" type="button" style="--seed-color: #ff7b59" data-bloom="orange" aria-label="橙色種子"></button>
             <button class="bloom-seed" type="button" style="--seed-color: #ffd166" data-bloom="yellow" aria-label="黃色種子"></button>
@@ -188,9 +189,9 @@
             <button class="bloom-audio-toggle" id="bloom-audio-toggle" type="button" aria-label="暫停花朵音樂" aria-pressed="false"></button>
           </div>
           <div class="bloom-scene" aria-live="polite">
-            <div class="bloom-empty" id="bloom-empty">選擇一顆種子，讓它在這裡盛開。</div>
+            <div class="bloom-empty" id="bloom-empty">選擇一顆顏色種子，或觸碰花蕊，讓它在這裡盛開。</div>
             <div class="bloom-message" id="bloom-message"></div>
-            <div class="bloom-palette" id="bloom-palette" aria-hidden="true">
+            <div class="bloom-palette" id="bloom-palette" aria-label="隱藏希望之花">
               <span style="--angle: 0deg; --petal-color: #ff6b6b"></span>
               <span style="--angle: 45deg; --petal-color: #ffa94d"></span>
               <span style="--angle: 90deg; --petal-color: #ffd86b"></span>
@@ -199,7 +200,7 @@
               <span style="--angle: 225deg; --petal-color: #6f75ff"></span>
               <span style="--angle: 270deg; --petal-color: #c6a0ff"></span>
               <span style="--angle: 315deg; --petal-color: #acbe9a"></span>
-              <i></i>
+              <i role="button" tabindex="0" aria-label="觸碰花蕊，讓隱藏花瓣慢慢出現"></i>
             </div>
             <div class="bloom-plant" id="bloom-plant" aria-hidden="true">
               <div class="bloom-flower">
@@ -211,6 +212,7 @@
                 <span style="--rotate: 225deg"></span>
                 <span style="--rotate: 270deg"></span>
                 <span style="--rotate: 315deg"></span>
+                <b class="bloom-red-petal-cap" aria-hidden="true"></b>
                 <i></i>
               </div>
               <div class="bloom-stem"></div>
@@ -456,7 +458,7 @@
               <small>灰</small>
               <em>5:11</em>
             </button>
-            <button class="track" type="button" data-track="9" style="--track-color: #ffafcc">
+            <button class="track" type="button" data-track="9" style="--track-color: #ffafcc; --track-flower: url('assets/cards/flowers/hope-flower.png')">
               <span class="track-number">10</span>
               <span class="track-composer"><span>李岳鴒</span><span>ZEROYUEH</span></span>
               <strong>Hope Flower</strong>
@@ -548,6 +550,15 @@
             </span>
             <span class="card-face back">
               <img src="assets/cards/web/gray.jpg" alt="灰色銀葉菊小花卡" loading="lazy" decoding="async" />
+            </span>
+          </button>
+          <button class="flower-card hope-card reveal" type="button" data-flower-card="hope" style="--card-color: #a986ff" aria-label="翻開希望之花花卡" hidden>
+            <span class="card-face front">
+              <i class="hope-card-icon" aria-hidden="true"></i>
+              <strong>Hope｜希望</strong>
+            </span>
+            <span class="card-face back">
+              <img src="assets/cards/web/hope.jpg" alt="希望之花花卡" loading="lazy" decoding="async" />
             </span>
           </button>
         </div>
@@ -708,6 +719,6 @@
     </div>
     <div class="bloom-toast" id="bloom-toast" aria-live="polite"></div>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="script.js?v=20260616-b4-5"></script>
+    <script src="script.js?v=20260617-b4-11"></script>
   </body>
 </html>

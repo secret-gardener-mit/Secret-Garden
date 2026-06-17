@@ -22,7 +22,7 @@
     <meta name="theme-color" content="#f6efe4" />
     <title>網站版本紀錄｜Secret Garden</title>
     <link rel="icon" type="image/png" href="assets/favicon-secret-garden-max.png?v=20260603-01" />
-    <link rel="stylesheet" href="styles.css?v=20260616-b4-5" />
+    <link rel="stylesheet" href="styles.css?v=20260617-b4-11" />
   </head>
   <body class="version-page" data-theme="light">
     <div class="ambient-layer" aria-hidden="true">
@@ -60,6 +60,14 @@
             <article class="version-item"><div class="version-item-heading"><h3>v0.5b4</h3><time class="version-item-date">2026 06/16</time></div><p>- 重新啟用「花朵綻放」八色花朵的獨立網址入口，可使用 #red_bloom、#orange_bloom、#yellow_bloom、#green_bloom、#blue_bloom、#indigo_bloom、#purple_bloom、#violet_bloom、#gray_bloom 直接進入對應花色。
 
                     - 為符合行動瀏覽器的音訊播放限制，深連結不會立刻自動開花，而是先顯示「歡迎來到秘密花園」與「進入花園」按鈕；訪客點擊「進入花園」後，會直接播放對應顏色的開花音效、音樂與綻放動畫，不需要再選擇顏色。
+
+                    - 新增隱藏版 Hope Flower：一般進入花園後，初始彩色花只顯示花蕊；連續觸碰花蕊八次會逐片露出迷你八色花瓣，第九次會觸發希望之花綻放。Hope Flower 也可透過 #hope_bloom 進入，同樣需先點擊「進入花園」。
+
+                    - 在「花朵綻放」種子列新增回到入口按鈕，可從已進入或已綻放狀態回到「歡迎來到秘密花園」與「進入花園」頁面；同時細修 Hope Flower 彩色花瓣的疊放平衡。
+
+                    - 細修 Hope Flower 彩蛋解鎖規則：手動綻放後網址會同步為 #hope_bloom，希望花卡會自動出現在圖鑑；未解鎖前專輯播放到 Hope Flower 不會自動切到彩色花綻放。
+
+                    - 修正專輯換歌同步「花朵綻放」時動畫沒有重播的問題，並調整右下角小花卡在退場動畫後才更換內容。
                   </p></article>
             <article class="version-item"><div class="version-item-heading"><h3>v0.5b3</h3><time class="version-item-date">2026 06/14</time></div><p>- 新增「專輯聆聽」各曲目的獨立播放次數統計，串接 Supabase 的 song_plays 資料表，讀取 id、song_id、played_at 與 plays 欄位。
 

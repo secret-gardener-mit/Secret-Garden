@@ -1435,6 +1435,41 @@ body[data-theme="light"] .bloom-intro {
   border-bottom: 1px solid var(--line);
 }
 
+.bloom-reset-toggle {
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  width: 42px;
+  height: 42px;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  color: var(--gold);
+  background: transparent;
+  box-shadow: none;
+  cursor: pointer;
+  transform: translateY(-50%);
+  transition: transform 220ms ease, filter 220ms ease, color 220ms ease;
+}
+
+.bloom-reset-toggle::before {
+  content: "↻";
+  display: block;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", system-ui, sans-serif;
+  font-size: 34px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.bloom-reset-toggle:hover,
+.bloom-reset-toggle:focus-visible {
+  outline: none;
+  color: color-mix(in srgb, var(--gold), white 16%);
+  transform: translateY(-50%) rotate(-28deg) scale(1.08);
+  filter: drop-shadow(0 0 12px color-mix(in srgb, var(--gold), transparent 28%));
+}
+
 .bloom-seed {
   width: 48px;
   aspect-ratio: 1;
@@ -1605,12 +1640,9 @@ body[data-theme="light"] .bloom-empty {
   transform: translate(-50%, -50%) scale(1);
 }
 
-.bloom-lab.entered .bloom-palette {
-  pointer-events: none;
-}
-
 .bloom-palette span,
-.bloom-flower span {
+.bloom-flower span,
+.bloom-red-petal-cap {
   position: absolute;
   width: 50px;
   height: 92px;
@@ -1625,15 +1657,17 @@ body[data-theme="light"] .bloom-empty {
   top: 24px;
 }
 
-.bloom-flower span {
+.bloom-flower span,
+.bloom-red-petal-cap {
   left: 75px;
   top: 34px;
 }
 
 .bloom-palette span {
   opacity: 0;
-  transform: rotate(var(--angle)) translateY(-26px) scale(0);
-  animation: palette-bloom 1.4s ease forwards;
+  transform: rotate(var(--angle)) translateY(-18px) scale(0.14);
+  transition: opacity 260ms ease, transform 360ms cubic-bezier(0.18, 0.84, 0.22, 1);
+  animation: none;
 }
 
 .bloom-palette span:nth-child(1) { animation-delay: 0.08s; }
@@ -1644,6 +1678,29 @@ body[data-theme="light"] .bloom-empty {
 .bloom-palette span:nth-child(6) { animation-delay: 0.58s; }
 .bloom-palette span:nth-child(7) { animation-delay: 0.68s; }
 .bloom-palette span:nth-child(8) { animation-delay: 0.78s; }
+
+.bloom-palette[data-hope-step="1"] span:nth-child(-n + 1),
+.bloom-palette[data-hope-step="2"] span:nth-child(-n + 2),
+.bloom-palette[data-hope-step="3"] span:nth-child(-n + 3),
+.bloom-palette[data-hope-step="4"] span:nth-child(-n + 4),
+.bloom-palette[data-hope-step="5"] span:nth-child(-n + 5),
+.bloom-palette[data-hope-step="6"] span:nth-child(-n + 6),
+.bloom-palette[data-hope-step="7"] span:nth-child(-n + 7),
+.bloom-palette[data-hope-step="8"] span:nth-child(-n + 8) {
+  opacity: 0.9;
+  transform: rotate(var(--angle)) translateY(-22px) scale(0.34);
+}
+
+.bloom-palette i:focus-visible {
+  outline: none;
+}
+
+.bloom-palette i:focus-visible {
+  box-shadow:
+    0 6px 18px rgba(0, 0, 0, 0.1),
+    0 0 0 3px color-mix(in srgb, var(--gold), white 28%),
+    0 0 28px rgba(255, 209, 102, 0.46);
+}
 
 .bloom-palette i,
 .bloom-flower i {
@@ -1659,10 +1716,16 @@ body[data-theme="light"] .bloom-empty {
   z-index: 2;
 }
 
+.bloom-palette i {
+  cursor: pointer;
+  pointer-events: auto;
+  touch-action: manipulation;
+}
+
 .bloom-flower i {
   left: 50%;
   top: 50%;
-  z-index: 4;
+  z-index: 20;
   opacity: 0;
   transform: translate(-50%, -50%) scale(0);
   transform-origin: center;
@@ -1692,12 +1755,17 @@ body[data-theme="light"] .bloom-empty {
   margin-top: 44px;
   transform-origin: 50% 100%;
   opacity: 0;
+  pointer-events: none;
   transition: opacity 320ms ease;
   animation: bloom-sway 5s ease-in-out infinite;
 }
 
 .bloom-lab.has-bloom .bloom-plant {
   opacity: 1;
+}
+
+.bloom-lab.has-bloom .bloom-plant.is-changing {
+  opacity: 0;
 }
 
 @keyframes bloom-sway {
@@ -1730,8 +1798,33 @@ body[data-theme="light"] .bloom-empty {
   transform: rotate(var(--rotate)) translateY(0) scale(0);
 }
 
+.bloom-flower span:nth-child(1) { z-index: 1; }
+.bloom-flower span:nth-child(2) { z-index: 2; }
+.bloom-flower span:nth-child(3) { z-index: 3; }
+.bloom-flower span:nth-child(4) { z-index: 4; }
+.bloom-flower span:nth-child(5) { z-index: 5; }
+.bloom-flower span:nth-child(6) { z-index: 6; }
+.bloom-flower span:nth-child(7) { z-index: 7; }
+.bloom-flower span:nth-child(8) { z-index: 8; }
+
+.bloom-flower span:nth-child(1) {
+  clip-path: inset(-4px -4px -4px 50%);
+}
+
+.bloom-red-petal-cap {
+  --rotate: 0deg;
+  opacity: 0;
+  z-index: 9;
+  transform: rotate(0deg) translateY(0) scale(0);
+  clip-path: inset(-4px 50% -4px -4px);
+}
+
 .bloom-plant.is-blooming .bloom-flower span {
   animation: bloom-petal-open 1.45s ease-out forwards;
+}
+
+.bloom-plant.is-blooming .bloom-red-petal-cap {
+  animation: bloom-red-petal-cap-open 1.45s ease-out 0.2s forwards;
 }
 
 .bloom-plant.is-blooming .bloom-flower span:nth-child(1) { animation-delay: 0.2s; }
@@ -1747,6 +1840,13 @@ body[data-theme="light"] .bloom-empty {
   to {
     opacity: 0.94;
     transform: rotate(var(--rotate)) translateY(-32px) scale(1);
+  }
+}
+
+@keyframes bloom-red-petal-cap-open {
+  to {
+    opacity: 0.94;
+    transform: rotate(0deg) translateY(-32px) scale(1);
   }
 }
 
@@ -4122,6 +4222,19 @@ body[data-theme="light"] .flip-all-button:focus-visible {
   transform: rotateY(360deg);
 }
 
+.flower-card.hope-card {
+  grid-column: 2 / span 2;
+  width: min(280px, 52%);
+  justify-self: center;
+}
+
+@media (max-width: 760px) {
+  .flower-card.hope-card {
+    grid-column: 1 / -1;
+    width: min(72%, 260px);
+  }
+}
+
 .card-face {
   position: absolute;
   inset: 0;
@@ -4147,6 +4260,24 @@ body[data-theme="light"] .card-face {
     rgba(255, 251, 246, 0.82);
 }
 
+.hope-card .front {
+  background:
+    radial-gradient(circle at 18% 18%, rgba(233, 69, 69, 0.34), transparent 42%),
+    radial-gradient(circle at 82% 18%, rgba(255, 209, 102, 0.34), transparent 42%),
+    radial-gradient(circle at 78% 82%, rgba(77, 150, 255, 0.34), transparent 44%),
+    radial-gradient(circle at 18% 78%, rgba(155, 93, 229, 0.34), transparent 44%),
+    rgba(13, 22, 18, 0.82);
+}
+
+body[data-theme="light"] .hope-card .front {
+  background:
+    radial-gradient(circle at 18% 18%, rgba(233, 69, 69, 0.26), transparent 42%),
+    radial-gradient(circle at 82% 18%, rgba(255, 209, 102, 0.3), transparent 42%),
+    radial-gradient(circle at 78% 82%, rgba(77, 150, 255, 0.26), transparent 44%),
+    radial-gradient(circle at 18% 78%, rgba(155, 93, 229, 0.26), transparent 44%),
+    rgba(255, 251, 246, 0.86);
+}
+
 .card-face i {
   width: clamp(110px, 42%, 170px);
   aspect-ratio: 1;
@@ -4158,6 +4289,18 @@ body[data-theme="light"] .card-face {
     radial-gradient(circle at 50% 94%, var(--card-color) 0 22%, transparent 23%),
     radial-gradient(circle at 10% 50%, var(--card-color) 0 22%, transparent 23%);
   filter: drop-shadow(0 0 22px color-mix(in srgb, var(--card-color), transparent 24%));
+}
+
+.hope-card .card-face i {
+  background:
+    radial-gradient(circle, #fff8ec 0 10%, transparent 11%),
+    radial-gradient(circle at 50% 6%, #e94545 0 22%, transparent 23%),
+    radial-gradient(circle at 90% 50%, #ffd166 0 22%, transparent 23%),
+    radial-gradient(circle at 50% 94%, #4d96ff 0 22%, transparent 23%),
+    radial-gradient(circle at 10% 50%, #9b5de5 0 22%, transparent 23%);
+  filter:
+    drop-shadow(0 0 18px rgba(255, 209, 102, 0.22))
+    drop-shadow(0 0 24px rgba(155, 93, 229, 0.2));
 }
 
 .card-face strong {
@@ -6321,11 +6464,17 @@ html.performance-lite body.scroll-optimizing .theme-toggle-button::after {
   .bloom-controls {
     justify-content: center;
     gap: 9px;
-    padding: 14px 60px 14px 14px;
+    padding: 14px 60px;
   }
 
   .bloom-seed {
     width: 40px;
+  }
+
+  .bloom-reset-toggle {
+    left: 12px;
+    width: 40px;
+    height: 40px;
   }
 
   .bloom-audio-toggle {
@@ -6357,7 +6506,8 @@ html.performance-lite body.scroll-optimizing .theme-toggle-button::after {
   }
 
   .bloom-palette span,
-  .bloom-flower span {
+  .bloom-flower span,
+  .bloom-red-petal-cap {
     width: 42px;
     height: 78px;
     transform-origin: 21px 56px;
@@ -6385,7 +6535,8 @@ html.performance-lite body.scroll-optimizing .theme-toggle-button::after {
     width: 172px;
   }
 
-  .bloom-flower span {
+  .bloom-flower span,
+  .bloom-red-petal-cap {
     left: 65px;
     top: 31px;
   }
@@ -6810,7 +6961,7 @@ html.performance-lite body.scroll-optimizing .theme-toggle-button::after {
 
   .bloom-controls {
     gap: 8px;
-    padding-left: 10px;
+    padding-left: 56px;
   }
 
   .bloom-seed {
@@ -6896,7 +7047,7 @@ html.performance-lite body.scroll-optimizing .theme-toggle-button::after {
     align-items: center;
     justify-items: center;
     gap: 5px;
-    padding: 12px;
+    padding: 12px 12px 12px 54px;
   }
 
   .bloom-seed {
@@ -6956,7 +7107,8 @@ html.performance-lite body.scroll-optimizing .theme-toggle-button::after {
     width: 142px;
   }
 
-  .bloom-lab.has-bloom .bloom-flower span {
+  .bloom-lab.has-bloom .bloom-flower span,
+  .bloom-lab.has-bloom .bloom-red-petal-cap {
     left: 53px;
     top: 24px;
     width: 36px;
@@ -7298,7 +7450,8 @@ html.performance-lite body.scroll-optimizing .theme-toggle-button::after {
     width: clamp(106px, 31vw, 132px);
   }
 
-  .bloom-lab.has-bloom .bloom-flower span {
+  .bloom-lab.has-bloom .bloom-flower span,
+  .bloom-lab.has-bloom .bloom-red-petal-cap {
     left: calc(50% - 17px);
     top: 20px;
     width: 34px;
@@ -7683,6 +7836,7 @@ html.performance-lite body.scroll-optimizing .theme-toggle-button::after {
 
   .bloom-palette span,
   .bloom-flower span,
+  .bloom-red-petal-cap,
   .bloom-lab.has-bloom .bloom-flower span {
     left: 50% !important;
     top: 5% !important;
@@ -7713,7 +7867,8 @@ html.performance-lite body.scroll-optimizing .theme-toggle-button::after {
     animation-name: palette-bloom-mobile-grouped;
   }
 
-  .bloom-plant.is-blooming .bloom-flower span {
+  .bloom-plant.is-blooming .bloom-flower span,
+  .bloom-plant.is-blooming .bloom-red-petal-cap {
     animation-name: bloom-petal-open-mobile-grouped;
   }
 

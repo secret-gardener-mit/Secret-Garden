@@ -14,8 +14,11 @@ const themeFlowerVisual = themeToggle?.querySelector(".theme-flower-visual");
 const bloomLab = document.querySelector(".bloom-lab");
 const startBloomButton = document.getElementById("start-bloom");
 const bloomMessage = document.getElementById("bloom-message");
+const bloomPalette = document.getElementById("bloom-palette");
+const bloomPaletteCenter = bloomPalette?.querySelector("i");
 const bloomPlant = document.getElementById("bloom-plant");
 const bloomCard = document.getElementById("bloom-card");
+const bloomResetToggle = document.getElementById("bloom-reset-toggle");
 const bloomAudioToggle = document.getElementById("bloom-audio-toggle");
 const miniPlayer = document.getElementById("mini-player");
 const miniPlayerTitle = document.getElementById("mini-player-title");
@@ -241,6 +244,16 @@ const bloomChoices = {
     alt: "灰色銀葉菊小花卡",
     bloom: "assets/audio/gray_bloom.mp3",
     music: "assets/audio/gray.mp3"
+  },
+  hope: {
+    color: "#ffafcc",
+    tone: 587.33,
+    message: "只要還有呼吸，一切都還有希望",
+    card: "assets/cards/web/hope.jpg",
+    alt: "希望之花花卡",
+    bloom: "assets/audio/secret_bloom.mp3",
+    music: "assets/audio/secret-flower-demo.mp3",
+    petals: ["#e94545", "#ff7b59", "#ffd166", "#60d394", "#4d96ff", "#5048f4", "#9b5de5", "#acbe9a"]
   }
 };
 
@@ -351,7 +364,8 @@ const albumTracks = [
     composer: "李岳鴒 ZEROYUEH",
     duration: "4:24",
     color: "#ffafcc",
-    src: "assets/audio/secret-flower-demo.mp3"
+    src: "assets/audio/secret-flower-demo.mp3",
+    flower: "assets/cards/flowers/hope-flower.png"
   }
 ];
 
@@ -364,7 +378,8 @@ const bloomTrackByKey = {
   blue: 5,
   indigo: 6,
   purple: 7,
-  gray: 8
+  gray: 8,
+  hope: 9
 };
 const bloomKeyByTrackIndex = Object.fromEntries(
   Object.entries(bloomTrackByKey).map(([key, index]) => [index, key])
@@ -414,6 +429,9 @@ let backgroundResumeTimer;
 let bloomPauseResumeTimer;
 let bloomLeaveTimer;
 let pendingBloomEntryKey = "";
+let hopePaletteStep = 0;
+let hopeBloomUnlocked = false;
+let bloomCardRevealTimer;
 let flowerMusicActive = false;
 let lastBloomKey = "";
 let bloomInView = false;
@@ -445,6 +463,7 @@ const interactiveCursorSelector = [
   ".flower-card",
   ".seed",
   ".bloom-seed",
+  ".bloom-palette",
   ".gate-flower",
   ".sound-cluster",
   ".theme-toggle-button",
@@ -2471,7 +2490,7 @@ async function playBackground({ direction = 0, restart = false } = {}) {
 
 function syncBloomVisualToTrack(index) {
   const bloomKey = bloomKeyByTrackIndex[index];
-  if (bloomInView && bloomKey) {
+  if (bloomInView && bloomKey && (bloomKey !== "hope" || hopeBloomUnlocked)) {
     setBloomChoice(bloomKey, { playSfx: false, startTrack: false });
   }
 }
@@ -2595,7 +2614,7 @@ backgroundAudio.addEventListener("ended", () => {
   const nextIndex = (backgroundTrackIndex + 1) % backgroundTracks.length;
   const nextBloomKey = bloomKeyByTrackIndex[nextIndex];
   playBackground({ direction: 1, restart: true });
-  if (bloomInView && nextBloomKey) {
+  if (bloomInView && nextBloomKey && (nextBloomKey !== "hope" || hopeBloomUnlocked)) {
     setBloomChoice(nextBloomKey, { playSfx: false, startTrack: false });
   }
 });
@@ -3129,6 +3148,7 @@ document.querySelectorAll(".gate-flower").forEach((button) => {
     playTone(button.dataset.tone, color);
     showToast(`${button.dataset.name} 正在綻放`);
     smoothScrollToElement(mobileMediaQuery.matches ? document.getElementById("bloom-title") || "#bloom" : "#bloom", mobileMediaQuery.matches ? { offset: MOBILE_BLOOM_ENTRY_SCROLL_OFFSET } : {});
+    updateBloomHash(bloomKey);
     window.setTimeout(() => {
       if (bloomKey) setBloomChoice(bloomKey, { playToneFeedback: false });
     }, 520);
@@ -3191,7 +3211,7 @@ const flipAllButton = document.getElementById("flip-all-cards");
 
 function updateFlipAllButton() {
   if (!flipAllButton) return;
-  const cards = [...document.querySelectorAll(".flower-card")];
+  const cards = [...document.querySelectorAll(".flower-card:not([hidden])")];
   const allFlipped = cards.length > 0 && cards.every((card) => card.classList.contains("flipped"));
   flipAllButton.textContent = allFlipped ? "關閉全部" : "翻開全部";
   flipAllButton.setAttribute("aria-pressed", String(allFlipped));
@@ -3200,16 +3220,88 @@ function updateFlipAllButton() {
 function openFlowerCardFromBloom(key) {
   const targetCard = document.querySelector(`.flower-card[data-flower-card="${key}"]`);
   if (!targetCard) return;
-  smoothScrollToElement("#flowers", { block: "start" });
-  document.querySelectorAll(".flower-card").forEach((card) => {
+  if (key === "hope") revealHopeFlowerCard();
+  document.querySelectorAll(".flower-card:not([hidden])").forEach((card) => {
     card.classList.remove("flipped");
   });
   updateFlipAllButton();
+  smoothScrollToElement(targetCard, { block: "center" });
   window.setTimeout(() => {
     targetCard.classList.add("flipped");
     updateFlipAllButton();
-  }, 720);
+    smoothScrollToElement(targetCard, { block: "center" });
+  }, 520);
   playTone(392, getComputedStyle(targetCard).getPropertyValue("--card-color"));
+}
+
+function resetHopePalette() {
+  hopePaletteStep = 0;
+  bloomPalette?.dataset && (bloomPalette.dataset.hopeStep = "0");
+  bloomPalette?.classList.remove("is-complete");
+}
+
+function setHopePaletteStep(step) {
+  hopePaletteStep = Math.max(0, Math.min(8, step));
+  if (bloomPalette) {
+    bloomPalette.dataset.hopeStep = String(hopePaletteStep);
+    bloomPalette.classList.toggle("is-complete", hopePaletteStep >= 8);
+  }
+}
+
+function advanceHopePalette() {
+  if (!bloomLab?.classList.contains("entered") || bloomLab.classList.contains("has-bloom")) return;
+  if (hopePaletteStep < 8) {
+    setHopePaletteStep(hopePaletteStep + 1);
+    playTone(392 + hopePaletteStep * 18, bloomChoices.hope.color);
+    showToast(hopePaletteStep < 8 ? `希望花瓣 ${hopePaletteStep} / 8` : "希望已經準備綻放");
+    return;
+  }
+  updateBloomHash("hope");
+  setBloomChoice("hope", { playToneFeedback: true });
+}
+
+function revealHopeFlowerCard() {
+  const hopeCard = document.querySelector('.flower-card[data-flower-card="hope"]');
+  if (!hopeCard) return;
+  hopeCard.hidden = false;
+  hopeCard.classList.add("visible");
+  updateFlipAllButton();
+}
+
+function unlockHopeBloom() {
+  if (hopeBloomUnlocked) return;
+  hopeBloomUnlocked = true;
+  revealHopeFlowerCard();
+}
+
+function resetBloomLabToEntry() {
+  if (!bloomLab || !bloomMessage || !bloomPlant || !bloomCard) return;
+  pendingBloomEntryKey = "";
+  lastBloomKey = "";
+  flowerMusicActive = false;
+  window.clearTimeout(bloomPauseResumeTimer);
+  window.clearTimeout(bloomLeaveTimer);
+  resetHopePalette();
+  bloomLab.classList.remove("entered", "has-bloom", "has-hope-bloom");
+  bloomLab.style.setProperty("--bloom-color", bloomChoices.green.color);
+  bloomMessage.textContent = "";
+  bloomMessage.style.animation = "none";
+  bloomPlant.classList.remove("is-blooming", "is-changing");
+  bloomCard.classList.remove("show");
+  bloomCard.setAttribute("aria-hidden", "true");
+  bloomCard.setAttribute("tabindex", "-1");
+  delete bloomCard.dataset.bloomCard;
+  document.querySelectorAll(".bloom-seed").forEach((seed) => seed.classList.remove("active"));
+  flowerAudio.pause();
+  clearAudioFade(flowerAudio);
+  flowerAudio.currentTime = 0;
+  bloomSfxAudio.pause();
+  clearAudioFade(bloomSfxAudio);
+  bloomSfxAudio.currentTime = 0;
+  bloomSfxAudio.onended = null;
+  setAudioVolume(bloomSfxAudio, 1);
+  if (getBloomKeyFromHash()) history.replaceState(null, "", "#bloom");
+  showToast("已回到花園入口");
 }
 
 function getBloomKeyFromHash(hash = window.location.hash) {
@@ -3249,11 +3341,12 @@ function prepareBloomDeepLinkEntry(key, { replaceHash = false } = {}) {
   window.clearTimeout(bloomLeaveTimer);
   lastBloomKey = "";
   flowerMusicActive = false;
-  bloomLab.classList.remove("entered", "has-bloom");
+  resetHopePalette();
+  bloomLab.classList.remove("entered", "has-bloom", "has-hope-bloom");
   bloomLab.style.setProperty("--bloom-color", choice.color);
   bloomMessage.textContent = "";
   bloomMessage.style.animation = "none";
-  bloomPlant?.classList.remove("is-blooming");
+  bloomPlant?.classList.remove("is-blooming", "is-changing");
   bloomCard?.classList.remove("show");
   bloomCard?.setAttribute("aria-hidden", "true");
   bloomCard?.setAttribute("tabindex", "-1");
@@ -3277,7 +3370,7 @@ bloomCard?.addEventListener("keydown", (event) => {
 
 if (flipAllButton) {
   flipAllButton.addEventListener("click", () => {
-    const cards = [...document.querySelectorAll(".flower-card")];
+    const cards = [...document.querySelectorAll(".flower-card:not([hidden])")];
     const shouldOpen = !cards.every((card) => card.classList.contains("flipped"));
     cards.forEach((card, index) => {
       window.setTimeout(() => {
@@ -3295,19 +3388,20 @@ async function setBloomChoice(key = "green", { playSfx = true, startTrack = true
   if (!bloomLab || !bloomMessage || !bloomPlant || !bloomCard) return;
   const choice = bloomChoices[key] || bloomChoices.green;
   const bloomPetals = bloomPlant.querySelectorAll(".bloom-flower span");
+  const bloomRedPetalCap = bloomPlant.querySelector(".bloom-red-petal-cap");
   const bloomImage = bloomCard.querySelector("img");
   const trackIndex = bloomTrackByKey[key];
+  const petalColors = choice.petals || Array.from({ length: bloomPetals.length }, () => choice.color);
 
   lastBloomKey = key;
   flowerMusicActive = false;
   window.clearTimeout(bloomPauseResumeTimer);
   window.clearTimeout(bloomLeaveTimer);
-  bloomLab.classList.add("entered");
-  bloomLab.classList.add("has-bloom");
-  bloomLab.style.setProperty("--bloom-color", choice.color);
-  bloomMessage.textContent = choice.message;
-  bloomMessage.style.animation = "none";
-  bloomPlant.classList.remove("is-blooming");
+  window.clearTimeout(bloomCardRevealTimer);
+  resetHopePalette();
+  const hadVisibleBloom = bloomLab.classList.contains("has-bloom") && bloomPlant.classList.contains("is-blooming");
+  if (hadVisibleBloom) bloomPlant.classList.add("is-changing");
+  else bloomPlant.classList.remove("is-blooming");
   bloomCard.classList.remove("show");
   bloomCard.setAttribute("aria-hidden", "true");
   bloomCard.setAttribute("tabindex", "-1");
@@ -3316,9 +3410,24 @@ async function setBloomChoice(key = "green", { playSfx = true, startTrack = true
     seed.classList.toggle("active", seed.dataset.bloom === key);
   });
 
-  bloomPetals.forEach((petal) => {
-    petal.style.setProperty("--petal-color", choice.color);
+  if (hadVisibleBloom) {
+    await wait(560);
+    if (lastBloomKey !== key) return;
+    bloomPlant.classList.remove("is-blooming");
+  }
+
+  bloomLab.classList.add("entered");
+  bloomLab.classList.add("has-bloom");
+  bloomLab.classList.toggle("has-hope-bloom", key === "hope");
+  if (key === "hope") unlockHopeBloom();
+  bloomLab.style.setProperty("--bloom-color", choice.color);
+  bloomMessage.textContent = choice.message;
+  bloomMessage.style.animation = "none";
+
+  bloomPetals.forEach((petal, index) => {
+    petal.style.setProperty("--petal-color", petalColors[index] || choice.color);
   });
+  bloomRedPetalCap?.style.setProperty("--petal-color", petalColors[0] || choice.color);
 
   if (bloomImage) {
     bloomImage.src = choice.card;
@@ -3345,9 +3454,13 @@ async function setBloomChoice(key = "green", { playSfx = true, startTrack = true
   const revealBloom = () => {
     if (lastBloomKey !== key) return;
     if (playToneFeedback) playTone(choice.tone, choice.color);
+    bloomPlant.classList.remove("is-changing");
     bloomMessage.style.animation = "";
-    bloomPlant.classList.add("is-blooming");
-    window.setTimeout(() => {
+    window.requestAnimationFrame(() => {
+      if (lastBloomKey !== key) return;
+      bloomPlant.classList.add("is-blooming");
+    });
+    bloomCardRevealTimer = window.setTimeout(() => {
       if (lastBloomKey !== key) return;
       bloomCard.classList.add("show");
       bloomCard.setAttribute("aria-hidden", "false");
@@ -3387,6 +3500,7 @@ async function setBloomChoice(key = "green", { playSfx = true, startTrack = true
 
 if (bloomLab) {
   bloomLab.style.setProperty("--bloom-color", bloomChoices.green.color);
+  resetHopePalette();
   startBloomButton?.addEventListener("click", () => {
     if (pendingBloomEntryKey) {
       const key = pendingBloomEntryKey;
@@ -3394,14 +3508,33 @@ if (bloomLab) {
       setBloomChoice(key, { playToneFeedback: true });
       return;
     }
+    resetHopePalette();
     bloomLab.classList.add("entered");
+    bloomLab.classList.remove("has-hope-bloom");
     document.querySelectorAll(".bloom-seed").forEach((seed) => seed.classList.remove("active"));
     showToast("秘密花園已開啟");
+  });
+
+  bloomResetToggle?.addEventListener("click", () => {
+    resetBloomLabToEntry();
+    playTone(392, "#ffd166");
+  });
+
+  bloomPaletteCenter?.addEventListener("click", (event) => {
+    event.stopPropagation();
+    advanceHopePalette();
+  });
+
+  bloomPaletteCenter?.addEventListener("keydown", (event) => {
+    if (event.key !== "Enter" && event.key !== " ") return;
+    event.preventDefault();
+    advanceHopePalette();
   });
 
   document.querySelectorAll(".bloom-seed").forEach((seed) => {
     seed.addEventListener("click", () => {
       pendingBloomEntryKey = "";
+      resetHopePalette();
       updateBloomHash(seed.dataset.bloom);
       setBloomChoice(seed.dataset.bloom, { triggerDelay: 200 });
     });
