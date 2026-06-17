@@ -1306,6 +1306,26 @@
         <p class="details">新增 bloomCardRevealTimer 與 bloom-plant.is-changing 狀態，避免連續切歌時舊計時器誤觸發卡片顯示，並讓花朵淡出與新花長出維持穩定時序。</p>
         <p class="details">同步更新 index.html、script.js 與 version.html 的資源快取參數為 20260617-b4-11，並在使用者版 version.html 的 v0.5b4 條目補充本次換花動畫修正。</p>
       </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b4-12</h3>
+        <p class="date">修改時間：2026 06/17</p>
+        <p class="details">調整手機版「花朵綻放」重啟花園按鈕的位置。原本按鈕位於顏色種子列最左側，在窄螢幕會與紅色種子卡在一起；現在手機版將按鈕往下移到同一個花朵綻放面板的左上角，種子列則恢復平均排列。</p>
+        <p class="details">同步更新 index.html、script.js 與 version.html 的資源快取參數為 20260617-b4-12，並在使用者版 version.html 的 v0.5b4 條目補充本次手機版位置修正。</p>
+        <p class="details">已將本次使用者提供的手機版參考截圖壓縮保存於 更新日誌/assets/v0.5b4-12/。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b4-13</h3>
+        <p class="date">修改時間：2026 06/17</p>
+        <p class="details">修正手機版底部導覽列的八項目排列。自從移除 Messages 頁面後，底部導覽重新回到八個項目，但手機版 CSS 仍保留五欄格線，導致排列變成上五下三；本次將手機版導覽列改回四欄格線，使八個入口穩定呈現為上四個、下四個。</p>
+        <p class="details">同步更新 index.html、script.js 與 version.html 的資源快取參數為 20260617-b4-13，並在使用者版 version.html 的 v0.5b4 條目補充本次手機版底部導覽修正。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b4-14</h3>
+        <p class="date">修改時間：2026 06/17</p>
+        <p class="details">調整「專輯聆聽」中的 Hope Flower 圖片載入規則。原本 Hope Flower 曲目卡會在 HTML inline style 中直接載入 hope-flower.png，大播放器也會在播放 Hope Flower 時直接套用 hope-flower-player.png；本次改為共用彩色希望之花的解鎖狀態，未觸發彩色花綻放前不設定這兩張圖片來源。</p>
+        <p class="details">新增 getTrackFlower 與 updateHopeAlbumArtworkVisibility 流程。使用者觸發 Hope Flower 綻放後，系統才會把 hope-flower.png 注入曲目卡、並允許大播放器在 Hope Flower 曲目中使用 hope-flower-player.png；若尚未解鎖，即使播放到 Hope Flower，也只保留曲目顏色與文字，不顯示隱藏花圖片。</p>
+        <p class="details">同步更新 index.html、script.js 與 version.html 的資源快取參數為 20260617-b4-14，並在使用者版 version.html 的 v0.5b4 條目補充本次 Hope Flower 專輯圖片隱藏規則。</p>
+      </article>
     </section>
 
     <section class="asset-section">
@@ -2025,6 +2045,17 @@
             <img src="assets/v0.5b4-10/hope-petal-split-reference.jpg" alt="Hope Flower 紅色花瓣分割與彩蛋解鎖規則參考截圖">
             <a href="assets/v0.5b4-10/hope-petal-split-reference.jpg">hope-petal-split-reference.jpg</a>
             <small>使用者標示紅色花瓣左右半拼接仍有透明度分界，並提出 Hope Flower 音樂同步與花卡解鎖規則的參考截圖。</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="asset-version">
+        <h3>v0.5b4-12</h3>
+        <div class="asset-grid">
+          <div class="asset-card">
+            <img src="assets/v0.5b4-12/mobile-bloom-reset-overlap-reference.jpg" alt="手機版重啟花園按鈕與紅色種子重疊參考截圖">
+            <a href="assets/v0.5b4-12/mobile-bloom-reset-overlap-reference.jpg">mobile-bloom-reset-overlap-reference.jpg</a>
+            <small>使用者標示手機版重啟花園按鈕與紅色種子重疊，希望將按鈕往下移至花朵綻放面板左上角的參考截圖。</small>
           </div>
         </div>
       </div>

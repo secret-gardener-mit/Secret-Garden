@@ -6473,8 +6473,15 @@ html.performance-lite body.scroll-optimizing .theme-toggle-button::after {
 
   .bloom-reset-toggle {
     left: 12px;
+    top: 68px;
     width: 40px;
     height: 40px;
+    transform: none;
+  }
+
+  .bloom-reset-toggle:hover,
+  .bloom-reset-toggle:focus-visible {
+    transform: rotate(-28deg) scale(1.08);
   }
 
   .bloom-audio-toggle {
@@ -6961,7 +6968,7 @@ html.performance-lite body.scroll-optimizing .theme-toggle-button::after {
 
   .bloom-controls {
     gap: 8px;
-    padding-left: 56px;
+    padding-left: 10px;
   }
 
   .bloom-seed {
@@ -6995,7 +7002,7 @@ html.performance-lite body.scroll-optimizing .theme-toggle-button::after {
 
   .nav-links {
     display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     grid-auto-rows: 32px;
     align-items: stretch;
     justify-items: stretch;
@@ -7047,7 +7054,7 @@ html.performance-lite body.scroll-optimizing .theme-toggle-button::after {
     align-items: center;
     justify-items: center;
     gap: 5px;
-    padding: 12px 12px 12px 54px;
+    padding: 12px;
   }
 
   .bloom-seed {

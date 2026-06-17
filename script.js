@@ -86,6 +86,9 @@ const SUPABASE_KEY = "sb_publishable_aWOjHvsUelALoPTgKgAsbw_VyXJq-YE";
 const SUPABASE_MESSAGES_TABLE = "garden_messages_beta";
 const SUPABASE_SONG_PLAYS_TABLE = "song_plays";
 const SONG_PLAY_COUNT_DELAY = 10000;
+const HOPE_TRACK_INDEX = 9;
+const HOPE_TRACK_CARD_FLOWER = "assets/cards/flowers/hope-flower.png";
+const HOPE_TRACK_PLAYER_FLOWER = "assets/cards/flowers/hope-flower-player.png";
 const MESSAGE_LIMIT = 500;
 const MEADOW_WORLD_WIDTH = 7200;
 const MEADOW_WORLD_HEIGHT = 3600;
@@ -264,7 +267,7 @@ const albumTracks = [
     title: "Welcome to the Secret Garden",
     subtitle: "歡迎光臨秘密花園",
     composer: "李岳鴒 ZEROYUEH",
-    duration: "2:49",
+    duration: "2:47",
     color: "#8fa780",
     src: "assets/audio/welcome-secret-garden.mp3"
   },
@@ -274,7 +277,7 @@ const albumTracks = [
     title: "Red",
     subtitle: "紅",
     composer: "林書磊 Aries Lin",
-    duration: "3:28",
+    duration: "3:19",
     color: "#e94545",
     src: "assets/audio/red.mp3",
     flower: "assets/cards/flowers/red-flower.png"
@@ -285,7 +288,7 @@ const albumTracks = [
     title: "Orange",
     subtitle: "橙",
     composer: "林書磊 Aries Lin",
-    duration: "3:28",
+    duration: "3:27",
     color: "#ff7b59",
     src: "assets/audio/orange.mp3",
     flower: "assets/cards/flowers/orange-flower.png"
@@ -296,7 +299,7 @@ const albumTracks = [
     title: "Yellow",
     subtitle: "黃",
     composer: "林書磊 Aries Lin",
-    duration: "3:28",
+    duration: "2:24",
     color: "#ffd166",
     src: "assets/audio/yellow.mp3",
     flower: "assets/cards/flowers/yellow-flower.png"
@@ -307,7 +310,7 @@ const albumTracks = [
     title: "Green",
     subtitle: "綠",
     composer: "林書磊 Aries Lin",
-    duration: "3:28",
+    duration: "2:57",
     color: "#60d394",
     src: "assets/audio/green.mp3",
     flower: "assets/cards/flowers/green-flower.png"
@@ -318,7 +321,7 @@ const albumTracks = [
     title: "Blue",
     subtitle: "藍",
     composer: "陳映里 Osmond Chen",
-    duration: "4:10",
+    duration: "4:07",
     color: "#4d96ff",
     src: "assets/audio/blue.mp3",
     flower: "assets/cards/flowers/blue-flower.png"
@@ -329,7 +332,7 @@ const albumTracks = [
     title: "Indigo",
     subtitle: "靛",
     composer: "陳映里 Osmond Chen",
-    duration: "5:02",
+    duration: "5:00",
     color: "#5542a1",
     src: "assets/audio/indigo.mp3",
     flower: "assets/cards/flowers/indigo-flower.png"
@@ -340,10 +343,10 @@ const albumTracks = [
     title: "Violet",
     subtitle: "紫",
     composer: "陳映里 Osmond Chen",
-    duration: "3:28",
+    duration: "3:46",
     color: "#8b62c7",
     src: "assets/audio/violet.mp3",
-    flower: "assets/cards/flowers/purple-flower.png"
+    flower: "assets/cards/flowers/violet-flower.png"
   },
   {
     id: 9,
@@ -351,7 +354,7 @@ const albumTracks = [
     title: "Gray",
     subtitle: "灰",
     composer: "陳映里 Osmond Chen",
-    duration: "5:11",
+    duration: "5:10",
     color: "#7f877d",
     src: "assets/audio/gray.mp3",
     flower: "assets/cards/flowers/gray-flower.png"
@@ -360,12 +363,11 @@ const albumTracks = [
     id: 10,
     songId: "Hope Flower",
     title: "Hope Flower",
-    subtitle: "勿忘我",
+    subtitle: "希望之花",
     composer: "李岳鴒 ZEROYUEH",
     duration: "4:24",
     color: "#ffafcc",
-    src: "assets/audio/secret-flower-demo.mp3",
-    flower: "assets/cards/flowers/hope-flower.png"
+    src: "assets/audio/secret-flower-demo.mp3"
   }
 ];
 
@@ -453,6 +455,25 @@ const platformName = navigator.userAgentData?.platform || navigator.platform || 
 const isWindowsPlatform = /win/i.test(platformName);
 const nativeCursorEnabled = usesHover && (isWindowsPlatform || visualPerformanceLite);
 const customCursorEnabled = usesHover && !nativeCursorEnabled;
+
+function getTrackFlower(track, index = backgroundTracks.indexOf(track)) {
+  if (!track) return "";
+  if (index === HOPE_TRACK_INDEX) return hopeBloomUnlocked ? HOPE_TRACK_PLAYER_FLOWER : "";
+  return track.flower || "";
+}
+
+function updateHopeAlbumArtworkVisibility() {
+  const hopeTrackButton = document.querySelector(`.track[data-track="${HOPE_TRACK_INDEX}"]`);
+  if (hopeTrackButton) {
+    if (hopeBloomUnlocked) {
+      hopeTrackButton.style.setProperty("--track-flower", `url("${HOPE_TRACK_CARD_FLOWER}")`);
+    } else {
+      hopeTrackButton.style.removeProperty("--track-flower");
+    }
+  }
+  if (backgroundTrackIndex === HOPE_TRACK_INDEX) updateAlbumUI();
+}
+
 const cursorPalette = ["#ffd166", "#ff7a90", "#4ecdc4", "#9b5de5", "#60d394", "#4d96ff", "#ff9f68", "#d7b9ff"];
 const interactiveCursorSelector = [
   "a",
@@ -2409,9 +2430,10 @@ function updateAlbumUI() {
   const fullTitle = `${track.title} ${track.subtitle}`.trim();
   const isLongTitle = fullTitle.length > 24;
   const albumNow = albumNowTitle?.closest(".album-now");
+  const trackFlower = getTrackFlower(track, backgroundTrackIndex);
   document.documentElement.style.setProperty("--current-track-color", track.color);
-  if (track.flower) {
-    document.documentElement.style.setProperty("--current-track-flower", `url("${track.flower}")`);
+  if (trackFlower) {
+    document.documentElement.style.setProperty("--current-track-flower", `url("${trackFlower}")`);
     albumNow?.classList.add("has-flower");
   } else {
     document.documentElement.style.removeProperty("--current-track-flower");
@@ -3271,6 +3293,7 @@ function revealHopeFlowerCard() {
 function unlockHopeBloom() {
   if (hopeBloomUnlocked) return;
   hopeBloomUnlocked = true;
+  updateHopeAlbumArtworkVisibility();
   revealHopeFlowerCard();
 }
 
