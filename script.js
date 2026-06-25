@@ -1,7 +1,14 @@
 const canvas = document.getElementById("petal-canvas");
 const ctx = canvas.getContext("2d");
+const siteLoadingOverlay = document.getElementById("site-loading-overlay");
+const loadingSkipButton = document.getElementById("loading-skip-button");
+const siteLoadingPhrase = document.getElementById("site-loading-phrase");
+const siteConsole = document.getElementById("site-console");
+const siteConsoleList = document.getElementById("site-console-list");
+const siteConsoleClose = document.getElementById("site-console-close");
 const cursor = document.querySelector(".cursor-orb");
 const soundToggle = document.querySelector(".sound-toggle");
+const brandLink = document.querySelector(".brand");
 const brandLabel = document.getElementById("brand-label");
 const bloomToast = document.getElementById("bloom-toast");
 const gardenSection = document.getElementById("garden");
@@ -74,13 +81,15 @@ const meadowViewer = document.getElementById("meadow-viewer");
 const meadowViewerFlower = document.getElementById("meadow-viewer-flower");
 const meadowViewerMood = document.getElementById("meadow-viewer-mood");
 const meadowViewerContent = document.getElementById("meadow-viewer-content");
+const meadowViewerColor = document.getElementById("meadow-viewer-color");
+const meadowViewerColorSwatch = document.getElementById("meadow-viewer-color-swatch");
 const meadowViewerTime = document.getElementById("meadow-viewer-time");
 const meadowBloomFocus = document.getElementById("meadow-bloom-focus");
 const meadowZoom = document.getElementById("meadow-zoom");
 const meadowZoomOutput = document.getElementById("meadow-zoom-output");
 const meadowContentExpand = document.getElementById("meadow-content-expand");
 const meadowCancelModal = document.getElementById("meadow-cancel-modal");
-const CURRENT_SITE_VERSION = "v0.5b4";
+const CURRENT_SITE_VERSION = "v0.6b2";
 const SUPABASE_URL = "https://suatoixeqmjmaojfuiwg.supabase.co";
 const SUPABASE_KEY = "sb_publishable_aWOjHvsUelALoPTgKgAsbw_VyXJq-YE";
 const SUPABASE_MESSAGES_TABLE = "garden_messages";
@@ -89,6 +98,10 @@ const SONG_PLAY_COUNT_DELAY = 10000;
 const HOPE_TRACK_INDEX = 9;
 const HOPE_TRACK_CARD_FLOWER = "assets/cards/flowers/hope-flower.png";
 const HOPE_TRACK_PLAYER_FLOWER = "assets/cards/flowers/hope-flower-player.png";
+const MIXER_MIN_DB = -60;
+const MIXER_MAX_DB = 6;
+const MUSIC_SFX_DEFAULT_DB = -15;
+const MIXER_AUDIO_ENABLED = false;
 const MESSAGE_LIMIT = 500;
 const MEADOW_WORLD_WIDTH = 7200;
 const MEADOW_WORLD_HEIGHT = 3600;
@@ -108,6 +121,26 @@ const albumProgress = document.getElementById("album-progress");
 const albumPlayButton = document.getElementById("album-play");
 const albumPrevButton = document.getElementById("album-prev");
 const albumNextButton = document.getElementById("album-next");
+const albumSfxButton = document.getElementById("album-sfx");
+const miniSfxButton = document.getElementById("mini-sfx");
+const albumPlayModeButton = document.getElementById("album-play-mode");
+const albumRandomModeButton = document.getElementById("album-random-mode");
+const albumMixerToggle = document.getElementById("album-mixer-toggle");
+const albumMixerPanel = document.getElementById("album-mixer-panel");
+const albumMixerGrid = document.getElementById("album-mixer-grid");
+const albumMixerReset = document.getElementById("album-mixer-reset");
+const masterMeterLeft = document.getElementById("master-meter-left");
+const masterMeterRight = document.getElementById("master-meter-right");
+const masterMeterAlert = document.getElementById("master-meter-alert");
+const masterMeterClip = document.getElementById("master-meter-clip");
+const albumOverloadAlert = document.getElementById("album-overload-alert");
+const miniOverloadAlert = document.getElementById("mini-overload-alert");
+const customAudioInput = document.getElementById("custom-audio-input");
+const localPlaylist = document.getElementById("local-playlist");
+const localPlaylistList = document.getElementById("local-playlist-list");
+const sleepTimerMinutes = document.getElementById("sleep-timer-minutes");
+const sleepTimerToggle = document.getElementById("sleep-timer-toggle");
+const sleepTimerOutput = document.getElementById("sleep-timer-output");
 
 const backgroundAudio = new Audio();
 const backgroundAnalysisAudio = new Audio();
@@ -115,9 +148,9 @@ const bloomSfxAudio = new Audio();
 const flowerAudio = new Audio();
 const AUDIO_FADE_DURATION = 300;
 const AUDIO_START_EPSILON = 0.08;
-backgroundAudio.preload = "metadata";
+backgroundAudio.preload = "auto";
 backgroundAnalysisAudio.preload = "none";
-bloomSfxAudio.preload = "none";
+bloomSfxAudio.preload = "auto";
 flowerAudio.preload = "none";
 backgroundAudio.loop = false;
 backgroundAnalysisAudio.loop = false;
@@ -182,7 +215,7 @@ const bloomChoices = {
     message: "願你的勇敢，被世界溫柔擁抱",
     card: "assets/cards/web/red.jpg",
     alt: "紅色山茶花小花卡",
-    bloom: "assets/audio/red_bloom.mp3",
+    bloom: "assets/audio/Bloom/red_bloom.mp3",
     music: "assets/audio/red.mp3"
   },
   orange: {
@@ -191,7 +224,7 @@ const bloomChoices = {
     message: "願今天有道暖陽落進你心裡",
     card: "assets/cards/web/orange.jpg",
     alt: "橙色金盞花小花卡",
-    bloom: "assets/audio/orange_bloom.mp3",
+    bloom: "assets/audio/Bloom/orange_bloom.mp3",
     music: "assets/audio/orange.mp3"
   },
   yellow: {
@@ -200,7 +233,7 @@ const bloomChoices = {
     message: "願閃閃發亮的星，與你起舞",
     card: "assets/cards/web/yellow.jpg",
     alt: "黃色向日葵小花卡",
-    bloom: "assets/audio/yellow_bloom.mp3",
+    bloom: "assets/audio/Bloom/yellow_bloom.mp3",
     music: "assets/audio/yellow.mp3"
   },
   green: {
@@ -209,7 +242,7 @@ const bloomChoices = {
     message: "或許有些事，慢慢來也沒關係",
     card: "assets/cards/web/green.jpg",
     alt: "綠色鈴蘭小花卡",
-    bloom: "assets/audio/green_bloom.mp3",
+    bloom: "assets/audio/Bloom/green_bloom.mp3",
     music: "assets/audio/green.mp3"
   },
   blue: {
@@ -218,7 +251,7 @@ const bloomChoices = {
     message: "願你今晚能睡得安穩，有個好夢",
     card: "assets/cards/web/blue.jpg",
     alt: "藍色藍繡球小花卡",
-    bloom: "assets/audio/blue_bloom.mp3",
+    bloom: "assets/audio/Bloom/blue_bloom.mp3",
     music: "assets/audio/blue.mp3"
   },
   indigo: {
@@ -227,7 +260,7 @@ const bloomChoices = {
     message: "那些深夜裡的情緒，將化為雨滴落下",
     card: "assets/cards/web/indigo.jpg",
     alt: "靛色鳶尾小花卡",
-    bloom: "assets/audio/indigo_bloom.mp3",
+    bloom: "assets/audio/Bloom/indigo_bloom.mp3",
     music: "assets/audio/indigo.mp3"
   },
   purple: {
@@ -236,7 +269,7 @@ const bloomChoices = {
     message: "也許有些孤獨，會化為星光",
     card: "assets/cards/web/purple.jpg",
     alt: "紫色薰衣草小花卡",
-    bloom: "assets/audio/violet_bloom.mp3",
+    bloom: "assets/audio/Bloom/violet_bloom.mp3",
     music: "assets/audio/violet.mp3"
   },
   gray: {
@@ -245,7 +278,7 @@ const bloomChoices = {
     message: "傾聽四周，或許它們也在聆聽著你",
     card: "assets/cards/web/gray.jpg",
     alt: "灰色銀葉菊小花卡",
-    bloom: "assets/audio/gray_bloom.mp3",
+    bloom: "assets/audio/Bloom/gray_bloom.mp3",
     music: "assets/audio/gray.mp3"
   },
   hope: {
@@ -254,10 +287,23 @@ const bloomChoices = {
     message: "只要還有呼吸，一切都還有希望",
     card: "assets/cards/web/hope.jpg",
     alt: "希望之花花卡",
-    bloom: "assets/audio/secret_bloom.mp3",
+    bloom: "assets/audio/Bloom/secret_bloom.mp3",
     music: "assets/audio/secret-flower-demo.mp3",
     petals: ["#e94545", "#ff7b59", "#ffd166", "#60d394", "#4d96ff", "#5048f4", "#9b5de5", "#acbe9a"]
   }
+};
+
+const bloomDisplayNames = {
+  red: "紅色",
+  orange: "橙色",
+  yellow: "黃色",
+  green: "綠色",
+  blue: "藍色",
+  indigo: "靛色",
+  purple: "紫色",
+  violet: "紫色",
+  gray: "灰色",
+  hope: "希望"
 };
 
 const albumTracks = [
@@ -269,7 +315,8 @@ const albumTracks = [
     composer: "李岳鴒 ZEROYUEH",
     duration: "2:47",
     color: "#8fa780",
-    src: "assets/audio/welcome-secret-garden.mp3"
+    src: "assets/audio/Music/1. Welcome to the Secret Garden.mp3",
+    sfxSlots: []
   },
   {
     id: 2,
@@ -279,7 +326,8 @@ const albumTracks = [
     composer: "林書磊 Aries Lin",
     duration: "3:19",
     color: "#e94545",
-    src: "assets/audio/red.mp3",
+    src: "assets/audio/Music/2. Red.mp3",
+    sfxSlots: [],
     flower: "assets/cards/flowers/red-flower.png"
   },
   {
@@ -290,7 +338,8 @@ const albumTracks = [
     composer: "林書磊 Aries Lin",
     duration: "3:27",
     color: "#ff7b59",
-    src: "assets/audio/orange.mp3",
+    src: "assets/audio/Music/3. Orange.mp3",
+    sfxSlots: [],
     flower: "assets/cards/flowers/orange-flower.png"
   },
   {
@@ -301,7 +350,8 @@ const albumTracks = [
     composer: "林書磊 Aries Lin",
     duration: "2:24",
     color: "#ffd166",
-    src: "assets/audio/yellow.mp3",
+    src: "assets/audio/Music/4. Yellow.mp3",
+    sfxSlots: [],
     flower: "assets/cards/flowers/yellow-flower.png"
   },
   {
@@ -312,7 +362,8 @@ const albumTracks = [
     composer: "林書磊 Aries Lin",
     duration: "2:57",
     color: "#60d394",
-    src: "assets/audio/green.mp3",
+    src: "assets/audio/Music/5. Green.mp3",
+    sfxSlots: [],
     flower: "assets/cards/flowers/green-flower.png"
   },
   {
@@ -323,7 +374,8 @@ const albumTracks = [
     composer: "陳映里 Osmond Chen",
     duration: "4:07",
     color: "#4d96ff",
-    src: "assets/audio/blue.mp3",
+    src: "assets/audio/Music/6. Blue.mp3",
+    sfxSlots: [],
     flower: "assets/cards/flowers/blue-flower.png"
   },
   {
@@ -334,7 +386,8 @@ const albumTracks = [
     composer: "陳映里 Osmond Chen",
     duration: "5:00",
     color: "#5542a1",
-    src: "assets/audio/indigo.mp3",
+    src: "assets/audio/Music/7. Indigo.mp3",
+    sfxSlots: [],
     flower: "assets/cards/flowers/indigo-flower.png"
   },
   {
@@ -345,7 +398,8 @@ const albumTracks = [
     composer: "陳映里 Osmond Chen",
     duration: "3:46",
     color: "#8b62c7",
-    src: "assets/audio/violet.mp3",
+    src: "assets/audio/Music/8. Violet.mp3",
+    sfxSlots: [],
     flower: "assets/cards/flowers/violet-flower.png"
   },
   {
@@ -356,7 +410,8 @@ const albumTracks = [
     composer: "陳映里 Osmond Chen",
     duration: "5:10",
     color: "#7f877d",
-    src: "assets/audio/gray.mp3",
+    src: "assets/audio/Music/9. Gray.mp3",
+    sfxSlots: [],
     flower: "assets/cards/flowers/gray-flower.png"
   },
   {
@@ -367,11 +422,16 @@ const albumTracks = [
     composer: "李岳鴒 ZEROYUEH",
     duration: "4:24",
     color: "#ffafcc",
-    src: "assets/audio/secret-flower-demo.mp3"
+    src: "assets/audio/Music/10. Hope Flower.mp3",
+    sfxSlots: []
   }
 ];
 
-const backgroundTracks = albumTracks;
+albumTracks.forEach((track, index) => {
+  track.albumIndex = index;
+});
+const customTracks = [];
+const backgroundTracks = [...albumTracks];
 const bloomTrackByKey = {
   red: 1,
   orange: 2,
@@ -394,12 +454,80 @@ const bloomPublicHashKeys = {
   purple: "violet"
 };
 
+const sfxChannelDefinitions = [
+  { id: "orange", label: "雷雨", type: "雷雨轟隆聲", icon: "assets/icons/playback/sfx/thunder.png", iconSrc: "assets/icons/playback/sfx/thunder.png", color: "#747e4b", ambience: "assets/audio/Ambience/Orange(Ambience).mp3" },
+  { id: "yellow", label: "餐廳", type: "餐廳交談聲", icon: "assets/icons/playback/sfx/restaurant.png", iconSrc: "assets/icons/playback/sfx/restaurant.png", color: "#adada9", ambience: "assets/audio/Ambience/Yellow(Ambience).mp3" },
+  { id: "green", label: "窗戶", type: "窗外汽車聲", icon: "assets/icons/playback/sfx/window.png", iconSrc: "assets/icons/playback/sfx/window.png", color: "#856632", ambience: "assets/audio/Ambience/Green(Ambience).mp3" },
+  { id: "blueWave", label: "海浪", type: "海浪刷啦聲", icon: "assets/icons/playback/sfx/waves.png", iconSrc: "assets/icons/playback/sfx/waves.png", color: "#377ec1", ambience: "assets/audio/Ambience/Blue (Wave Ambience).mp3" },
+  { id: "blueBell", label: "葉子", type: "夏季樹林聲", icon: "assets/icons/playback/sfx/leaf.png", iconSrc: "assets/icons/playback/sfx/leaf.png", color: "#90c974", ambience: "assets/audio/Ambience/Blue(Bell Ambience).mp3" },
+  { id: "violet", label: "雨滴", type: "下雨嘩啦聲", icon: "assets/icons/playback/sfx/rain.png", iconSrc: "assets/icons/playback/sfx/rain.png", color: "#9ad3f3", ambience: "assets/audio/Ambience/Violet(Ambience).mp3" },
+  { id: "grayBirds", label: "小鳥", type: "小鳥啼叫聲", icon: "assets/icons/playback/sfx/bird.png", iconSrc: "assets/icons/playback/sfx/bird.png", color: "#dce576", ambience: "assets/audio/Ambience/Gray (Birds Ambience).mp3" },
+  { id: "grayWind", label: "風", type: "微風吹拂聲", icon: "assets/icons/playback/sfx/wind.png", iconSrc: "assets/icons/playback/sfx/wind.png", color: "#bbbddf", ambience: "assets/audio/Ambience/Gray(Wind Ambience).mp3" },
+  { id: "fire", label: "篝火", type: "篝火劈啪聲", icon: "assets/icons/playback/sfx/bonfire.png", iconSrc: "assets/icons/playback/sfx/bonfire.png", color: "#ec5f4c", ambience: "assets/audio/Ambience/Fire(Ambience).mp3" }
+];
+
+const sfxChannelStates = new Map(sfxChannelDefinitions.map((definition) => {
+  const ambienceAudio = new Audio(definition.ambience);
+  ambienceAudio.loop = true;
+  ambienceAudio.preload = "none";
+  const state = {
+    ...definition,
+    db: MIXER_MIN_DB,
+    muted: false,
+    solo: false,
+    occupied: false,
+    sfxPaused: false,
+    sfxPausedAt: 0,
+    sfxAmbienceOverride: false,
+    ambienceLoading: false,
+    ambienceWatchdog: null,
+    ambienceRecoveryAttempts: 0,
+    ambienceAudio,
+    albumAudios: []
+  };
+  const finishLoading = () => {
+    if (!state.ambienceLoading) return;
+    state.ambienceLoading = false;
+    appLog("循環音效讀取完成", `${state.label} ${state.type}`);
+    renderMixerControls();
+  };
+  ambienceAudio.addEventListener("canplay", finishLoading);
+  ambienceAudio.addEventListener("playing", finishLoading);
+  ambienceAudio.addEventListener("error", finishLoading);
+  return [definition.id, state];
+}));
+
+const musicMixerState = {
+  id: "music",
+  label: "Music",
+  type: "純音樂",
+  icon: "音",
+  iconSrc: "assets/icons/playback/sfx/music.png",
+  color: "#ffd166",
+  db: 0,
+  muted: false,
+  solo: false
+};
+
 let width = 0;
 let height = 0;
 let petals = [];
 let pointer = { x: 0, y: 0, active: false };
 let audioContext;
 let ambientGain;
+let masterGain;
+let masterSplitter;
+let masterAnalyserLeft;
+let masterAnalyserRight;
+let masterMeterLeftData;
+let masterMeterRightData;
+let masterMeterFrame;
+let masterEqConnected = false;
+let masterClipLatched = false;
+let masterOverloadActive = false;
+let masterOverloadClearTimer;
+let masterMeterLeftLevel = 0;
+let masterMeterRightLevel = 0;
 let backgroundAnalysisSource;
 let backgroundAnalysisGain;
 let backgroundAnalyser;
@@ -444,6 +572,38 @@ let musicHintDismissed = false;
 let brandLabelTimer;
 let brandLabelTarget = "Welcome";
 let brandLabelChanging = false;
+let mixerAudioReady = false;
+let currentAlbumSfx = [];
+let albumSfxGeneration = 0;
+const albumSfxAudioRegistry = new Set();
+let musicTrackPaused = false;
+const customTrackUrls = new Map();
+let ambienceWanted = false;
+let lastAmbienceIds = [];
+let lastTransportClickAt = 0;
+let lastTransportHadAudio = false;
+let playMode = "album-loop";
+let randomPlayEnabled = false;
+let randomPlayQueue = [];
+let randomPlayHistory = [];
+let draggedCustomTrackId = "";
+let sleepTimerEndsAt = 0;
+let sleepTimerInterval = null;
+let lastAlbumDisplayTitle = "";
+let activeBloomSfxKey = "";
+let bloomSfxTransportActive = false;
+let savedMixerCustomState = null;
+let mixerDefaultMode = false;
+let siteLoadingCount = 0;
+let siteLoadingTimer = null;
+let activeAlbumLoadToken = null;
+let pendingPlaybackSnapshot = null;
+let consoleRevealClicks = 0;
+let consoleRevealTimer = null;
+const audioPreloadCache = new Map();
+const loadedAudioSources = new Set();
+const siteConsoleLines = [];
+const loadingPetalPalette = ["#e94545", "#ff7b59", "#ffd166", "#60d394", "#4d96ff", "#5048F4", "#9b5de5", "#acbe9a", "#ffafcc"];
 const usesHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 const mobileMediaQuery = window.matchMedia("(max-width: 760px)");
 const MOBILE_BLOOM_ENTRY_SCROLL_OFFSET = -90;
@@ -458,7 +618,7 @@ const customCursorEnabled = usesHover && !nativeCursorEnabled;
 
 function getTrackFlower(track, index = backgroundTracks.indexOf(track)) {
   if (!track) return "";
-  if (index === HOPE_TRACK_INDEX) return hopeBloomUnlocked ? HOPE_TRACK_PLAYER_FLOWER : "";
+  if (track.albumIndex === HOPE_TRACK_INDEX) return hopeBloomUnlocked ? HOPE_TRACK_PLAYER_FLOWER : "";
   return track.flower || "";
 }
 
@@ -471,7 +631,7 @@ function updateHopeAlbumArtworkVisibility() {
       hopeTrackButton.style.removeProperty("--track-flower");
     }
   }
-  if (backgroundTrackIndex === HOPE_TRACK_INDEX) updateAlbumUI();
+  if (backgroundTracks[backgroundTrackIndex]?.albumIndex === HOPE_TRACK_INDEX) updateAlbumUI();
 }
 
 const cursorPalette = ["#ffd166", "#ff7a90", "#4ecdc4", "#9b5de5", "#60d394", "#4d96ff", "#ff9f68", "#d7b9ff"];
@@ -704,6 +864,30 @@ document.querySelectorAll(".nav-links a, .brand").forEach((link) => {
   });
 });
 
+brandLink?.addEventListener("click", () => {
+  consoleRevealClicks += 1;
+  window.clearTimeout(consoleRevealTimer);
+  consoleRevealTimer = window.setTimeout(() => {
+    consoleRevealClicks = 0;
+  }, 2200);
+  if (consoleRevealClicks >= 7) {
+    consoleRevealClicks = 0;
+    setSiteConsoleVisible(true);
+    appLog("開啟 Console Log", "brand x7");
+  }
+});
+
+document.addEventListener("click", (event) => {
+  const target = event.target.closest?.("button, a, input, textarea, .track[data-track]");
+  if (!target) return;
+  const label = target.getAttribute("aria-label")
+    || target.textContent?.trim()?.replace(/\s+/g, " ")
+    || target.id
+    || target.className
+    || target.tagName;
+  appLog("使用者互動", label.slice(0, 80));
+}, true);
+
 function getPetalCount() {
   const petalDensity = visualPerformanceLite ? 32 : 18;
   const petalLimit = visualPerformanceLite ? 42 : 80;
@@ -811,9 +995,14 @@ function ensureAudio() {
   const AudioContextClass = window.AudioContext || window.webkitAudioContext;
   if (!AudioContextClass) return null;
   audioContext = new AudioContextClass();
+  masterGain = audioContext.createGain();
+  masterGain.gain.value = 1;
+  masterGain.channelCount = 2;
+  masterGain.channelCountMode = "explicit";
+  masterGain.connect(audioContext.destination);
   ambientGain = audioContext.createGain();
   ambientGain.gain.value = 0.0;
-  ambientGain.connect(audioContext.destination);
+  ambientGain.connect(masterGain);
 
   const low = audioContext.createOscillator();
   const shimmer = audioContext.createOscillator();
@@ -839,13 +1028,14 @@ function toggleSound() {
   backgroundWanted = enabled;
   if (enabled) {
     if (backgroundAudio.src && backgroundAudio.paused) {
-      fadeResume(backgroundAudio).then(updateAlbumUI);
+      fadeResumeAlbumGroup().then(updateAlbumUI);
     } else {
       playBackground({ restart: !backgroundAudio.src });
     }
     showToast("背景音樂已開啟。");
   } else {
-    fadePause(backgroundAudio).then(updateAlbumUI);
+    musicTrackPaused = true;
+    fadePauseAlbumGroup().then(updateAlbumUI);
     showToast("背景音樂已暫停。");
   }
 }
@@ -884,10 +1074,10 @@ function fadePause(audio, duration = AUDIO_FADE_DURATION) {
   });
 }
 
-function fadeResume(audio, duration = AUDIO_FADE_DURATION) {
+function fadeResume(audio, duration = AUDIO_FADE_DURATION, options = {}) {
   if (!audio || !audio.src) return Promise.resolve();
   clearAudioFade(audio);
-  if ((audio.currentTime || 0) <= AUDIO_START_EPSILON) {
+  if ((audio.currentTime || 0) <= AUDIO_START_EPSILON && !options.forceFade) {
     setAudioVolume(audio, 1);
     return audio.play().catch(() => {});
   }
@@ -914,9 +1104,1377 @@ function wait(ms = 0) {
   return new Promise((resolve) => window.setTimeout(resolve, ms));
 }
 
+function escapeHtml(value = "") {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
+
+function appLog(message, detail = "") {
+  const now = new Date();
+  const time = now.toLocaleTimeString("zh-TW", { hour12: false });
+  const text = detail ? `${message}｜${detail}` : message;
+  siteConsoleLines.push({ time, text });
+  while (siteConsoleLines.length > 160) siteConsoleLines.shift();
+  console.debug(`[Secret Garden] ${time} ${text}`);
+  renderSiteConsole();
+}
+
+function renderSiteConsole() {
+  if (!siteConsoleList) return;
+  siteConsoleList.innerHTML = siteConsoleLines.map((line) => (
+    `<div class="site-console-line"><time>${line.time}</time><span>${escapeHtml(line.text)}</span></div>`
+  )).join("");
+  siteConsoleList.scrollTop = siteConsoleList.scrollHeight;
+}
+
+function setSiteConsoleVisible(visible) {
+  if (!siteConsole) return;
+  siteConsole.hidden = !visible;
+  if (visible) renderSiteConsole();
+}
+
+function getCurrentDailyPhraseText() {
+  const phrase = dailyPhrases?.[dailyPhraseIndex] || randomItem(dailyPhrases) || "";
+  return normalizeDailyPhrase(phrase).replace(/\s+/g, " ").trim();
+}
+
+function randomizeLoadingFlower() {
+  const color = randomItem(loadingPetalPalette);
+  siteLoadingOverlay?.style.setProperty("--loading-flower-color", color);
+  appLog("更新讀取花顏色", color);
+}
+
+function normalizeAudioSource(src = "") {
+  if (!src) return "";
+  try {
+    return new URL(src, document.baseURI).href;
+  } catch {
+    return src;
+  }
+}
+
+function markAudioSourceLoaded(src = "") {
+  const normalized = normalizeAudioSource(src);
+  if (normalized) loadedAudioSources.add(normalized);
+}
+
+function isAudioSourceLoaded(src = "") {
+  return loadedAudioSources.has(normalizeAudioSource(src));
+}
+
+function showSiteLoading(delay = 140) {
+  siteLoadingCount += 1;
+  window.clearTimeout(siteLoadingTimer);
+  siteLoadingTimer = window.setTimeout(() => {
+    if (!siteLoadingOverlay || siteLoadingCount <= 0) return;
+    randomizeLoadingFlower();
+    if (siteLoadingPhrase) siteLoadingPhrase.textContent = `今日花語：${getCurrentDailyPhraseText()}`;
+    siteLoadingOverlay.hidden = false;
+    requestAnimationFrame(() => siteLoadingOverlay.classList.add("is-visible"));
+    appLog("顯示讀取畫面");
+  }, delay);
+}
+
+function hideSiteLoading() {
+  siteLoadingCount = Math.max(0, siteLoadingCount - 1);
+  if (siteLoadingCount > 0) return;
+  window.clearTimeout(siteLoadingTimer);
+  if (!siteLoadingOverlay) return;
+  siteLoadingOverlay.classList.remove("is-visible");
+  window.setTimeout(() => {
+    if (siteLoadingCount === 0 && siteLoadingOverlay) siteLoadingOverlay.hidden = true;
+  }, 260);
+  appLog("關閉讀取畫面");
+}
+
+function hideAllSiteLoading() {
+  siteLoadingCount = 1;
+  hideSiteLoading();
+}
+
 function playAudioWhenReady(audio) {
   if (!audio || !audio.src) return Promise.resolve(false);
   return audio.play().then(() => true).catch(() => false);
+}
+
+function waitForAudioEnd(audio, timeout = 5000) {
+  if (!audio || audio.paused || audio.ended) return Promise.resolve();
+  return new Promise((resolve) => {
+    let settled = false;
+    const done = () => {
+      if (settled) return;
+      settled = true;
+      window.clearTimeout(timeoutId);
+      audio.removeEventListener("ended", done);
+      audio.removeEventListener("pause", done);
+      audio.removeEventListener("error", done);
+      resolve();
+    };
+    const timeoutId = window.setTimeout(done, timeout);
+    audio.addEventListener("ended", done, { once: true });
+    audio.addEventListener("pause", done, { once: true });
+    audio.addEventListener("error", done, { once: true });
+  });
+}
+
+function loadAudioSoon(audio) {
+  if (!audio?.src) return;
+  try {
+    audio.load();
+  } catch {
+    // Some browsers reject load() while the element is transitioning sources.
+  }
+}
+
+function setBloomSfxTransport(key = "") {
+  activeBloomSfxKey = key;
+  bloomSfxTransportActive = Boolean(key);
+}
+
+function clearBloomSfxTransport() {
+  activeBloomSfxKey = "";
+  bloomSfxTransportActive = false;
+}
+
+function isBloomSfxTransportActive() {
+  return Boolean(bloomSfxTransportActive && activeBloomSfxKey && bloomSfxAudio.src);
+}
+
+function waitForMediaReady(audio, timeout = 12000) {
+  if (!audio || !audio.src) return Promise.resolve(false);
+  if (audio.readyState >= 3) {
+    markAudioSourceLoaded(audio.currentSrc || audio.src);
+    return Promise.resolve(true);
+  }
+  appLog("等待音檔讀取", audio.currentSrc || audio.src);
+  return new Promise((resolve) => {
+    let timeoutId = 0;
+    const done = (event = null) => {
+      window.clearTimeout(timeoutId);
+      audio.removeEventListener("canplaythrough", done);
+      audio.removeEventListener("canplay", done);
+      audio.removeEventListener("loadeddata", done);
+      audio.removeEventListener("error", done);
+      if (event?.type !== "error" && event?.type !== "timeout") {
+        markAudioSourceLoaded(audio.currentSrc || audio.src);
+      }
+      const status = event?.type === "error"
+        ? "音檔讀取錯誤"
+        : event?.type === "timeout"
+        ? "音檔讀取逾時"
+        : "音檔可播放";
+      appLog(status, audio.currentSrc || audio.src);
+      resolve(event?.type !== "error" && event?.type !== "timeout");
+    };
+    timeoutId = window.setTimeout(() => done({ type: "timeout" }), timeout);
+    audio.addEventListener("canplaythrough", done, { once: true });
+    audio.addEventListener("canplay", done, { once: true });
+    audio.addEventListener("loadeddata", done, { once: true });
+    audio.addEventListener("error", done, { once: true });
+    audio.load();
+  });
+}
+
+function preloadAudioSource(src = "") {
+  if (!src) return Promise.resolve();
+  const existing = audioPreloadCache.get(src);
+  if (existing) return existing._preloadPromise || Promise.resolve();
+  const audio = new Audio(src);
+  audio.preload = "auto";
+  audio.muted = true;
+  audio._preloadPoolSource = src;
+  audio._preloadInUse = false;
+  audioPreloadCache.set(src, audio);
+  audio._preloadPromise = new Promise((resolve) => {
+    let settled = false;
+    const finish = (loaded) => {
+      if (settled) return;
+      settled = true;
+      window.clearTimeout(audio._preloadTimeout);
+      if (loaded) {
+        markAudioSourceLoaded(audio.currentSrc || src);
+        appLog("背景預載完成", src);
+      } else {
+        appLog("背景預載暫停或失敗", src);
+      }
+      resolve();
+    };
+    audio._finishPreload = finish;
+    audio.addEventListener("canplay", () => finish(true), { once: true });
+    audio.addEventListener("error", () => finish(false), { once: true });
+    audio._preloadTimeout = window.setTimeout(() => finish(audio.readyState >= 3), 14000);
+  });
+  loadAudioSoon(audio);
+  return audio._preloadPromise;
+}
+
+function createPlaybackAudio(src = "") {
+  const audio = new Audio(src);
+  audio.preload = "auto";
+  return audio;
+}
+
+function preloadTrackBundle(index) {
+  const track = backgroundTracks[index];
+  if (!track) return Promise.resolve();
+  return preloadAudioSource(track.src);
+}
+
+function preloadNearbyTracks(index = backgroundTrackIndex) {
+  preloadTrackBundle(index);
+  preloadTrackBundle((index + 1 + backgroundTracks.length) % backgroundTracks.length);
+  preloadTrackBundle((index - 1 + backgroundTracks.length) % backgroundTracks.length);
+}
+
+function warmAlbumAudioLibrary() {
+  const bloomSources = [...new Set(Object.values(bloomChoices).map((choice) => choice.bloom).filter(Boolean))];
+  appLog("排程背景預載", "先準備開花音效與目前曲目，閒置時再準備其餘專輯音檔");
+  const schedule = window.requestIdleCallback || ((callback) => window.setTimeout(callback, 1200));
+  window.setTimeout(async () => {
+    for (const src of bloomSources) {
+      if (activeAlbumLoadToken || hasAnyAudibleAudio()) break;
+      await preloadAudioSource(src);
+    }
+    if (activeAlbumLoadToken || hasAnyAudibleAudio()) return;
+    await preloadTrackBundle(backgroundTrackIndex);
+    schedule(async () => {
+      for (let index = 0; index < backgroundTracks.length; index += 1) {
+        if (activeAlbumLoadToken || hasAnyAudibleAudio()) break;
+        await preloadTrackBundle(index);
+      }
+      appLog("背景預載排程完成", "專輯單檔音樂已排程準備");
+    });
+  }, 1800);
+}
+
+async function waitForAlbumGroupReady({ showLoading = true, audios: requestedAudios = null } = {}) {
+  const audios = (requestedAudios || [backgroundAudio, ...currentAlbumSfx.map(({ audio }) => audio)]).filter((audio) => audio?.src);
+  const needsWait = audios.some((audio) => audio.readyState < 3);
+  if (!needsWait) return;
+  const hasUncachedSource = audios.some((audio) => !isAudioSourceLoaded(audio.currentSrc || audio.src));
+  const shouldShowLoading = showLoading && hasUncachedSource;
+  if (shouldShowLoading) showSiteLoading();
+  else appLog("已預載音檔，靜默等待同步起播");
+  try {
+    const readyStates = await Promise.all(audios.map((audio) => waitForMediaReady(audio)));
+    if (readyStates.some((ready) => !ready)) {
+      throw new Error("部分音檔無法完成讀取");
+    }
+  } finally {
+    if (shouldShowLoading) hideSiteLoading();
+  }
+}
+
+function createAlbumLoadToken() {
+  cancelActiveAlbumLoad();
+  const token = { cancelled: false, id: Date.now() + Math.random() };
+  activeAlbumLoadToken = token;
+  return token;
+}
+
+function cancelActiveAlbumLoad() {
+  if (activeAlbumLoadToken) {
+    activeAlbumLoadToken.cancelled = true;
+    appLog("取消目前音樂讀取請求");
+  }
+  activeAlbumLoadToken = null;
+}
+
+function rememberPlaybackSnapshot(reason = "manual") {
+  const track = backgroundTracks[backgroundTrackIndex];
+  if (!track || !backgroundAudio.src) return;
+  pendingPlaybackSnapshot = {
+    index: backgroundTrackIndex,
+    time: reason === "auto-next" ? 0 : backgroundAudio.currentTime || 0,
+    wasPlaying: backgroundWanted && !backgroundAudio.paused,
+    reason
+  };
+  appLog("記住播放位置", `${track.title} @ ${formatTime(pendingPlaybackSnapshot.time)} / ${reason}`);
+}
+
+function clearPlaybackSnapshot() {
+  if (!pendingPlaybackSnapshot) return;
+  pendingPlaybackSnapshot = null;
+  appLog("清除播放位置記錄");
+}
+
+async function restorePendingPlaybackSnapshot() {
+  if (!pendingPlaybackSnapshot) {
+    cancelActiveAlbumLoad();
+    backgroundAudio.pause();
+    stopCurrentAlbumSfx({ reset: true });
+    backgroundWanted = false;
+    hideAllSiteLoading();
+    updateAlbumUI();
+    appLog("沒有可回復的播放位置，停止等待中的音樂");
+    return;
+  }
+  const snapshot = pendingPlaybackSnapshot;
+  const track = backgroundTracks[snapshot.index];
+  cancelActiveAlbumLoad();
+  hideAllSiteLoading();
+  if (!track) return;
+  appLog("回復上一個播放位置", `${track.title} @ ${formatTime(snapshot.time)}`);
+  backgroundTrackIndex = snapshot.index;
+  clearSongPlayTimer();
+  songPlayCountedKey = "";
+  backgroundAudio.src = track.src;
+  backgroundAudio.currentTime = snapshot.time;
+  setAudioVolume(backgroundAudio, 1);
+  loadAudioSoon(backgroundAudio);
+  stopCurrentAlbumSfx({ reset: true });
+  setAlbumGroupCurrentTime(snapshot.time);
+  updateAlbumUI();
+  updateProgressUI();
+  if (snapshot.wasPlaying) {
+    backgroundWanted = true;
+    await playAlbumGroup({ showLoading: false, clearSnapshot: false });
+    scheduleSongPlayCount();
+    updateAlbumUI();
+  }
+  pendingPlaybackSnapshot = null;
+}
+
+function dbToGain(db) {
+  const value = Number(db);
+  if (!Number.isFinite(value) || value <= MIXER_MIN_DB) return 0;
+  return Math.pow(10, value / 20);
+}
+
+function formatDbLabel(db) {
+  const value = Number(db);
+  if (!Number.isFinite(value) || value <= MIXER_MIN_DB) return "-∞ dB";
+  return `${value > 0 ? "+" : ""}${value} dB`;
+}
+
+function mixerDbToPercent(db, maxDb = MIXER_MAX_DB) {
+  const value = Math.min(maxDb, Math.max(MIXER_MIN_DB, Number(db)));
+  return ((value - MIXER_MIN_DB) / (maxDb - MIXER_MIN_DB)) * 100;
+}
+
+function ensureMixerNode(audio, state) {
+  if (!MIXER_AUDIO_ENABLED) return null;
+  const context = ensureAudio();
+  if (!context || !audio) return null;
+  if (audio.mixerGain) return audio.mixerGain;
+  audio.mixerSource = context.createMediaElementSource(audio);
+  audio.mixerGain = context.createGain();
+  audio.mixerGain.gain.value = 1;
+  audio.mixerSource.connect(audio.mixerGain).connect(masterGain);
+  return audio.mixerGain;
+}
+
+function connectMixerNodesToAnalyser() {
+  if (!backgroundAnalyser || !masterGain || masterEqConnected) return;
+  if (MIXER_AUDIO_ENABLED) {
+    masterGain.connect(backgroundAnalyser);
+    masterEqConnected = true;
+    return;
+  }
+  if (!backgroundAnalysisSource) {
+    try {
+      backgroundAnalysisSource = audioContext.createMediaElementSource(backgroundAudio);
+      backgroundAnalysisGain = audioContext.createGain();
+      backgroundAnalysisGain.gain.value = 1;
+      backgroundAnalysisSource.connect(backgroundAnalysisGain);
+      backgroundAnalysisGain.connect(backgroundAnalyser);
+      backgroundAnalysisGain.connect(audioContext.destination);
+      masterEqConnected = true;
+    } catch {
+      // The browser may already have a media source for this element from an older session.
+    }
+  }
+}
+
+function hasActiveSolo() {
+  return musicMixerState.solo || [...sfxChannelStates.values()].some((channel) => channel.solo);
+}
+
+function getEffectiveMixerGain(state, db = state.db) {
+  if (!state || state.muted || Number(db) <= MIXER_MIN_DB) return 0;
+  if (hasActiveSolo() && !state.solo) return 0;
+  return dbToGain(state.id === "music" ? Math.min(0, Number(db)) : db);
+}
+
+function getEffectiveAlbumSfxGain(channel) {
+  if (channel?.sfxPaused || channel?.sfxAmbienceOverride) return 0;
+  if (!channel || channel.muted || Number(channel.db) <= MIXER_MIN_DB) return 0;
+  if (hasActiveSolo() && !channel.solo) return 0;
+  return dbToGain(Number(channel.db) - MUSIC_SFX_DEFAULT_DB);
+}
+
+function applyGainToAudio(audio, state, db = state.db, options = {}) {
+  const gain = ensureMixerNode(audio, state);
+  const value = getEffectiveMixerGain(state, db);
+  if (gain) {
+    const now = audioContext?.currentTime || 0;
+    if (options.rampDuration) {
+      gain.gain.cancelScheduledValues(now);
+      gain.gain.setValueAtTime(gain.gain.value, now);
+      gain.gain.linearRampToValueAtTime(value, now + options.rampDuration);
+    } else {
+      gain.gain.cancelScheduledValues(now);
+      gain.gain.setValueAtTime(gain.gain.value, now);
+      gain.gain.setTargetAtTime(value, now, 0.015);
+    }
+  }
+  else setAudioVolume(audio, Math.min(1, value));
+}
+
+function applyMixerGains(options = {}) {
+  if (!MIXER_AUDIO_ENABLED) {
+    setAudioVolume(backgroundAudio, 1);
+    return;
+  }
+  applyGainToAudio(backgroundAudio, musicMixerState);
+  currentAlbumSfx.forEach(({ audio, channel }) => {
+    const gain = ensureMixerNode(audio, channel);
+    const value = getEffectiveAlbumSfxGain(channel);
+    if (gain) gain.gain.setTargetAtTime(value, audioContext?.currentTime || 0, 0.015);
+    else setAudioVolume(audio, Math.min(1, value));
+  });
+  sfxChannelStates.forEach((channel) => {
+    applyGainToAudio(channel.ambienceAudio, channel, channel.db, {
+      rampDuration: options.ambienceRampDuration
+    });
+  });
+  updateAmbiencePlayback(options);
+}
+
+function snapshotMixerState() {
+  return {
+    music: {
+      db: musicMixerState.db,
+      muted: musicMixerState.muted,
+      solo: musicMixerState.solo,
+      paused: musicTrackPaused
+    },
+    ambienceWanted,
+    lastAmbienceIds: [...lastAmbienceIds],
+    channels: [...sfxChannelStates.entries()].map(([id, channel]) => ({
+      id,
+      db: channel.db,
+      muted: channel.muted,
+      solo: channel.solo
+    }))
+  };
+}
+
+function restoreMixerState(snapshot) {
+  if (!snapshot) return;
+  musicMixerState.db = snapshot.music?.db ?? 0;
+  musicMixerState.muted = Boolean(snapshot.music?.muted);
+  musicMixerState.solo = Boolean(snapshot.music?.solo);
+  musicTrackPaused = Boolean(snapshot.music?.paused);
+  ambienceWanted = Boolean(snapshot.ambienceWanted);
+  lastAmbienceIds = Array.isArray(snapshot.lastAmbienceIds) ? [...snapshot.lastAmbienceIds] : [];
+  snapshot.channels?.forEach((savedChannel) => {
+    const channel = sfxChannelStates.get(savedChannel.id);
+    if (!channel) return;
+    channel.db = Number.isFinite(Number(savedChannel.db)) ? Number(savedChannel.db) : channel.db;
+    channel.muted = Boolean(savedChannel.muted);
+    channel.solo = Boolean(savedChannel.solo);
+  });
+}
+
+function applyDefaultMixerState() {
+  musicMixerState.db = 0;
+  musicMixerState.muted = false;
+  musicMixerState.solo = false;
+  musicTrackPaused = false;
+  ambienceWanted = false;
+  lastAmbienceIds = [];
+  sfxChannelStates.forEach((channel) => {
+    channel.db = channel.occupied ? MUSIC_SFX_DEFAULT_DB : MIXER_MIN_DB;
+    channel.muted = false;
+    channel.solo = false;
+  });
+}
+
+function setMixerResetButtonState() {
+  if (!albumMixerReset) return;
+  albumMixerReset.classList.toggle("is-restoring", mixerDefaultMode);
+  albumMixerReset.setAttribute(
+    "aria-label",
+    mixerDefaultMode ? "還原自訂音效控制" : "恢復預設音效控制"
+  );
+  albumMixerReset.title = mixerDefaultMode ? "還原自訂音效控制" : "恢復預設音效控制";
+}
+
+function toggleDefaultMixerState() {
+  userActivatedAudio = true;
+  if (!mixerDefaultMode) {
+    savedMixerCustomState = snapshotMixerState();
+    applyDefaultMixerState();
+    mixerDefaultMode = true;
+  } else if (savedMixerCustomState) {
+    restoreMixerState(savedMixerCustomState);
+    savedMixerCustomState = null;
+    mixerDefaultMode = false;
+  } else {
+    applyDefaultMixerState();
+  }
+  renderMixerControls();
+  applyMixerGains();
+  updateAlbumUI();
+  setMixerResetButtonState();
+}
+
+function getAudibleAmbienceChannels() {
+  if (!MIXER_AUDIO_ENABLED) return [];
+  return [...sfxChannelStates.values()].filter((channel) => (
+    (!channel.occupied || channel.sfxAmbienceOverride) &&
+    !channel.ambienceAudio.paused &&
+    getEffectiveMixerGain(channel) > 0
+  ));
+}
+
+function getEnabledAmbienceChannels() {
+  if (!MIXER_AUDIO_ENABLED) return [];
+  return [...sfxChannelStates.values()].filter((channel) => (
+    (!channel.occupied || channel.sfxAmbienceOverride) &&
+    getEffectiveMixerGain(channel) > 0
+  ));
+}
+
+function getRawEnabledAmbienceChannels() {
+  if (!MIXER_AUDIO_ENABLED) return [];
+  return [...sfxChannelStates.values()].filter((channel) => (
+    (!channel.occupied || channel.sfxAmbienceOverride) &&
+    !channel.muted &&
+    Number(channel.db) > MIXER_MIN_DB
+  ));
+}
+
+function getRawEnabledAlbumSfxChannels() {
+  if (!MIXER_AUDIO_ENABLED) return [];
+  const channels = new Set();
+  currentAlbumSfx.forEach(({ channel }) => {
+    if (!channel || channel.muted || Number(channel.db) <= MIXER_MIN_DB) return;
+    channels.add(channel);
+  });
+  return [...channels];
+}
+
+function hasEnabledEffects() {
+  if (!MIXER_AUDIO_ENABLED) return false;
+  const musicSfxActive = !backgroundAudio.paused &&
+    !musicTrackPaused &&
+    currentAlbumSfx.some(({ channel }) => (
+      !channel.sfxPaused &&
+      !channel.muted &&
+      Number(channel.db) > MIXER_MIN_DB
+    ));
+  const ambienceActive = getRawEnabledAmbienceChannels().some((channel) => (
+    channel.sfxAmbienceOverride || ambienceWanted
+  ));
+  return musicSfxActive || ambienceActive;
+}
+
+function hasAudibleAlbumGroup() {
+  if (!MIXER_AUDIO_ENABLED) return !backgroundAudio.paused && backgroundWanted && !musicTrackPaused;
+  const musicAudible = !backgroundAudio.paused && backgroundWanted && !musicTrackPaused && getEffectiveMixerGain(musicMixerState) > 0;
+  const sfxAudible = currentAlbumSfx.some(({ audio, channel }) => !audio.paused && getEffectiveAlbumSfxGain(channel) > 0);
+  return musicAudible || sfxAudible;
+}
+
+function hasAnyAudibleAudio() {
+  const bloomSfxAudible = isBloomSfxTransportActive() && !bloomSfxAudio.paused;
+  return Boolean(bloomSfxAudible || hasAudibleAlbumGroup() || (MIXER_AUDIO_ENABLED && getAudibleAmbienceChannels().length > 0));
+}
+
+function getAvailableAmbienceChannels() {
+  return [...sfxChannelStates.values()].filter((channel) => !channel.occupied);
+}
+
+function rememberActiveAmbience() {
+  const ids = [...sfxChannelStates.values()]
+    .filter((channel) => !channel.occupied && Number(channel.db) > MIXER_MIN_DB)
+    .map((channel) => channel.id);
+  if (ids.length) lastAmbienceIds = ids;
+}
+
+function chooseRandomAmbienceIds() {
+  const available = getAvailableAmbienceChannels();
+  const shuffled = available.sort(() => Math.random() - 0.5);
+  const count = Math.min(shuffled.length, 1 + Math.floor(Math.random() * 2));
+  return shuffled.slice(0, count).map((channel) => channel.id);
+}
+
+function startAmbience(ids = lastAmbienceIds) {
+  const selectedIds = ids.length ? ids : chooseRandomAmbienceIds();
+  if (!selectedIds.length) return;
+  ambienceWanted = true;
+  backgroundWanted = true;
+  userActivatedAudio = true;
+  selectedIds.forEach((id) => {
+    const channel = sfxChannelStates.get(id);
+    if (!channel || channel.occupied) return;
+    channel.muted = false;
+    if (Number(channel.db) <= MIXER_MIN_DB) channel.db = -18;
+  });
+  lastAmbienceIds = selectedIds;
+  renderMixerControls();
+  applyMixerGains({ ambienceTransition: true });
+  updateAlbumUI();
+}
+
+function getAlbumSfxEntryByChannel(channel) {
+  return currentAlbumSfx.find((entry) => entry.channel === channel) || null;
+}
+
+function isAlbumSfxPauseActive(channel) {
+  return Boolean(channel?.occupied && channel.sfxPaused && !channel.sfxAmbienceOverride);
+}
+
+function stopSfxAmbienceOverride(channel) {
+  if (!channel?.sfxAmbienceOverride) return;
+  channel.sfxAmbienceOverride = false;
+  if (!channel.ambienceAudio.paused) {
+    clearAudioFade(channel.ambienceAudio);
+    channel.ambienceAudio.pause();
+    setAudioVolume(channel.ambienceAudio, 1);
+  }
+}
+
+function clearSfxAmbienceOverrides({ restoreTime = true } = {}) {
+  currentAlbumSfx.forEach(({ audio, channel }) => {
+    if (!channel.sfxAmbienceOverride) return;
+    stopSfxAmbienceOverride(channel);
+    if (!restoreTime) return;
+    try {
+      audio.currentTime = Number.isFinite(channel.sfxPausedAt)
+        ? channel.sfxPausedAt
+        : backgroundAudio.currentTime || 0;
+    } catch {
+      // Some browsers reject seeking before metadata is ready.
+    }
+  });
+}
+
+function markAlbumSfxPaused() {
+  currentAlbumSfx.forEach(({ audio, channel }) => {
+    channel.sfxPaused = true;
+    channel.sfxPausedAt = audio.currentTime || backgroundAudio.currentTime || 0;
+  });
+}
+
+function resumeAlbumSfxAfterMusicPause() {
+  clearSfxAmbienceOverrides({ restoreTime: true });
+  currentAlbumSfx.forEach(({ audio, channel }) => {
+    channel.sfxPaused = false;
+    try {
+      audio.currentTime = Number.isFinite(channel.sfxPausedAt)
+        ? channel.sfxPausedAt
+        : backgroundAudio.currentTime || 0;
+    } catch {
+      // Keep the browser's current media position if seeking is unavailable.
+    }
+  });
+}
+
+function startSfxAmbienceOverride(channel) {
+  const entry = getAlbumSfxEntryByChannel(channel);
+  if (!entry) return;
+  channel.sfxPaused = true;
+  channel.sfxPausedAt = Number.isFinite(channel.sfxPausedAt)
+    ? channel.sfxPausedAt
+    : entry.audio.currentTime || backgroundAudio.currentTime || 0;
+  channel.sfxAmbienceOverride = true;
+  channel.muted = false;
+  if (Number(channel.db) <= MIXER_MIN_DB) channel.db = MUSIC_SFX_DEFAULT_DB;
+  if (!lastAmbienceIds.includes(channel.id)) lastAmbienceIds.push(channel.id);
+  clearAudioFade(entry.audio);
+  entry.audio.pause();
+  applyMixerGains();
+}
+
+function toggleAlbumSfxPause(channel) {
+  const entry = getAlbumSfxEntryByChannel(channel);
+  if (!entry) return;
+  if (channel.sfxAmbienceOverride) {
+    stopSfxAmbienceOverride(channel);
+    channel.sfxPaused = true;
+    renderMixerControls();
+    applyMixerGains();
+    updateAlbumUI();
+    return;
+  }
+  if (!channel.sfxPaused) {
+    channel.sfxPaused = true;
+    channel.sfxPausedAt = entry.audio.currentTime || backgroundAudio.currentTime || 0;
+    clearAudioFade(entry.audio);
+    entry.audio.pause();
+    renderMixerControls();
+    applyMixerGains();
+    updateAlbumUI();
+    return;
+  }
+  if (musicTrackPaused || backgroundAudio.paused) {
+    startSfxAmbienceOverride(channel);
+  } else {
+    channel.sfxPaused = false;
+    try {
+      entry.audio.currentTime = backgroundAudio.currentTime || channel.sfxPausedAt || 0;
+    } catch {
+      // Keep the current media position if seeking is unavailable.
+    }
+    entry.audio.play().catch(() => {});
+    applyMixerGains();
+  }
+  renderMixerControls();
+  updateAlbumUI();
+}
+
+function pauseAmbience() {
+  rememberActiveAmbience();
+  getRawEnabledAmbienceChannels().forEach((channel) => {
+    if (!lastAmbienceIds.includes(channel.id)) lastAmbienceIds.push(channel.id);
+    channel.db = MIXER_MIN_DB;
+  });
+  sfxChannelStates.forEach((channel) => {
+    applyGainToAudio(channel.ambienceAudio, channel, channel.db, { rampDuration: 0.2 });
+  });
+  renderMixerControls();
+  window.setTimeout(() => applyMixerGains(), 220);
+  updateAlbumUI();
+}
+
+function muteAlbumSfx() {
+  currentAlbumSfx.forEach(({ channel }) => {
+    channel.muted = true;
+  });
+}
+
+function unmuteAlbumSfx() {
+  currentAlbumSfx.forEach(({ channel }) => {
+    channel.muted = false;
+    if (Number(channel.db) <= MIXER_MIN_DB) channel.db = MUSIC_SFX_DEFAULT_DB;
+  });
+}
+
+function pauseEffectBus() {
+  const activeOverrides = currentAlbumSfx
+    .map(({ channel }) => channel)
+    .filter((channel) => channel.sfxAmbienceOverride);
+  if ((musicTrackPaused || backgroundAudio.paused) && activeOverrides.length) {
+    activeOverrides.forEach((channel) => {
+      stopSfxAmbienceOverride(channel);
+      channel.sfxPaused = true;
+    });
+    renderMixerControls();
+    applyMixerGains();
+    updateAlbumUI();
+    syncSoundButton();
+    return;
+  }
+  muteAlbumSfx();
+  pauseAmbience();
+  renderMixerControls();
+  applyMixerGains({ ambienceRampDuration: 0.2 });
+  updateAlbumUI();
+}
+
+function startEffectBus() {
+  const standaloneAmbienceActive = getRawEnabledAmbienceChannels().some((channel) => (
+    !channel.occupied && ambienceWanted
+  ));
+  if ((musicTrackPaused || backgroundAudio.paused) && !standaloneAmbienceActive && currentAlbumSfx.length) {
+    backgroundWanted = true;
+    userActivatedAudio = true;
+    currentAlbumSfx.forEach(({ channel }) => {
+      channel.muted = false;
+      startSfxAmbienceOverride(channel);
+    });
+    renderMixerControls();
+    applyMixerGains();
+    updateAlbumUI();
+    syncSoundButton();
+    appLog("音樂暫停時啟動 Music SFX 對應循環音效");
+    return;
+  }
+  unmuteAlbumSfx();
+  if (getRawEnabledAmbienceChannels().length > 0 || lastAmbienceIds.length > 0 || !currentAlbumSfx.length) {
+    startAmbience(lastAmbienceIds.length ? lastAmbienceIds : chooseRandomAmbienceIds());
+  } else {
+    renderMixerControls();
+    applyMixerGains();
+    updateAlbumUI();
+  }
+}
+
+function toggleEffectBusPlayback() {
+  if (!MIXER_AUDIO_ENABLED) {
+    showToast("音效控制系統已在 v0.6b2 暫時停用。");
+    syncSoundButton();
+    return;
+  }
+  if (hasEnabledEffects()) pauseEffectBus();
+  else startEffectBus();
+}
+
+function rebuildBackgroundTracks() {
+  const activeTrack = backgroundTracks[backgroundTrackIndex];
+  backgroundTracks.splice(0, backgroundTracks.length, ...customTracks, ...albumTracks);
+  const activeIndex = activeTrack ? backgroundTracks.indexOf(activeTrack) : -1;
+  backgroundTrackIndex = activeIndex >= 0 ? activeIndex : Math.min(backgroundTrackIndex, Math.max(0, backgroundTracks.length - 1));
+  resetRandomPlayQueue();
+  updateAlbumUI();
+  renderLocalPlaylist();
+}
+
+function shuffleTrackIndices(indices) {
+  const shuffled = [...indices];
+  for (let index = shuffled.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(Math.random() * (index + 1));
+    [shuffled[index], shuffled[swapIndex]] = [shuffled[swapIndex], shuffled[index]];
+  }
+  return shuffled;
+}
+
+function resetRandomPlayQueue() {
+  randomPlayHistory = backgroundTracks[backgroundTrackIndex] ? [backgroundTrackIndex] : [];
+  randomPlayQueue = shuffleTrackIndices(
+    backgroundTracks.map((_, index) => index).filter((index) => index !== backgroundTrackIndex)
+  );
+}
+
+function getRandomTrackIndex() {
+  if (!backgroundTracks.length) return -1;
+  if (!randomPlayQueue.length) {
+    if (playMode === "album-once") return -1;
+    randomPlayHistory = [];
+    randomPlayQueue = shuffleTrackIndices(backgroundTracks.map((_, index) => index));
+    if (randomPlayQueue.length > 1 && randomPlayQueue[0] === backgroundTrackIndex) {
+      randomPlayQueue.push(randomPlayQueue.shift());
+    }
+  }
+  const nextIndex = randomPlayQueue.shift();
+  randomPlayHistory.push(nextIndex);
+  return nextIndex;
+}
+
+function getNextTrackIndex(direction = 1) {
+  if (randomPlayEnabled && direction > 0) return getRandomTrackIndex();
+  if (randomPlayEnabled && direction < 0) {
+    if (randomPlayHistory.length <= 1) return -1;
+    const currentIndex = randomPlayHistory.pop();
+    if (Number.isInteger(currentIndex)) randomPlayQueue.unshift(currentIndex);
+    return randomPlayHistory[randomPlayHistory.length - 1] ?? -1;
+  }
+  const nextIndex = backgroundTrackIndex + direction;
+  if (nextIndex >= 0 && nextIndex < backgroundTracks.length) return nextIndex;
+  if (playMode === "album-loop") {
+    return (nextIndex + backgroundTracks.length) % backgroundTracks.length;
+  }
+  return -1;
+}
+
+function updatePlayModeButton() {
+  const labels = {
+    "album-loop": "專輯循環播放",
+    "single-loop": "單曲循環播放",
+    "album-once": "專輯不循環播放"
+  };
+  if (albumPlayModeButton) {
+    albumPlayModeButton.classList.remove("album-loop", "single-loop", "album-once", "active");
+    albumPlayModeButton.classList.add(playMode);
+    albumPlayModeButton.classList.toggle("active", playMode !== "album-once");
+    albumPlayModeButton.setAttribute("aria-label", labels[playMode]);
+    albumPlayModeButton.title = labels[playMode];
+  }
+  if (albumRandomModeButton) {
+    albumRandomModeButton.classList.toggle("active", randomPlayEnabled);
+    albumRandomModeButton.setAttribute("aria-pressed", String(randomPlayEnabled));
+    albumRandomModeButton.setAttribute("aria-label", randomPlayEnabled ? "關閉隨機播放" : "隨機播放");
+    albumRandomModeButton.title = randomPlayEnabled ? "關閉隨機播放" : "隨機播放";
+  }
+}
+
+function cyclePlayMode() {
+  playMode = playMode === "album-loop"
+    ? "single-loop"
+    : playMode === "single-loop"
+    ? "album-once"
+    : "album-loop";
+  resetRandomPlayQueue();
+  updatePlayModeButton();
+  showToast(albumPlayModeButton?.title || "播放模式已切換");
+}
+
+function toggleRandomPlayMode() {
+  randomPlayEnabled = !randomPlayEnabled;
+  resetRandomPlayQueue();
+  updatePlayModeButton();
+  showToast(randomPlayEnabled ? "隨機播放已開啟" : "隨機播放已關閉");
+}
+
+function getActiveTransportAudio() {
+  if (isBloomSfxTransportActive()) return bloomSfxAudio;
+  return backgroundAudio;
+}
+
+function pauseAllPlayback() {
+  backgroundWanted = false;
+  musicTrackPaused = true;
+  fadePauseAlbumGroup().then(updateAlbumUI);
+  if (isBloomSfxTransportActive() && !bloomSfxAudio.paused) {
+    fadePause(bloomSfxAudio).then(updateAlbumUI).catch(() => {});
+  }
+  syncSoundButton();
+}
+
+function startAllPlayback() {
+  backgroundWanted = true;
+  musicTrackPaused = false;
+  userActivatedAudio = true;
+  if (backgroundAudio.src) fadeResumeAlbumGroup().then(updateAlbumUI);
+  else playBackground({ restart: true });
+  if (isBloomSfxTransportActive() && bloomSfxAudio.paused) {
+    fadeResume(bloomSfxAudio).then(updateAlbumUI).catch(() => {});
+  }
+}
+
+function handleTransportClick(kind) {
+  const now = performance.now();
+  const hadAudioBeforeAction = hasAnyAudibleAudio();
+  const doubleClick = now - lastTransportClickAt < 360;
+  lastTransportClickAt = now;
+  if (!doubleClick) {
+    lastTransportHadAudio = hadAudioBeforeAction;
+    return false;
+  }
+  if (lastTransportHadAudio) pauseAllPlayback();
+  else startAllPlayback();
+  return true;
+}
+
+function shouldAmbienceChannelRun(channel) {
+  return Boolean(
+    channel &&
+    backgroundWanted &&
+    !channel.muted &&
+    Number(channel.db) > MIXER_MIN_DB &&
+    (channel.sfxAmbienceOverride || (ambienceWanted && !channel.occupied))
+  );
+}
+
+function setAmbienceChannelLoading(channel, loading) {
+  if (!channel || channel.ambienceLoading === loading) return;
+  channel.ambienceLoading = loading;
+  renderMixerControls();
+}
+
+function scheduleAmbiencePlaybackCheck(channel, observedTime = channel?.ambienceAudio?.currentTime || 0) {
+  if (!channel) return;
+  window.clearTimeout(channel.ambienceWatchdog);
+  channel.ambienceWatchdog = window.setTimeout(async () => {
+    channel.ambienceWatchdog = null;
+    if (!shouldAmbienceChannelRun(channel)) return;
+    const audio = channel.ambienceAudio;
+    const currentTime = audio.currentTime || 0;
+    const wrapped = Number.isFinite(audio.duration) && observedTime > audio.duration - 0.5 && currentTime < 0.5;
+    const progressing = !audio.paused && (currentTime > observedTime + 0.02 || wrapped);
+    const contextRunning = !audioContext || audioContext.state === "running";
+    if (progressing && contextRunning) {
+      channel.ambienceRecoveryAttempts = 0;
+      setAmbienceChannelLoading(channel, false);
+      return;
+    }
+
+    channel.ambienceRecoveryAttempts += 1;
+    setAmbienceChannelLoading(channel, true);
+    appLog(
+      "循環音效無聲，自動修復",
+      `${channel.label} ${channel.type} / attempt ${channel.ambienceRecoveryAttempts} / paused=${audio.paused} / context=${audioContext?.state || "none"}`
+    );
+
+    const context = ensureAudio();
+    if (context?.state === "suspended") {
+      await context.resume().catch(() => {});
+    }
+
+    const resumeTime = audio.currentTime || observedTime || 0;
+    if (channel.ambienceRecoveryAttempts >= 2) {
+      clearAudioFade(audio);
+      audio.pause();
+      if (audio.error || audio.networkState === HTMLMediaElement.NETWORK_NO_SOURCE || audio.readyState < 2) {
+        audio.load();
+        await waitForMediaReady(audio, 5000);
+      }
+      try {
+        if (Number.isFinite(audio.duration) && audio.duration > 0) {
+          audio.currentTime = Math.min(resumeTime, Math.max(0, audio.duration - 0.05));
+        }
+      } catch {
+        // Keep the browser-selected position if seeking is unavailable.
+      }
+    }
+
+    applyGainToAudio(audio, channel);
+    await audio.play().catch((error) => {
+      appLog("循環音效重新播放失敗", `${channel.label} ${channel.type} / ${error?.message || error}`);
+    });
+    scheduleAmbiencePlaybackCheck(channel, audio.currentTime || resumeTime);
+  }, 700);
+}
+
+function ensureAmbienceChannelPlaying(channel, options = {}) {
+  if (!shouldAmbienceChannelRun(channel)) return;
+  const audio = channel.ambienceAudio;
+  const context = ensureAudio();
+  if (context?.state === "suspended") context.resume().catch(() => {});
+  audio.loop = true;
+  if (!audio.src) audio.src = channel.ambience;
+  applyGainToAudio(audio, channel);
+
+  if (audio.readyState < 3) {
+    setAmbienceChannelLoading(channel, true);
+    appLog("循環音效讀取中", `${channel.label} ${channel.type}`);
+  }
+
+  if (audio.paused || options.force) {
+    clearAudioFade(audio);
+    const playRequest = options.transition
+      ? fadeResume(audio, AUDIO_FADE_DURATION, { forceFade: true })
+      : (setAudioVolume(audio, 1), audio.play());
+    playRequest.then(() => {
+      scheduleAmbiencePlaybackCheck(channel, audio.currentTime || 0);
+    }).catch((error) => {
+      setAmbienceChannelLoading(channel, true);
+      appLog("循環音效啟動失敗", `${channel.label} ${channel.type} / ${error?.message || error}`);
+      scheduleAmbiencePlaybackCheck(channel, audio.currentTime || 0);
+    });
+    return;
+  }
+
+  if (!channel.ambienceWatchdog) {
+    scheduleAmbiencePlaybackCheck(channel, audio.currentTime || 0);
+  }
+}
+
+function updateAmbiencePlayback({ ambienceTransition = false } = {}) {
+  const context = ensureAudio();
+  if (context?.state === "suspended" && userActivatedAudio) context.resume().catch(() => {});
+  sfxChannelStates.forEach((channel) => {
+    const shouldRun = shouldAmbienceChannelRun(channel);
+    if (shouldRun) {
+      ensureAmbienceChannelPlaying(channel, { transition: ambienceTransition });
+    } else {
+      window.clearTimeout(channel.ambienceWatchdog);
+      channel.ambienceWatchdog = null;
+      channel.ambienceRecoveryAttempts = 0;
+      setAmbienceChannelLoading(channel, false);
+      if (!channel.ambienceAudio.paused) {
+        if (ambienceTransition) {
+          fadePause(channel.ambienceAudio).catch(() => {});
+        } else {
+          clearAudioFade(channel.ambienceAudio);
+          channel.ambienceAudio.pause();
+          setAudioVolume(channel.ambienceAudio, 1);
+        }
+      }
+    }
+  });
+  syncBackgroundAnalysis({ anticipatePlay: true });
+}
+
+function stopAllAlbumSfxAudioInstances({ reset = false } = {}) {
+  if (!MIXER_AUDIO_ENABLED) {
+    currentAlbumSfx = [];
+    albumSfxAudioRegistry.clear();
+    return;
+  }
+  const audios = new Set([
+    ...albumSfxAudioRegistry,
+    ...currentAlbumSfx.map(({ audio }) => audio)
+  ]);
+  audios.forEach((audio) => {
+    clearAudioFade(audio);
+    audio.pause();
+    if (reset) {
+      try {
+        audio.currentTime = 0;
+      } catch {
+        // Metadata may not be ready yet; pausing is sufficient to prevent stale playback.
+      }
+    }
+    audio.removeAttribute("src");
+    audio.load();
+  });
+  albumSfxAudioRegistry.clear();
+}
+
+function stopCurrentAlbumSfx({ reset = false } = {}) {
+  albumSfxGeneration += 1;
+  if (!MIXER_AUDIO_ENABLED) {
+    currentAlbumSfx = [];
+    albumSfxAudioRegistry.clear();
+    return;
+  }
+  stopAllAlbumSfxAudioInstances({ reset });
+  currentAlbumSfx = [];
+  sfxChannelStates.forEach((channel) => {
+    const wasOccupied = channel.occupied;
+    stopSfxAmbienceOverride(channel);
+    channel.occupied = false;
+    channel.sfxPaused = false;
+    channel.sfxPausedAt = 0;
+    channel.sfxAmbienceOverride = false;
+    channel.albumAudios = [];
+    if (wasOccupied && channel.db > MIXER_MIN_DB && channel.db <= 0) channel.db = MIXER_MIN_DB;
+  });
+  renderMixerControls();
+  applyMixerGains();
+}
+
+function prepareAlbumSfx(track, { restart = false } = {}) {
+  if (!MIXER_AUDIO_ENABLED) {
+    stopCurrentAlbumSfx({ reset: true });
+    return;
+  }
+  stopCurrentAlbumSfx({ reset: true });
+  const generation = albumSfxGeneration;
+  const slots = Array.isArray(track?.sfxSlots) ? track.sfxSlots : [];
+  currentAlbumSfx = slots.map((slot) => {
+    const channel = sfxChannelStates.get(slot.slot);
+    if (!channel) return null;
+    channel.occupied = true;
+    channel.db = MUSIC_SFX_DEFAULT_DB;
+    channel.muted = false;
+    channel.sfxPaused = false;
+    channel.sfxPausedAt = 0;
+    channel.sfxAmbienceOverride = false;
+    const audio = createPlaybackAudio(slot.src);
+    audio.albumSfxGeneration = generation;
+    audio.preload = "auto";
+    audio.loop = false;
+    audio.currentTime = restart ? 0 : backgroundAudio.currentTime || 0;
+    loadAudioSoon(audio);
+    albumSfxAudioRegistry.add(audio);
+    audio.addEventListener("ended", () => albumSfxAudioRegistry.delete(audio), { once: true });
+    channel.albumAudios.push(audio);
+    return { audio, channel, slot };
+  }).filter(Boolean);
+  renderMixerControls();
+  applyMixerGains();
+}
+
+function setAlbumGroupCurrentTime(time = 0) {
+  if (!MIXER_AUDIO_ENABLED) return;
+  currentAlbumSfx.forEach(({ audio }) => {
+    try {
+      audio.currentTime = time;
+    } catch {
+      // Some browsers reject seeking before metadata; sync on next play.
+    }
+    if (audio.paused || audio.mixerGain) {
+      const entry = currentAlbumSfx.find((item) => item.audio === audio);
+      if (entry?.channel?.sfxPaused) entry.channel.sfxPausedAt = time;
+    }
+  });
+}
+
+function syncAlbumSfxToMusicTime() {
+  if (!MIXER_AUDIO_ENABLED) return;
+  const targetTime = backgroundAudio.currentTime || 0;
+  currentAlbumSfx.forEach(({ audio }) => {
+    if (!audio?.src || !Number.isFinite(audio.duration)) return;
+    if (Math.abs((audio.currentTime || 0) - targetTime) < 0.08) return;
+    try {
+      audio.currentTime = Math.min(targetTime, Math.max(0, audio.duration - 0.05));
+    } catch {
+      // Browsers can reject seeks on media that just became ready; the next seek/play event will resync it.
+    }
+  });
+}
+
+async function playAlbumGroup(options = {}) {
+  if (!MIXER_AUDIO_ENABLED) {
+    const { token = null, clearSnapshot = true } = options;
+    musicTrackPaused = false;
+    if (token?.cancelled) return Promise.resolve();
+    appLog("起播專輯音樂", backgroundTracks[backgroundTrackIndex]?.title || "");
+    return backgroundAudio.play().then((result) => {
+      if (token?.cancelled) {
+        backgroundAudio.pause();
+        return result;
+      }
+      if (clearSnapshot) clearPlaybackSnapshot();
+      return result;
+    }).catch((error) => {
+      appLog("專輯音樂播放失敗", error?.message || String(error));
+    });
+  }
+  const { showLoading = true, token = null, clearSnapshot = true } = options;
+  const generation = albumSfxGeneration;
+  const sfxEntries = [...currentAlbumSfx];
+  const audios = [backgroundAudio, ...sfxEntries.map(({ audio }) => audio)];
+  resumeAlbumSfxAfterMusicPause();
+  musicTrackPaused = false;
+  renderMixerControls();
+  applyMixerGains();
+  await waitForAlbumGroupReady({ showLoading, audios });
+  if (token?.cancelled || generation !== albumSfxGeneration) {
+    sfxEntries.forEach(({ audio }) => {
+      clearAudioFade(audio);
+      audio.pause();
+    });
+    appLog("播放請求已取消，停止起播");
+    return Promise.resolve();
+  }
+  albumSfxAudioRegistry.forEach((audio) => {
+    if (audio.albumSfxGeneration === generation) return;
+    clearAudioFade(audio);
+    audio.pause();
+    albumSfxAudioRegistry.delete(audio);
+  });
+  syncAlbumSfxToMusicTime();
+  appLog("同步起播音樂與 Music SFX", `${audios.length} tracks`);
+  return Promise.all(audios.map((audio) => audio.play().catch(() => {}))).then((result) => {
+    if (token?.cancelled || generation !== albumSfxGeneration) {
+      sfxEntries.forEach(({ audio }) => {
+        clearAudioFade(audio);
+        audio.pause();
+      });
+      return result;
+    }
+    if (clearSnapshot) clearPlaybackSnapshot();
+    return result;
+  });
+}
+
+function fadePauseAlbumGroup(duration = AUDIO_FADE_DURATION, options = {}) {
+  if (!MIXER_AUDIO_ENABLED) {
+    if (options.remember !== false) rememberPlaybackSnapshot(options.reason || "pause");
+    musicTrackPaused = true;
+    return fadePause(backgroundAudio, duration);
+  }
+  if (options.remember !== false) rememberPlaybackSnapshot(options.reason || "pause");
+  markAlbumSfxPaused();
+  renderMixerControls();
+  return Promise.all([backgroundAudio, ...currentAlbumSfx.map(({ audio }) => audio)].map((audio) => fadePause(audio, duration)));
+}
+
+async function fadeResumeAlbumGroup(duration = AUDIO_FADE_DURATION, options = {}) {
+  if (!MIXER_AUDIO_ENABLED) {
+    musicTrackPaused = false;
+    await fadeResume(backgroundAudio, duration);
+    clearPlaybackSnapshot();
+    return;
+  }
+  const { showLoading = true } = options;
+  resumeAlbumSfxAfterMusicPause();
+  musicTrackPaused = false;
+  renderMixerControls();
+  await waitForAlbumGroupReady({ showLoading });
+  syncAlbumSfxToMusicTime();
+  await Promise.all([backgroundAudio, ...currentAlbumSfx.map(({ audio }) => audio)].map((audio) => fadeResume(audio, duration)));
+  applyMixerGains();
+  clearPlaybackSnapshot();
+}
+
+function renderMixerControls() {
+  if (!albumMixerGrid) return;
+  if (!MIXER_AUDIO_ENABLED) {
+    albumMixerGrid.innerHTML = "";
+    if (albumMixerPanel) albumMixerPanel.hidden = true;
+    if (albumMixerToggle) {
+      albumMixerToggle.hidden = true;
+      albumMixerToggle.setAttribute("aria-expanded", "false");
+    }
+    albumSfxButton?.setAttribute("hidden", "");
+    miniSfxButton?.setAttribute("hidden", "");
+    return;
+  }
+  const rows = [
+    ...sfxChannelDefinitions.map((definition) => sfxChannelStates.get(definition.id)),
+    musicMixerState
+  ].filter(Boolean);
+  albumMixerGrid.innerHTML = rows.map((state) => {
+    const isMusic = state.id === "music";
+    const occupied = !isMusic && state.occupied;
+    const maxDb = isMusic ? 0 : MIXER_MAX_DB;
+    const faderValue = Math.min(state.db, maxDb);
+    return `
+      <article class="mixer-strip ${occupied ? "is-occupied" : ""}" data-mixer-id="${state.id}">
+        <div class="mixer-strip-main">
+          <span class="mixer-icon" style="--mixer-accent: ${state.color}"><img src="${state.iconSrc}" alt="" /></span>
+          <div>
+            <strong>${state.label}</strong>
+            <small>${state.type}${occupied ? "｜Music SFX" : ""}</small>
+          </div>
+        </div>
+        <div class="mixer-strip-actions">
+          ${isMusic ? `<button class="mixer-pause ${musicTrackPaused ? "active" : ""}" type="button" data-mixer-action="pause">暫停</button>` : ""}
+          ${occupied ? `<button class="mixer-pause ${isAlbumSfxPauseActive(state) ? "active" : ""}" type="button" data-mixer-action="sfx-pause">暫停</button>` : ""}
+          <button class="${state.muted ? "active" : ""}" type="button" data-mixer-action="mute">Mute</button>
+          <button class="${state.solo ? "active" : ""}" type="button" data-mixer-action="solo">Solo</button>
+        </div>
+        <label class="mixer-fader">
+          <input type="range" min="${MIXER_MIN_DB}" max="${maxDb}" step="1" value="${faderValue}" data-mixer-action="db" style="--mixer-fill: ${mixerDbToPercent(faderValue, maxDb)}%" />
+          <span class="mixer-db-value ${state.ambienceLoading ? "is-loading" : ""}" aria-label="${state.ambienceLoading ? "音效讀取中" : formatDbLabel(state.db)}">
+            ${state.ambienceLoading ? '<i class="mixer-loading-spinner" aria-hidden="true"></i>' : formatDbLabel(state.db)}
+          </span>
+        </label>
+      </article>
+    `;
+  }).join("");
+  setMixerResetButtonState();
+}
+
+function handleMixerInput(target) {
+  const strip = target.closest?.(".mixer-strip");
+  const id = strip?.dataset.mixerId;
+  const state = id === "music" ? musicMixerState : sfxChannelStates.get(id);
+  const action = target.dataset.mixerAction;
+  if (!state || !action) return;
+  userActivatedAudio = true;
+  backgroundWanted = true;
+  if (action === "sfx-pause") {
+    if (state.id !== "music" && state.occupied) toggleAlbumSfxPause(state);
+    return;
+  }
+  if (action === "mute") state.muted = !state.muted;
+  if (action === "solo") state.solo = !state.solo;
+  if (state.id !== "music" && action === "mute" && !state.muted) {
+    if (state.occupied) {
+      if (Number(state.db) <= MIXER_MIN_DB) state.db = MUSIC_SFX_DEFAULT_DB;
+    } else {
+      ambienceWanted = true;
+      if (Number(state.db) <= MIXER_MIN_DB) state.db = -18;
+      if (!lastAmbienceIds.includes(state.id)) lastAmbienceIds.push(state.id);
+    }
+  }
+  if (action === "db") {
+    state.db = state.id === "music"
+      ? Math.min(0, Number(target.value))
+      : Number(target.value);
+    if (state.id !== "music" && Number(state.db) > MIXER_MIN_DB) {
+      state.muted = false;
+      if (state.occupied) {
+        // Music SFX stays in sync with the song timeline; only its gain/mute changes.
+      } else {
+        ambienceWanted = true;
+        if (!lastAmbienceIds.includes(state.id)) lastAmbienceIds.push(state.id);
+      }
+    }
+    const label = target.closest(".mixer-fader")?.querySelector(".mixer-db-value");
+    if (label && !state.ambienceLoading) label.textContent = formatDbLabel(state.db);
+    target.style.setProperty("--mixer-fill", `${mixerDbToPercent(state.db, state.id === "music" ? 0 : MIXER_MAX_DB)}%`);
+  }
+  if (action === "pause") {
+    musicTrackPaused = !musicTrackPaused;
+    if (musicTrackPaused) fadePauseAlbumGroup().then(updateAlbumUI);
+    else fadeResumeAlbumGroup().then(updateAlbumUI);
+  }
+  if (action !== "db") renderMixerControls();
+  applyMixerGains();
+  updateAlbumUI();
 }
 
 function ensureTrackWaveBars() {
@@ -926,6 +2484,112 @@ function ensureTrackWaveBars() {
       wave.appendChild(document.createElement("b"));
     }
   });
+}
+
+function ensureMasterMeter() {
+  const context = ensureAudio();
+  if (!context || !masterGain) return false;
+  if (!masterSplitter) {
+    masterSplitter = context.createChannelSplitter(2);
+    masterAnalyserLeft = context.createAnalyser();
+    masterAnalyserRight = context.createAnalyser();
+    [masterAnalyserLeft, masterAnalyserRight].forEach((analyser) => {
+      analyser.fftSize = 1024;
+      analyser.smoothingTimeConstant = 0.5;
+    });
+    masterMeterLeftData = new Float32Array(masterAnalyserLeft.fftSize);
+    masterMeterRightData = new Float32Array(masterAnalyserRight.fftSize);
+    masterGain.connect(masterSplitter);
+    masterSplitter.connect(masterAnalyserLeft, 0);
+    masterSplitter.connect(masterAnalyserRight, 1);
+  }
+  return true;
+}
+
+function meterPeakToPercent(peak = 0) {
+  const db = 20 * Math.log10(Math.max(0.00001, peak));
+  return Math.min(100, Math.max(0, ((db + 60) / 66) * 100));
+}
+
+function setMasterOverloadWarning(active) {
+  const alerts = [masterMeterAlert, albumOverloadAlert, miniOverloadAlert].filter(Boolean);
+  if (active) {
+    if (masterOverloadActive) return;
+    masterOverloadActive = true;
+    window.clearTimeout(masterOverloadClearTimer);
+    masterOverloadClearTimer = null;
+    alerts.forEach((alert) => {
+      alert.classList.remove("is-clearing");
+      alert.classList.add("is-active");
+    });
+    if (!masterClipLatched) {
+      masterClipLatched = true;
+      masterMeterClip?.classList.add("is-active");
+    }
+    return;
+  }
+  if (!masterOverloadActive || masterOverloadClearTimer) return;
+  masterOverloadActive = false;
+  masterOverloadClearTimer = window.setTimeout(() => {
+    masterOverloadClearTimer = null;
+    alerts.forEach((alert) => {
+      alert.classList.remove("is-active");
+      alert.classList.add("is-clearing");
+    });
+    window.setTimeout(() => alerts.forEach((alert) => alert.classList.remove("is-clearing")), 380);
+  }, 1000);
+}
+
+function resetMasterMeter({ clearLevels = false } = {}) {
+  masterClipLatched = false;
+  masterOverloadActive = false;
+  window.clearTimeout(masterOverloadClearTimer);
+  masterOverloadClearTimer = null;
+  masterMeterClip?.classList.remove("is-active");
+  [masterMeterAlert, albumOverloadAlert, miniOverloadAlert].filter(Boolean).forEach((alert) => {
+    alert.classList.remove("is-active", "is-clearing");
+  });
+  if (!clearLevels) return;
+  masterMeterLeftLevel = 0;
+  masterMeterRightLevel = 0;
+  masterMeterLeft?.style.setProperty("--meter-level", "0%");
+  masterMeterRight?.style.setProperty("--meter-level", "0%");
+}
+
+function getMeterPeak(data) {
+  let peak = 0;
+  for (let index = 0; index < data.length; index += 1) {
+    peak = Math.max(peak, Math.abs(data[index]));
+  }
+  return peak;
+}
+
+function updateMasterMeter() {
+  masterMeterFrame = requestAnimationFrame(updateMasterMeter);
+  if (!userActivatedAudio || !hasAnyAudibleAudio()) {
+    masterMeterLeftLevel *= 0.72;
+    masterMeterRightLevel *= 0.72;
+    if (masterMeterLeftLevel < 0.001) masterMeterLeftLevel = 0;
+    if (masterMeterRightLevel < 0.001) masterMeterRightLevel = 0;
+    masterMeterLeft?.style.setProperty("--meter-level", `${meterPeakToPercent(masterMeterLeftLevel)}%`);
+    masterMeterRight?.style.setProperty("--meter-level", `${meterPeakToPercent(masterMeterRightLevel)}%`);
+    setMasterOverloadWarning(false);
+    return;
+  }
+  if (!ensureMasterMeter()) return;
+  masterAnalyserLeft.getFloatTimeDomainData(masterMeterLeftData);
+  masterAnalyserRight.getFloatTimeDomainData(masterMeterRightData);
+  const leftPeak = getMeterPeak(masterMeterLeftData);
+  const rightPeak = getMeterPeak(masterMeterRightData);
+  masterMeterLeftLevel = leftPeak > masterMeterLeftLevel
+    ? leftPeak
+    : masterMeterLeftLevel + (leftPeak - masterMeterLeftLevel) * 0.18;
+  masterMeterRightLevel = rightPeak > masterMeterRightLevel
+    ? rightPeak
+    : masterMeterRightLevel + (rightPeak - masterMeterRightLevel) * 0.18;
+  masterMeterLeft?.style.setProperty("--meter-level", `${meterPeakToPercent(masterMeterLeftLevel)}%`);
+  masterMeterRight?.style.setProperty("--meter-level", `${meterPeakToPercent(masterMeterRightLevel)}%`);
+  setMasterOverloadWarning(leftPeak >= 0.999 || rightPeak >= 0.999);
 }
 
 function ensureBackgroundAnalyser() {
@@ -944,14 +2608,8 @@ function ensureBackgroundAnalyser() {
     frequencyData = new Float32Array(backgroundAnalyser.frequencyBinCount);
     timeDomainData = new Uint8Array(backgroundAnalyser.fftSize);
   }
-  if (!backgroundAnalysisSource) {
-    backgroundAnalysisGain = context.createGain();
-    backgroundAnalysisGain.gain.value = 0.00001;
-    backgroundAnalysisSource = context.createMediaElementSource(backgroundAnalysisAudio);
-    backgroundAnalysisSource.connect(backgroundAnalyser);
-    backgroundAnalyser.connect(backgroundAnalysisGain);
-    backgroundAnalysisGain.connect(context.destination);
-  }
+  connectMixerNodesToAnalyser();
+  ensureMasterMeter();
   return backgroundAnalyser;
 }
 
@@ -959,31 +2617,10 @@ function syncBackgroundAnalysis({ restart = false, anticipatePlay = false } = {}
   if (!userActivatedAudio) return;
   const analyser = ensureBackgroundAnalyser();
   if (!analyser) return;
-  const track = backgroundTracks[backgroundTrackIndex];
-  if (!track) return;
-  const trackUrl = new URL(track.src, window.location.href).href;
-  if (backgroundAnalysisAudio.src !== trackUrl) {
-    backgroundAnalysisAudio.src = track.src;
-    restart = true;
-  }
-  const current = backgroundAudio.currentTime || 0;
-  if (restart || Math.abs((backgroundAnalysisAudio.currentTime || 0) - current) > 0.28) {
-    try {
-      backgroundAnalysisAudio.currentTime = current;
-    } catch {
-      // Metadata may not be ready yet; the next sync will catch up.
-    }
-  }
-  backgroundAnalysisAudio.playbackRate = backgroundAudio.playbackRate || 1;
-  if ((backgroundAudio.paused && !anticipatePlay) || !backgroundWanted) {
-    backgroundAnalysisAudio.pause();
-    return;
-  }
   const context = ensureAudio();
-  if (context?.state === "suspended" && (anticipatePlay || !backgroundAudio.paused)) {
+  if (context?.state === "suspended" && (anticipatePlay || hasAnyAudibleAudio())) {
     context.resume().catch(() => {});
   }
-  backgroundAnalysisAudio.play().catch(() => {});
 }
 
 function primeBackgroundAnalysisFromGesture({ restart = false, anticipatePlay = false } = {}) {
@@ -1018,33 +2655,18 @@ function paintEqBars(playingWave, bars, levels) {
 
 function isAnalysisStreamUnavailable() {
   if (!userActivatedAudio || !backgroundAnalyser) return true;
-  if (backgroundAudio.paused || !backgroundWanted) {
+  if (!hasAnyAudibleAudio()) {
     analysisStalledSince = 0;
-    lastAnalysisMediaTime = backgroundAnalysisAudio.currentTime || 0;
     return false;
   }
-
-  const now = performance.now();
-  const analysisTime = backgroundAnalysisAudio.currentTime || 0;
-  const backgroundTime = backgroundAudio.currentTime || 0;
-  const isSynchronized = Math.abs(analysisTime - backgroundTime) < 1.4;
-  const isAdvancing = Math.abs(analysisTime - lastAnalysisMediaTime) > 0.012;
-  const stalled = backgroundAnalysisAudio.paused || !isSynchronized || !isAdvancing;
-
-  if (stalled) {
-    analysisStalledSince ||= now;
-  } else {
-    analysisStalledSince = 0;
-  }
-
-  lastAnalysisMediaTime = analysisTime;
-  return Boolean(analysisStalledSince && now - analysisStalledSince > 1200);
+  analysisStalledSince = 0;
+  return false;
 }
 
 function updateTrackWaves() {
   waveFrame = requestAnimationFrame(updateTrackWaves);
   const playingWaves = [...document.querySelectorAll(".album-eq.petal-wave")];
-  if (!playingWaves.length || backgroundAudio.paused) return;
+  if (!playingWaves.length) return;
   const playingWave = playingWaves.find((wave) => getComputedStyle(wave).display !== "none") || playingWaves[0];
   const bars = [...playingWave.querySelectorAll("b")];
   if (!bars.length) return;
@@ -1054,11 +2676,14 @@ function updateTrackWaves() {
       if (waveBars.length) paintEqBars(wave, waveBars, levels);
     });
   };
+  if (!hasAnyAudibleAudio()) {
+    eqBarLevels = bars.map(() => 0);
+    paintAlbumEqBars(eqBarLevels);
+    return;
+  }
   if (
     userActivatedAudio &&
     (!backgroundAnalyser ||
-      backgroundAnalysisAudio.paused ||
-      Math.abs((backgroundAnalysisAudio.currentTime || 0) - (backgroundAudio.currentTime || 0)) > 0.6 ||
       !frequencyData ||
       !timeDomainData)
   ) {
@@ -1142,16 +2767,22 @@ function updateTrackWaves() {
 }
 
 function syncSoundButton() {
+  const ambienceActive = MIXER_AUDIO_ENABLED && getAudibleAmbienceChannels().length > 0;
+  const effectsEnabled = MIXER_AUDIO_ENABLED && hasEnabledEffects();
+  const bloomSfxActive = isBloomSfxTransportActive() && !bloomSfxAudio.paused;
+  const visuallyPaused = backgroundAudio.paused && !ambienceActive && !bloomSfxActive;
   soundToggle?.setAttribute("aria-expanded", String(miniPlayer?.classList.contains("is-open")));
-  document.body.classList.toggle("sound-on", backgroundWanted);
-  document.body.classList.toggle("album-paused", backgroundAudio.paused);
-  albumPlayButton?.classList.toggle("paused", backgroundAudio.paused);
-  albumPlayButton?.setAttribute("aria-label", backgroundAudio.paused ? "播放" : "暫停");
-  miniPlayButton?.classList.toggle("paused", backgroundAudio.paused);
-  miniPlayButton?.setAttribute("aria-label", backgroundAudio.paused ? "播放" : "暫停");
-  bloomAudioToggle?.classList.toggle("paused", backgroundAudio.paused);
-  bloomAudioToggle?.setAttribute("aria-pressed", String(backgroundAudio.paused));
-  bloomAudioToggle?.setAttribute("aria-label", backgroundAudio.paused ? "繼續音樂" : "暫停音樂");
+  document.body.classList.toggle("sound-on", backgroundWanted || ambienceActive || effectsEnabled);
+  document.body.classList.toggle("album-paused", visuallyPaused);
+  albumPlayButton?.classList.toggle("paused", visuallyPaused);
+  albumPlayButton?.setAttribute("aria-label", visuallyPaused ? "播放" : "暫停");
+  miniPlayButton?.classList.toggle("paused", visuallyPaused);
+  miniPlayButton?.setAttribute("aria-label", visuallyPaused ? "播放" : "暫停");
+  albumSfxButton?.classList.toggle("active", effectsEnabled);
+  miniSfxButton?.classList.toggle("active", effectsEnabled);
+  bloomAudioToggle?.classList.toggle("paused", visuallyPaused);
+  bloomAudioToggle?.setAttribute("aria-pressed", String(visuallyPaused));
+  bloomAudioToggle?.setAttribute("aria-label", visuallyPaused ? "繼續音樂" : "暫停音樂");
 }
 
 function formatTime(seconds = 0) {
@@ -1233,6 +2864,10 @@ function normalizeSongPlayRow(row) {
   };
 }
 
+function isCustomTrack(track) {
+  return Boolean(track && String(track.id).startsWith("custom-"));
+}
+
 function ensureTrackPlayBadges() {
   document.querySelectorAll(".track-plays").forEach((badge) => badge.remove());
 }
@@ -1276,6 +2911,17 @@ async function fetchSongPlayStats() {
 async function incrementSongPlay(index) {
   const track = backgroundTracks[index];
   if (!track?.songId) return;
+
+  if (isCustomTrack(track)) {
+    const current = songPlayStats.get(track.id) || { id: track.id, songId: track.songId, playedAt: "", plays: 0 };
+    songPlayStats.set(track.id, {
+      ...current,
+      playedAt: new Date().toISOString(),
+      plays: (Number(current.plays) || 0) + 1
+    });
+    updateSongPlayUI();
+    return;
+  }
 
   try {
     const supabase = createSongPlaySupabaseClient();
@@ -1754,7 +3400,7 @@ function endMeadowDrag(event) {
 }
 
 function getMeadowViewAlignX() {
-  return window.matchMedia("(max-width: 760px)").matches ? 0.5 : 0.28;
+  return window.matchMedia("(max-width: 760px)").matches ? 0.24 : 0.28;
 }
 
 function getMeadowViewportCenterPoint() {
@@ -1786,6 +3432,7 @@ function applyMeadowZoomMetrics(value) {
   const controlValue = clamp(meadowZoomValue, 0, 100);
   if (meadowZoom) meadowZoom.value = String(Math.round(controlValue));
   if (meadowZoomOutput) meadowZoomOutput.textContent = `${Math.round(controlValue)}%`;
+  updateMobileMeadowScrollLock();
   return { scale, width, height };
 }
 
@@ -1903,6 +3550,12 @@ function findMeadowMarker(message) {
 }
 
 function getMeadowViewingMarkerSize() {
+  if (mobileMediaQuery.matches) {
+    return {
+      width: Math.min(150, window.innerWidth * 0.34),
+      height: Math.min(212, window.innerWidth * 0.48)
+    };
+  }
   return {
     width: Math.min(340, window.innerWidth * 0.32),
     height: Math.min(460, window.innerWidth * 0.44)
@@ -2037,7 +3690,20 @@ function setMeadowState(nextState) {
   gardenMeadowPanel?.classList.toggle("is-placing", nextState === "placing");
   gardenMeadowPanel?.classList.toggle("is-viewing", nextState === "viewing");
   meadowViewport?.classList.toggle("is-scroll-locked", nextState === "compose" || nextState === "viewing");
+  updateMobileMeadowScrollLock();
   syncMeadowViewportOverlays();
+}
+
+function updateMobileMeadowScrollLock() {
+  if (!gardenMeadowPanel) return;
+  const shouldLock = mobileMediaQuery.matches && meadowZoomValue > 0 && meadowState !== "viewing";
+  gardenMeadowPanel.classList.toggle("is-page-scroll-locked", shouldLock);
+}
+
+function preventLockedMeadowPageScroll(event) {
+  if (!gardenMeadowPanel?.classList.contains("is-page-scroll-locked")) return;
+  if (event.target.closest("input, textarea, button, a, .meadow-compose, .meadow-place-confirm, .meadow-cancel-modal")) return;
+  event.preventDefault();
 }
 
 function createMeadowFlowerElement(color = "#ffffff", className = "meadow-flower-shape") {
@@ -2189,7 +3855,7 @@ async function playMeadowBloomSequence(color, options = {}) {
   if (!meadowBloomFocus) return;
   const manageBackground = options.manageBackground !== false;
   const wasPlaying = manageBackground && backgroundWanted && !backgroundAudio.paused;
-  if (wasPlaying) await fadePause(backgroundAudio, 300);
+  if (wasPlaying) await fadePauseAlbumGroup(300);
   meadowBloomFocus.hidden = false;
   meadowBloomFocus.style.setProperty("--meadow-color", color);
   meadowBloomFocus.classList.remove("is-blooming");
@@ -2200,14 +3866,14 @@ async function playMeadowBloomSequence(color, options = {}) {
   meadowBloomFocus.classList.remove("is-blooming");
   await wait(260);
   meadowBloomFocus.hidden = true;
-  if (wasPlaying && backgroundWanted) await fadeResume(backgroundAudio, 300);
+  if (wasPlaying && backgroundWanted) await fadeResumeAlbumGroup(300);
 }
 
 async function playMeadowMarkerBloom(marker, options = {}) {
   if (!marker) return;
   const manageBackground = options.manageBackground !== false;
   const wasPlaying = manageBackground && backgroundWanted && !backgroundAudio.paused;
-  if (wasPlaying) await fadePause(backgroundAudio, 300);
+  if (wasPlaying) await fadePauseAlbumGroup(300);
   const started = await playRandomBloomSfx();
   if (started) await wait(160);
   marker.classList.remove("is-awaiting-bloom");
@@ -2219,7 +3885,7 @@ async function playMeadowMarkerBloom(marker, options = {}) {
     wait(1900)
   ]);
   marker.classList.remove("is-new-bloom");
-  if (wasPlaying && backgroundWanted) await fadeResume(backgroundAudio, 300);
+  if (wasPlaying && backgroundWanted) await fadeResumeAlbumGroup(300);
 }
 
 function formatMeadowTime(value) {
@@ -2265,6 +3931,9 @@ function showMeadowMessage(message, marker = null, options = {}) {
     meadowViewerMood.classList.toggle("is-empty", !mood);
   }
   if (meadowViewerContent) meadowViewerContent.textContent = message.content || "";
+  const flowerColor = normalizeHex(message.color) || "#ffffff";
+  if (meadowViewerColor) meadowViewerColor.textContent = flowerColor.toUpperCase();
+  if (meadowViewerColorSwatch) meadowViewerColorSwatch.style.setProperty("--meadow-viewer-color", flowerColor);
   if (meadowViewerTime) meadowViewerTime.textContent = formatMeadowTime(message.created_at);
   if (meadowViewer) meadowViewer.hidden = false;
 }
@@ -2281,7 +3950,7 @@ async function confirmMeadowPlanting() {
   try {
     if (meadowPlaceConfirm) meadowPlaceConfirm.hidden = true;
     setMeadowPositionCue(null);
-    if (wasPlaying) await fadePause(backgroundAudio, 300);
+    if (wasPlaying) await fadePauseAlbumGroup(300);
     inserted = await insertGardenMessage({ ...meadowDraft, ...position });
     gardenMessagesCache = [inserted, ...gardenMessagesCache];
     renderMeadowMessages(gardenMessagesCache);
@@ -2292,10 +3961,10 @@ async function confirmMeadowPlanting() {
     await playMeadowMarkerBloom(insertedMarker, { manageBackground: false });
     resetMeadowForm();
     setMeadowStatus("");
-    if (wasPlaying && backgroundWanted) await fadeResume(backgroundAudio, 300);
+    if (wasPlaying && backgroundWanted) await fadeResumeAlbumGroup(300);
   } catch (error) {
     console.error(error);
-    if (wasPlaying && backgroundWanted) await fadeResume(backgroundAudio, 300);
+    if (wasPlaying && backgroundWanted) await fadeResumeAlbumGroup(300);
     setMeadowStatus("留言花送出失敗，請確認 Supabase 欄位與權限設定。", "error");
     setMeadowState("placing");
   }
@@ -2378,6 +4047,7 @@ function initGardenMeadow() {
   meadowZoom?.addEventListener("input", () => setMeadowZoom(meadowZoom.value));
   meadowContentExpand?.addEventListener("click", toggleMeadowContentExpand);
   meadowViewport.addEventListener("wheel", handleMeadowWheel, { passive: true });
+  meadowViewport.addEventListener("touchmove", preventLockedMeadowPageScroll, { passive: false });
   meadowViewport.addEventListener("scroll", syncMeadowViewportOverlays, { passive: true });
   meadowViewport.addEventListener("pointerdown", startMeadowDrag);
   meadowViewport.addEventListener("pointermove", moveMeadowDrag);
@@ -2424,15 +4094,57 @@ function initGardenMeadow() {
   });
 }
 
+function setScrollableText(container, text) {
+  if (!container) return null;
+  let span = container.querySelector(":scope > span");
+  if (!span) {
+    container.textContent = "";
+    span = document.createElement("span");
+    container.append(span);
+  }
+  span.textContent = text;
+  return span;
+}
+
+function updateTitleScrollDistance(container) {
+  if (!container) return;
+  const span = container.querySelector(":scope > span");
+  if (!span) return;
+  const distance = Math.max(0, span.scrollWidth - container.clientWidth);
+  container.style.setProperty("--title-scroll-distance", `${distance ? -distance : 0}px`);
+  container.classList.toggle("is-scrollable-title", distance > 8);
+}
+
 function updateAlbumUI() {
   const track = backgroundTracks[backgroundTrackIndex];
   if (!track) return;
   const fullTitle = `${track.title} ${track.subtitle}`.trim();
   const isLongTitle = fullTitle.length > 24;
+  const customTitleScroll = isCustomTrack(track) && isLongTitle && !isBloomSfxTransportActive();
   const albumNow = albumNowTitle?.closest(".album-now");
   const trackFlower = getTrackFlower(track, backgroundTrackIndex);
-  document.documentElement.style.setProperty("--current-track-color", track.color);
-  if (trackFlower) {
+  const ambienceOnlyChannels = MIXER_AUDIO_ENABLED ? getAudibleAmbienceChannels() : [];
+  const bloomSfxActive = isBloomSfxTransportActive();
+  const ambienceOnly = MIXER_AUDIO_ENABLED && !bloomSfxActive && ambienceOnlyChannels.length > 0 && (backgroundAudio.paused || musicTrackPaused || !backgroundWanted);
+  const bloomChoice = bloomChoices[activeBloomSfxKey];
+  const displayColor = bloomSfxActive ? bloomChoice?.color || track.color : ambienceOnly ? ambienceOnlyChannels[0].color : track.color;
+  document.documentElement.style.setProperty("--current-track-color", displayColor);
+  document.documentElement.style.setProperty("--current-ambient-gradient", ambienceOnlyChannels.length > 1
+    ? `linear-gradient(120deg, ${ambienceOnlyChannels.map((channel) => channel.color).join(", ")})`
+    : displayColor);
+  albumNow?.classList.toggle("is-ambient-only", ambienceOnly);
+  const displayTitle = bloomSfxActive ? `${bloomDisplayNames[activeBloomSfxKey] || activeBloomSfxKey}花朵綻放音效` : ambienceOnly ? "音效" : track.title;
+  if (displayTitle !== lastAlbumDisplayTitle) {
+    albumNow?.classList.add("is-changing");
+    miniPlayer?.classList.add("is-changing");
+    window.clearTimeout(updateAlbumUI.changeTimer);
+    updateAlbumUI.changeTimer = window.setTimeout(() => {
+      albumNow?.classList.remove("is-changing");
+      miniPlayer?.classList.remove("is-changing");
+    }, 360);
+    lastAlbumDisplayTitle = displayTitle;
+  }
+  if (!ambienceOnly && trackFlower) {
     document.documentElement.style.setProperty("--current-track-flower", `url("${trackFlower}")`);
     albumNow?.classList.add("has-flower");
   } else {
@@ -2440,25 +4152,48 @@ function updateAlbumUI() {
     albumNow?.classList.remove("has-flower");
   }
   albumNow?.classList.toggle("is-long-title", isLongTitle);
+  albumNow?.classList.toggle("is-custom-title-scroll", customTitleScroll);
   miniPlayer?.classList.toggle("is-long-title", isLongTitle);
-  if (albumNowTitle) albumNowTitle.textContent = track.title;
-  if (albumNowMeta) albumNowMeta.textContent = `${track.composer}｜${track.duration}`;
-  if (albumDuration) albumDuration.textContent = track.duration;
-  if (miniTrackTitle) miniTrackTitle.textContent = track.title;
-  if (miniFullTitle) miniFullTitle.textContent = fullTitle;
+  if (albumNowTitle) setScrollableText(albumNowTitle, displayTitle);
+  if (albumNowMeta) {
+    albumNowMeta.classList.toggle("is-ambient-channel-list", ambienceOnly);
+    if (ambienceOnly) {
+      albumNowMeta.innerHTML = ambienceOnlyChannels.map((channel) => `
+        <span class="ambient-channel-label" title="${channel.type}" aria-label="${channel.type}">
+          <img src="${channel.iconSrc}" alt="" />
+        </span>
+      `).join("");
+    } else {
+      albumNowMeta.textContent = bloomSfxActive
+        ? "Bloom SFX｜可暫停與拖曳"
+        : `${track.composer}｜${track.duration}`;
+    }
+  }
+  if (albumDuration) albumDuration.textContent = bloomSfxActive && bloomSfxAudio.duration ? formatTime(bloomSfxAudio.duration) : track.duration;
+  if (miniTrackTitle) miniTrackTitle.textContent = displayTitle;
+  if (miniFullTitle) miniFullTitle.textContent = ambienceOnly ? ambienceOnlyChannels.map((channel) => channel.type).join(" / ") : fullTitle;
   miniPlayerTitle?.classList.toggle("is-long", isLongTitle);
+  miniPlayerTitle?.classList.toggle("is-custom-title-scroll", customTitleScroll);
+  requestAnimationFrame(() => {
+    updateTitleScrollDistance(albumNowTitle);
+    updateTitleScrollDistance(miniTrackTitle?.closest(".mini-track-title"));
+    updateTitleScrollDistance(miniFullTitle?.closest(".mini-title-viewport"));
+  });
   document.querySelectorAll(".track[data-track]").forEach((button) => {
-    const active = Number(button.dataset.track) === backgroundTrackIndex;
+    const active = albumTracks[Number(button.dataset.track)] === track;
     button.classList.toggle("active", active);
     button.classList.toggle("is-playing", active && !backgroundAudio.paused && backgroundWanted);
   });
+  updateLocalPlaylistActiveState();
   updateSongPlayUI();
+  if (ambienceOnly && albumPlayCount) albumPlayCount.textContent = "循環音效";
   syncSoundButton();
 }
 
 function updateProgressUI() {
-  const duration = backgroundAudio.duration || 0;
-  const current = backgroundAudio.currentTime || 0;
+  const transportAudio = getActiveTransportAudio();
+  const duration = transportAudio.duration || 0;
+  const current = transportAudio.currentTime || 0;
   const progress = duration ? String(Math.round((current / duration) * 1000)) : "0";
   const progressRatio = duration ? `${Math.min(100, Math.max(0, (current / duration) * 100)).toFixed(2)}%` : "0%";
   if (albumProgress) {
@@ -2475,43 +4210,83 @@ function updateProgressUI() {
   if (miniDuration) miniDuration.textContent = duration ? formatTime(duration) : backgroundTracks[backgroundTrackIndex]?.duration || "0:00";
 }
 
+function stopPlaybackAtQueueEnd() {
+  backgroundWanted = false;
+  musicTrackPaused = true;
+  backgroundAudio.pause();
+  resetMasterMeter({ clearLevels: true });
+  stopCurrentAlbumSfx({ reset: true });
+  clearSongPlayTimer();
+  renderMixerControls();
+  updateAlbumUI();
+  syncSoundButton();
+  appLog("播放佇列結束，自動停止");
+  showToast("播放清單已播放完畢");
+}
+
 async function playBackground({ direction = 0, restart = false } = {}) {
   if (!backgroundTracks.length || !backgroundWanted) {
     syncSoundButton();
     return;
   }
+  const token = createAlbumLoadToken();
   if (direction !== 0) {
-    backgroundTrackIndex = (backgroundTrackIndex + direction + backgroundTracks.length) % backgroundTracks.length;
+    rememberPlaybackSnapshot("manual-skip");
+    const nextIndex = getNextTrackIndex(direction);
+    if (nextIndex < 0) {
+      if (direction < 0) {
+        backgroundAudio.currentTime = 0;
+        setAlbumGroupCurrentTime(0);
+        updateProgressUI();
+        return;
+      }
+      stopPlaybackAtQueueEnd();
+      return;
+    }
+    backgroundTrackIndex = nextIndex;
     restart = true;
   }
   const track = backgroundTracks[backgroundTrackIndex];
+  appLog("準備播放曲目", `${track.title} / restart=${restart}`);
   if (restart || !backgroundAudio.src) {
     clearSongPlayTimer();
     songPlayCountedKey = "";
     backgroundAudio.src = track.src;
     backgroundAudio.currentTime = 0;
     setAudioVolume(backgroundAudio, 1);
+    loadAudioSoon(backgroundAudio);
+    musicTrackPaused = false;
     eqBarLevels = [];
     lastAnalysisSyncAt = 0;
     lastAnalysisMediaTime = 0;
     analysisStalledSince = 0;
     analysisInvalidSince = 0;
+    stopCurrentAlbumSfx({ reset: true });
   }
   updateAlbumUI();
   if (userActivatedAudio) {
     ensureBackgroundAnalyser();
     syncBackgroundAnalysis({ restart, anticipatePlay: true });
   }
-  backgroundAudio.play().then(() => {
+  playAlbumGroup({ token }).then(() => {
+    if (token.cancelled) return;
+    if (activeAlbumLoadToken === token) activeAlbumLoadToken = null;
     syncBackgroundAnalysis({ restart });
     backgroundWanted = true;
     scheduleSongPlayCount();
     updateAlbumUI();
-  }).catch(updateAlbumUI);
+    window.setTimeout(() => {
+      if (!token.cancelled) preloadNearbyTracks(backgroundTrackIndex);
+    }, 1800);
+  }).catch((error) => {
+    if (activeAlbumLoadToken === token) activeAlbumLoadToken = null;
+    appLog("播放曲目失敗", error?.message || String(error));
+    updateAlbumUI();
+  });
 }
 
 function syncBloomVisualToTrack(index) {
-  const bloomKey = bloomKeyByTrackIndex[index];
+  const bloomKey = bloomKeyByTrackIndex[backgroundTracks[index]?.albumIndex];
   if (bloomInView && bloomKey && (bloomKey !== "hope" || hopeBloomUnlocked)) {
     setBloomChoice(bloomKey, { playSfx: false, startTrack: false });
   }
@@ -2520,20 +4295,48 @@ function syncBloomVisualToTrack(index) {
 async function skipBackgroundTrack(direction) {
   if (!backgroundTracks.length) return;
   backgroundWanted = true;
+  resetMasterMeter({ clearLevels: true });
+  cancelActiveAlbumLoad();
+  stopAllAlbumSfxAudioInstances();
   if (backgroundAudio.src && !backgroundAudio.paused) {
-    await fadePause(backgroundAudio);
+    await fadePauseAlbumGroup(AUDIO_FADE_DURATION, { reason: "manual-skip" });
   }
   playBackground({ direction, restart: true });
   syncBloomVisualToTrack(backgroundTrackIndex);
 }
 
+async function previousBackgroundTrack() {
+  if (backgroundAudio.currentTime > 3) {
+    backgroundAudio.currentTime = 0;
+    setAlbumGroupCurrentTime(0);
+    updateProgressUI();
+    return;
+  }
+  const hasPrevious = randomPlayEnabled
+    ? randomPlayHistory.length > 1
+    : backgroundTrackIndex > 0 || playMode === "album-loop";
+  if (!hasPrevious) {
+    backgroundAudio.currentTime = 0;
+    setAlbumGroupCurrentTime(0);
+    updateProgressUI();
+    return;
+  }
+  await skipBackgroundTrack(-1);
+}
+
 async function selectBackgroundTrack(index) {
   if (!backgroundTracks[index]) return;
   backgroundWanted = true;
+  resetMasterMeter({ clearLevels: true });
+  cancelActiveAlbumLoad();
+  stopAllAlbumSfxAudioInstances();
   if (backgroundAudio.src && !backgroundAudio.paused) {
-    await fadePause(backgroundAudio);
+    await fadePauseAlbumGroup(AUDIO_FADE_DURATION, { reason: "manual-select" });
+  } else {
+    rememberPlaybackSnapshot("manual-select");
   }
   backgroundTrackIndex = index;
+  resetRandomPlayQueue();
   playBackground({ restart: true });
   syncBloomVisualToTrack(backgroundTrackIndex);
 }
@@ -2542,14 +4345,14 @@ function resumeBackgroundSoon(delay = 5000) {
   window.clearTimeout(backgroundResumeTimer);
   if (!backgroundWanted || flowerMusicActive) return;
   backgroundResumeTimer = window.setTimeout(() => {
-    fadeResume(backgroundAudio).then(syncSoundButton);
+    fadeResumeAlbumGroup().then(syncSoundButton);
   }, delay);
 }
 
 function pauseBackgroundForBloom() {
   window.clearTimeout(backgroundResumeTimer);
   backgroundAnalysisAudio.pause();
-  if (!backgroundAudio.paused) fadePause(backgroundAudio).then(syncSoundButton);
+  if (!backgroundAudio.paused) fadePauseAlbumGroup().then(syncSoundButton);
 }
 
 function openMiniPlayer() {
@@ -2613,12 +4416,17 @@ function dismissMusicHint() {
 
 function toggleBackgroundPlayback() {
   dismissMusicHint();
+  if (isBloomSfxTransportActive()) {
+    if (bloomSfxAudio.paused) fadeResume(bloomSfxAudio).then(updateAlbumUI);
+    else fadePause(bloomSfxAudio).then(updateAlbumUI);
+    return;
+  }
   primeBackgroundAnalysisFromGesture({ anticipatePlay: backgroundAudio.paused });
   backgroundWanted = true;
   if (backgroundAudio.paused) {
     if (backgroundAudio.src) {
       updateAlbumUI();
-      fadeResume(backgroundAudio).then(() => {
+      fadeResumeAlbumGroup().then(() => {
         syncBackgroundAnalysis();
         updateAlbumUI();
       });
@@ -2626,16 +4434,26 @@ function toggleBackgroundPlayback() {
       playBackground({ restart: true });
     }
   } else {
-    fadePause(backgroundAudio).then(updateAlbumUI);
+    musicTrackPaused = true;
+    fadePauseAlbumGroup().then(updateAlbumUI);
   }
 }
 
 backgroundAudio.addEventListener("ended", () => {
+  appLog("主音樂播放結束", backgroundTracks[backgroundTrackIndex]?.title || "");
+  resetMasterMeter({ clearLevels: true });
   clearSongPlayTimer();
   if (!backgroundWanted) return;
-  const nextIndex = (backgroundTrackIndex + 1) % backgroundTracks.length;
-  const nextBloomKey = bloomKeyByTrackIndex[nextIndex];
-  playBackground({ direction: 1, restart: true });
+  rememberPlaybackSnapshot("auto-next");
+  const nextIndex = playMode === "single-loop" ? backgroundTrackIndex : getNextTrackIndex(1);
+  if (nextIndex < 0) {
+    stopPlaybackAtQueueEnd();
+    return;
+  }
+  const nextTrack = backgroundTracks[nextIndex];
+  const nextBloomKey = bloomKeyByTrackIndex[nextTrack?.albumIndex];
+  backgroundTrackIndex = nextIndex;
+  playBackground({ restart: true });
   if (bloomInView && nextBloomKey && (nextBloomKey !== "hope" || hopeBloomUnlocked)) {
     setBloomChoice(nextBloomKey, { playSfx: false, startTrack: false });
   }
@@ -2644,27 +4462,49 @@ backgroundAudio.addEventListener("ended", () => {
 backgroundAudio.addEventListener("timeupdate", updateProgressUI);
 backgroundAudio.addEventListener("loadedmetadata", updateProgressUI);
 backgroundAudio.addEventListener("play", () => {
+  appLog("主音樂開始播放", backgroundTracks[backgroundTrackIndex]?.title || "");
   if (userActivatedAudio) syncBackgroundAnalysis({ anticipatePlay: true });
   scheduleSongPlayCount();
   updateAlbumUI();
 });
 backgroundAudio.addEventListener("pause", () => {
+  appLog("主音樂暫停", backgroundTracks[backgroundTrackIndex]?.title || "");
   clearSongPlayTimer();
   backgroundAnalysisAudio.pause();
+  resetMasterMeter({ clearLevels: true });
   updateAlbumUI();
 });
 backgroundAudio.addEventListener("seeking", () => {
   clearSongPlayTimer();
+  setAlbumGroupCurrentTime(backgroundAudio.currentTime || 0);
   syncBackgroundAnalysis({ restart: true });
 });
 backgroundAudio.addEventListener("seeked", scheduleSongPlayCount);
+
+bloomSfxAudio.addEventListener("timeupdate", updateProgressUI);
+bloomSfxAudio.addEventListener("loadedmetadata", updateProgressUI);
+bloomSfxAudio.addEventListener("play", () => {
+  updateAlbumUI();
+  syncSoundButton();
+});
+bloomSfxAudio.addEventListener("pause", () => {
+  resetMasterMeter({ clearLevels: true });
+  updateAlbumUI();
+  syncSoundButton();
+});
+bloomSfxAudio.addEventListener("ended", () => {
+  clearBloomSfxTransport();
+  updateAlbumUI();
+  updateProgressUI();
+  syncSoundButton();
+});
 
 soundPrevButton?.addEventListener("click", () => {
   scheduleMobileMiniPlayerClose();
   userActivatedAudio = true;
   backgroundWanted = true;
   primeBackgroundAnalysisFromGesture({ restart: true, anticipatePlay: true });
-  skipBackgroundTrack(-1);
+  previousBackgroundTrack();
 });
 
 soundNextButton?.addEventListener("click", () => {
@@ -2679,7 +4519,7 @@ albumPrevButton?.addEventListener("click", () => {
   userActivatedAudio = true;
   backgroundWanted = true;
   primeBackgroundAnalysisFromGesture({ restart: true, anticipatePlay: true });
-  skipBackgroundTrack(-1);
+  previousBackgroundTrack();
 });
 
 albumNextButton?.addEventListener("click", () => {
@@ -2689,26 +4529,332 @@ albumNextButton?.addEventListener("click", () => {
   skipBackgroundTrack(1);
 });
 
-albumPlayButton?.addEventListener("click", toggleBackgroundPlayback);
+albumPlayButton?.addEventListener("click", () => {
+  if (handleTransportClick("music")) return;
+  toggleBackgroundPlayback();
+});
 miniPlayButton?.addEventListener("click", () => {
   scheduleMobileMiniPlayerClose();
+  if (handleTransportClick("music")) return;
   toggleBackgroundPlayback();
 });
 
+albumSfxButton?.addEventListener("click", () => {
+  if (handleTransportClick("sfx")) return;
+  toggleEffectBusPlayback();
+});
+
+masterMeterClip?.addEventListener("click", () => {
+  resetMasterMeter();
+});
+
+miniSfxButton?.addEventListener("click", () => {
+  scheduleMobileMiniPlayerClose();
+  if (handleTransportClick("sfx")) return;
+  toggleEffectBusPlayback();
+});
+
+albumPlayModeButton?.addEventListener("click", cyclePlayMode);
+albumRandomModeButton?.addEventListener("click", toggleRandomPlayMode);
+
+loadingSkipButton?.addEventListener("click", () => {
+  appLog("使用者略過等待中的音樂");
+  restorePendingPlaybackSnapshot();
+});
+
+siteConsoleClose?.addEventListener("click", () => {
+  setSiteConsoleVisible(false);
+  appLog("關閉 Console Log");
+});
+
+siteLoadingOverlay?.querySelector(".loading-flower")?.addEventListener("animationiteration", () => {
+  randomizeLoadingFlower();
+});
+
+albumMixerToggle?.addEventListener("click", () => {
+  if (!MIXER_AUDIO_ENABLED) return;
+  const expanded = albumMixerToggle.getAttribute("aria-expanded") !== "true";
+  albumMixerToggle.setAttribute("aria-expanded", String(expanded));
+  if (albumMixerPanel) {
+    window.clearTimeout(albumMixerPanel.closeTimer);
+    if (expanded) {
+      albumMixerPanel.hidden = false;
+      albumMixerPanel.classList.remove("is-closing");
+      requestAnimationFrame(() => albumMixerPanel.classList.add("is-open"));
+    } else {
+      albumMixerPanel.classList.remove("is-open");
+      albumMixerPanel.classList.add("is-closing");
+      albumMixerPanel.closeTimer = window.setTimeout(() => {
+        albumMixerPanel.hidden = true;
+        albumMixerPanel.classList.remove("is-closing");
+      }, 320);
+    }
+  }
+  renderMixerControls();
+});
+
+albumMixerReset?.addEventListener("click", toggleDefaultMixerState);
+
+albumMixerGrid?.addEventListener("click", (event) => {
+  const target = event.target.closest("button[data-mixer-action]");
+  if (target) handleMixerInput(target);
+});
+
+albumMixerGrid?.addEventListener("input", (event) => {
+  if (event.target.matches('input[data-mixer-action="db"]')) handleMixerInput(event.target);
+});
+
+function updateLocalPlaylistActiveState() {
+  if (!localPlaylistList) return;
+  const activeTrack = backgroundTracks[backgroundTrackIndex];
+  localPlaylistList.querySelectorAll(".local-track").forEach((item) => {
+    item.classList.toggle("active", item.dataset.trackId === String(activeTrack?.id));
+  });
+}
+
+function renderLocalPlaylist() {
+  if (!localPlaylist || !localPlaylistList) return;
+  localPlaylist.hidden = customTracks.length === 0;
+  localPlaylistList.innerHTML = customTracks.map((track, index) => `
+    <article class="local-track" draggable="true" data-track-id="${track.id}">
+      <button class="local-track-handle" type="button" aria-label="拖曳 ${escapeHtml(track.title)}">⠿</button>
+      <button class="local-track-play" type="button" data-local-action="play">
+        <span>${index + 1}</span>
+        <strong>${escapeHtml(track.title)}</strong>
+        <small>${track.duration || "0:00"}</small>
+      </button>
+      <button class="local-track-remove" type="button" data-local-action="remove" aria-label="刪除 ${escapeHtml(track.title)}"></button>
+    </article>
+  `).join("");
+  updateLocalPlaylistActiveState();
+}
+
+function readCustomTrackDuration(track) {
+  const audio = new Audio(track.src);
+  audio.preload = "metadata";
+  audio.addEventListener("loadedmetadata", () => {
+    if (Number.isFinite(audio.duration)) {
+      track.duration = formatTime(audio.duration);
+      renderLocalPlaylist();
+      updateAlbumUI();
+    }
+  }, { once: true });
+  audio.load();
+}
+
+function createCustomTrack(file, index = 0) {
+  const id = `custom-${Date.now()}-${index}-${Math.random().toString(36).slice(2, 8)}`;
+  const src = URL.createObjectURL(file);
+  customTrackUrls.set(id, src);
+  return {
+    id,
+    songId: file.name,
+    title: file.name.replace(/\.[^.]+$/, ""),
+    subtitle: "本機音檔",
+    composer: "Local File",
+    duration: "0:00",
+    color: "#ffd166",
+    src,
+    sfxSlots: [],
+    isCustom: true
+  };
+}
+
+function removeCustomTrack(trackId) {
+  const index = customTracks.findIndex((track) => String(track.id) === String(trackId));
+  if (index < 0) return;
+  const track = customTracks[index];
+  const wasActive = backgroundTracks[backgroundTrackIndex] === track;
+  const wasPlaying = wasActive && backgroundWanted && !backgroundAudio.paused;
+  if (wasActive) {
+    backgroundAudio.pause();
+    stopCurrentAlbumSfx({ reset: true });
+  }
+  customTracks.splice(index, 1);
+  const url = customTrackUrls.get(track.id);
+  if (url) {
+    const preloaded = audioPreloadCache.get(url);
+    if (preloaded) {
+      preloaded.pause();
+      preloaded.removeAttribute("src");
+      audioPreloadCache.delete(url);
+    }
+    loadedAudioSources.delete(normalizeAudioSource(url));
+    URL.revokeObjectURL(url);
+  }
+  customTrackUrls.delete(track.id);
+  songPlayStats.delete(track.id);
+  rebuildBackgroundTracks();
+  appLog("刪除本機音檔", track.title);
+  if (wasActive && backgroundTracks.length) {
+    backgroundTrackIndex = Math.min(index, backgroundTracks.length - 1);
+    backgroundWanted = wasPlaying;
+    if (wasPlaying) playBackground({ restart: true });
+    else updateAlbumUI();
+  }
+}
+
+function clampSleepTimerMinutes(value) {
+  const minutes = Math.round(Number(value) || 1);
+  return Math.min(280, Math.max(1, minutes));
+}
+
+function formatSleepTimer(ms) {
+  const totalSeconds = Math.max(0, Math.ceil(ms / 1000));
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+  return hours > 0
+    ? `${hours}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`
+    : `${minutes}:${String(seconds).padStart(2, "0")}`;
+}
+
+function stopSleepTimer({ completed = false } = {}) {
+  window.clearInterval(sleepTimerInterval);
+  sleepTimerInterval = null;
+  sleepTimerEndsAt = 0;
+  if (sleepTimerToggle) {
+    sleepTimerToggle.classList.remove("active");
+    sleepTimerToggle.textContent = "開始";
+  }
+  if (sleepTimerOutput) {
+    sleepTimerOutput.hidden = true;
+    sleepTimerOutput.value = "";
+    sleepTimerOutput.textContent = "";
+  }
+  if (completed) {
+    pauseAllPlayback();
+    showToast("播放計時器時間到，音樂已停止");
+    appLog("播放計時器完成，自動停止");
+  }
+}
+
+function updateSleepTimerDisplay() {
+  if (!sleepTimerEndsAt || !sleepTimerOutput) return;
+  const remaining = sleepTimerEndsAt - Date.now();
+  if (remaining <= 0) {
+    stopSleepTimer({ completed: true });
+    return;
+  }
+  const label = formatSleepTimer(remaining);
+  sleepTimerOutput.value = label;
+  sleepTimerOutput.textContent = label;
+}
+
+function startSleepTimer() {
+  const minutes = clampSleepTimerMinutes(sleepTimerMinutes?.value);
+  if (sleepTimerMinutes) sleepTimerMinutes.value = String(minutes);
+  sleepTimerEndsAt = Date.now() + minutes * 60 * 1000;
+  window.clearInterval(sleepTimerInterval);
+  sleepTimerInterval = window.setInterval(updateSleepTimerDisplay, 250);
+  if (sleepTimerToggle) {
+    sleepTimerToggle.classList.add("active");
+    sleepTimerToggle.textContent = "取消";
+  }
+  if (sleepTimerOutput) sleepTimerOutput.hidden = false;
+  updateSleepTimerDisplay();
+  showToast(`播放計時器已設定為 ${minutes} 分鐘`);
+  appLog("啟動播放計時器", `${minutes} 分鐘`);
+}
+
+sleepTimerMinutes?.addEventListener("change", () => {
+  sleepTimerMinutes.value = String(clampSleepTimerMinutes(sleepTimerMinutes.value));
+});
+
+sleepTimerToggle?.addEventListener("click", () => {
+  if (sleepTimerEndsAt) stopSleepTimer();
+  else startSleepTimer();
+});
+
+customAudioInput?.addEventListener("change", () => {
+  const files = Array.from(customAudioInput.files || []);
+  if (!files.length) return;
+  const addedTracks = files.map(createCustomTrack);
+  customTracks.push(...addedTracks);
+  rebuildBackgroundTracks();
+  addedTracks.forEach(readCustomTrackDuration);
+  userActivatedAudio = true;
+  backgroundWanted = true;
+  const firstAddedIndex = backgroundTracks.indexOf(addedTracks[0]);
+  selectBackgroundTrack(firstAddedIndex);
+  appLog("新增本機音檔", files.map((file) => file.name).join("、"));
+  customAudioInput.value = "";
+});
+
+localPlaylistList?.addEventListener("click", (event) => {
+  const item = event.target.closest(".local-track");
+  const track = customTracks.find((entry) => String(entry.id) === item?.dataset.trackId);
+  if (!track) return;
+  const action = event.target.closest("[data-local-action]")?.dataset.localAction;
+  if (action === "remove") {
+    removeCustomTrack(track.id);
+    return;
+  }
+  if (action === "play") {
+    const index = backgroundTracks.indexOf(track);
+    if (index >= 0) selectBackgroundTrack(index);
+  }
+});
+
+localPlaylistList?.addEventListener("dragstart", (event) => {
+  const item = event.target.closest(".local-track");
+  if (!item) return;
+  draggedCustomTrackId = item.dataset.trackId || "";
+  item.classList.add("is-dragging");
+  event.dataTransfer.effectAllowed = "move";
+});
+
+localPlaylistList?.addEventListener("dragover", (event) => {
+  const item = event.target.closest(".local-track");
+  if (!item || item.dataset.trackId === draggedCustomTrackId) return;
+  event.preventDefault();
+  localPlaylistList.querySelectorAll(".local-track").forEach((row) => row.classList.remove("is-drag-target"));
+  item.classList.add("is-drag-target");
+});
+
+localPlaylistList?.addEventListener("drop", (event) => {
+  event.preventDefault();
+  const target = event.target.closest(".local-track");
+  const fromIndex = customTracks.findIndex((track) => String(track.id) === draggedCustomTrackId);
+  const toIndex = customTracks.findIndex((track) => String(track.id) === target?.dataset.trackId);
+  if (fromIndex < 0 || toIndex < 0 || fromIndex === toIndex) return;
+  const [moved] = customTracks.splice(fromIndex, 1);
+  customTracks.splice(toIndex, 0, moved);
+  rebuildBackgroundTracks();
+  appLog("調整本機播放順序", moved.title);
+});
+
+localPlaylistList?.addEventListener("dragend", () => {
+  draggedCustomTrackId = "";
+  localPlaylistList.querySelectorAll(".local-track").forEach((row) => {
+    row.classList.remove("is-dragging", "is-drag-target");
+  });
+});
+
 albumProgress?.addEventListener("input", () => {
-  const duration = backgroundAudio.duration || 0;
+  const transportAudio = getActiveTransportAudio();
+  const duration = transportAudio.duration || 0;
   if (!duration) return;
-  backgroundAudio.currentTime = (Number(albumProgress.value) / 1000) * duration;
-  syncBackgroundAnalysis({ restart: true });
+  const nextTime = (Number(albumProgress.value) / 1000) * duration;
+  transportAudio.currentTime = nextTime;
+  if (transportAudio === backgroundAudio) {
+    setAlbumGroupCurrentTime(nextTime);
+    syncBackgroundAnalysis({ restart: true });
+  }
   updateProgressUI();
 });
 
 miniProgress?.addEventListener("input", () => {
   scheduleMobileMiniPlayerClose();
-  const duration = backgroundAudio.duration || 0;
+  const transportAudio = getActiveTransportAudio();
+  const duration = transportAudio.duration || 0;
   if (!duration) return;
-  backgroundAudio.currentTime = (Number(miniProgress.value) / 1000) * duration;
-  syncBackgroundAnalysis({ restart: true });
+  const nextTime = (Number(miniProgress.value) / 1000) * duration;
+  transportAudio.currentTime = nextTime;
+  if (transportAudio === backgroundAudio) {
+    setAlbumGroupCurrentTime(nextTime);
+    syncBackgroundAnalysis({ restart: true });
+  }
   updateProgressUI();
 });
 
@@ -3130,7 +5276,7 @@ function playTone(frequency = 392, color = activeColor) {
   gain.gain.setValueAtTime(0.0001, context.currentTime);
   gain.gain.exponentialRampToValueAtTime(0.16, context.currentTime + 0.03);
   gain.gain.exponentialRampToValueAtTime(0.0001, context.currentTime + 0.8);
-  oscillator.connect(filter).connect(gain).connect(context.destination);
+  oscillator.connect(filter).connect(gain).connect(masterGain || context.destination);
   oscillator.start();
   oscillator.stop(context.currentTime + 0.86);
 }
@@ -3208,7 +5354,9 @@ livingGarden.addEventListener("pointerdown", (event) => {
 
 document.querySelectorAll(".track[data-track]").forEach((track) => {
   track.addEventListener("click", () => {
-    const nextIndex = Number(track.dataset.track);
+    const albumTrack = albumTracks[Number(track.dataset.track)];
+    const nextIndex = backgroundTracks.indexOf(albumTrack);
+    if (nextIndex < 0) return;
     dismissMusicHint();
     userActivatedAudio = true;
     backgroundWanted = true;
@@ -3318,6 +5466,7 @@ function resetBloomLabToEntry() {
   flowerAudio.pause();
   clearAudioFade(flowerAudio);
   flowerAudio.currentTime = 0;
+  clearBloomSfxTransport();
   bloomSfxAudio.pause();
   clearAudioFade(bloomSfxAudio);
   bloomSfxAudio.currentTime = 0;
@@ -3414,6 +5563,7 @@ async function setBloomChoice(key = "green", { playSfx = true, startTrack = true
   const bloomRedPetalCap = bloomPlant.querySelector(".bloom-red-petal-cap");
   const bloomImage = bloomCard.querySelector("img");
   const trackIndex = bloomTrackByKey[key];
+  const backgroundTargetIndex = trackIndex === undefined ? -1 : backgroundTracks.indexOf(albumTracks[trackIndex]);
   const petalColors = choice.petals || Array.from({ length: bloomPetals.length }, () => choice.color);
 
   lastBloomKey = key;
@@ -3461,6 +5611,7 @@ async function setBloomChoice(key = "green", { playSfx = true, startTrack = true
   flowerAudio.pause();
   clearAudioFade(flowerAudio);
   flowerAudio.currentTime = 0;
+  activeBloomSfxKey = "";
   bloomSfxAudio.pause();
   clearAudioFade(bloomSfxAudio);
   bloomSfxAudio.currentTime = 0;
@@ -3468,9 +5619,9 @@ async function setBloomChoice(key = "green", { playSfx = true, startTrack = true
   setAudioVolume(bloomSfxAudio, 1);
 
   const startSelectedTrack = () => {
-    if (!startTrack || lastBloomKey !== key || trackIndex === undefined) return;
+    if (!startTrack || lastBloomKey !== key || backgroundTargetIndex < 0) return;
     backgroundWanted = true;
-    backgroundTrackIndex = trackIndex;
+    backgroundTrackIndex = backgroundTargetIndex;
     playBackground({ restart: true });
   };
 
@@ -3491,16 +5642,16 @@ async function setBloomChoice(key = "green", { playSfx = true, startTrack = true
     }, 1500);
   };
 
-  if (startTrack && trackIndex !== undefined) {
+  if (startTrack && backgroundTargetIndex >= 0) {
     userActivatedAudio = true;
     backgroundWanted = true;
-    backgroundTrackIndex = trackIndex;
+    backgroundTrackIndex = backgroundTargetIndex;
     updateAlbumUI();
     if (userActivatedAudio) {
       ensureBackgroundAnalyser();
       syncBackgroundAnalysis({ restart: true, anticipatePlay: true });
     }
-    if (!backgroundAudio.paused) fadePause(backgroundAudio).then(syncSoundButton);
+    if (!backgroundAudio.paused) fadePauseAlbumGroup().then(syncSoundButton);
   }
 
   if (triggerDelay > 0) {
@@ -3509,12 +5660,23 @@ async function setBloomChoice(key = "green", { playSfx = true, startTrack = true
   }
 
   if (playSfx && choice.bloom) {
+    clearBloomSfxTransport();
     bloomSfxAudio.src = choice.bloom;
-    bloomSfxAudio.onended = startSelectedTrack;
+    bloomSfxAudio.preload = "auto";
+    loadAudioSoon(bloomSfxAudio);
     const started = await playAudioWhenReady(bloomSfxAudio);
     if (lastBloomKey !== key) return;
+    if (started) appLog("播放開花音效", choice.bloom);
+    else appLog("開花音效無法播放，繼續播放對應曲目", choice.bloom);
     revealBloom();
-    if (!started) startSelectedTrack();
+    if (started) {
+      const expectedDuration = Number.isFinite(bloomSfxAudio.duration) ? bloomSfxAudio.duration * 1000 + 600 : 5200;
+      await waitForAudioEnd(bloomSfxAudio, Math.max(3200, expectedDuration));
+    }
+    if (lastBloomKey !== key) return;
+    startSelectedTrack();
+    updateAlbumUI();
+    updateProgressUI();
   } else {
     revealBloom();
     startSelectedTrack();
@@ -3855,9 +6017,13 @@ window.addEventListener("resize", scheduleCanvasResize, { passive: true });
 
 ensureTrackWaveBars();
 updateTrackWaves();
+updateMasterMeter();
 animateThemeFlower();
+renderMixerControls();
+updatePlayModeButton();
 updateAlbumUI();
 updateProgressUI();
+warmAlbumAudioLibrary();
 
 window.setTimeout(() => {
   for (const color of ["#e94545", "#ffd166", "#4ecdc4", "#9b5de5", "#ffafcc"]) {

@@ -22,7 +22,7 @@
     <meta name="theme-color" content="#f6efe4" />
     <title>網站版本紀錄｜Secret Garden</title>
     <link rel="icon" type="image/png" href="assets/favicon-secret-garden-max.png?v=20260603-01" />
-    <link rel="stylesheet" href="styles.css?v=20260617-b4-14" />
+    <link rel="stylesheet" href="styles.css?v=20260625-06b2-1" />
   </head>
   <body class="version-page" data-theme="light">
     <div class="ambient-layer" aria-hidden="true">
@@ -37,7 +37,7 @@
       <section class="version-page-hero" aria-labelledby="version-page-title">
         <p class="eyebrow">Website Version</p>
         <h1 id="version-page-title">網站版本紀錄</h1>
-        <p>目前版本 <strong>v0.5b4</strong>。點開箭頭即可查看每一次更新內容。</p>
+        <p>目前版本 <strong>v0.6b2</strong>。點開箭頭即可查看每一次更新內容。</p>
       </section>
 
       <section class="version-archive version-page-archive is-open" id="version-page-archive" aria-label="網站版本紀錄">
@@ -57,6 +57,76 @@
         </div>
         <div class="version-panel" id="version-page-panel">
           <div class="version-panel-inner timeline version-page-list">
+            <article class="version-item"><div class="version-item-heading"><h3>v0.6b2</h3><time class="version-item-date">2026 06/25</time></div><p>- 暫時移除複雜的音效控制播放引擎，專輯聆聽回到單一音樂檔案播放，避免 Music SFX、Ambience 與同步等待流程造成播放卡死。
+
+                    - 專輯曲目改讀取 assets/audio/Music 中的完整音樂檔；花朵綻放音效保留使用 assets/audio/Bloom 中的音檔。
+
+                    - 保留專輯播放、播放次數、本機音檔、計時器、循環與隨機播放等主要功能，音效控制器入口暫時停用。
+
+                    - 修復 v0.6b2 首版開花音效消失的問題，花朵綻放現在會重新直接播放 Bloom 資料夾中的對應音效。
+                  </p></article>
+            <article class="version-item"><div class="version-item-heading"><h3>v0.6b1</h3><time class="version-item-date">2026 06/25</time></div><p>- 重構聯網音訊預載策略，停止首頁同時載入九條循環 Ambience，避免與使用者實際點播的音樂及 Music SFX 搶占頻寬。
+
+                    - 背景預載只負責暖機瀏覽器快取，正式播放使用獨立音訊元素；系統優先循序準備小型開花音效與目前曲目，其餘專輯音檔改為播放後按需準備。
+
+                    - 全面檢查 320px 與 390px 手機版排版，補強底部導覽、八色入口、工具列、播放器、曲目卡與協力人員區域的空間和觸控尺寸。
+
+                    - 手機版音效控制器改為雙欄卡片排列，每軌將名稱、控制按鈕與音量推桿分層顯示，在小尺寸螢幕上仍不重疊或產生水平捲動。
+
+                    - 修正聯網播放時開花音效、主音樂與 Music SFX 可能因預載流程互相取消而卡死的問題；同步調整手機版種花模式切換、留言檢視與草原捲動手勢。
+                  </p></article>
+            <article class="version-item"><div class="version-item-heading"><h3>v0.5b6</h3><time class="version-item-date">2026 06/24</time></div><p>- 更新專輯循環、單曲循環與隨機播放圖示，新增專輯不循環模式與整輪不重複的隨機播放佇列。
+
+                    - 新增多檔本機音樂播放清單，可拖曳排序、點擊播放或刪除；本機曲目會排在原專輯曲目前方。
+
+                    - 新增 1 至 280 分鐘播放計時器，倒數完成後會自動停止音樂、Music SFX 與循環音效。
+
+                    - 調整循環音效開關：音樂與 Music SFX 暫停且沒有其他循環音效時，開關會同步顯示暫停；再次開啟可暫時播放目前 Music SFX 軌道所對應的循環音效，恢復音樂後會從原暫停時間切回 Music SFX。
+
+                    - 將計時器與匯入本機音檔移至音效控制按鈕同一列，本機播放清單則移至十首專輯曲目下方。
+
+                    - 修正快速切歌時舊曲目 Music SFX 可能殘留播放的問題；調整專輯工具列與長曲名排版，並將大播放器左側替換為 Secret Garden Vol. I 正式專輯封面。
+
+                    - 重新整理正方形封面下的大播放器上下構圖，縮短進度條並精簡計時器／本機音檔工具列；Mixer 新增反映最終混音輸出的雙聲道 Master Meter 與 0 dB 過載警示。
+
+                    - 留言花園檢視新增花朵色號；完善 Mixer 軌道圖示、純音樂 0 dB 上限、迷你播放器過載提示與長曲名捲動，並修復淺色模式文字、Mixer 底色與曲名裁切問題；園丁區新增依職務分類的協力人員名單。
+
+                    - 主播放器的循環音效摘要改用真正的音效圖片圖示；互動引導名單固定為單列排列，窄螢幕可水平滑動且不會與頭像重疊。
+
+                    - Master Meter 依 -10、-3 與 0 dB 分段顯示綠黃紅警示；循環音效摘要改為純圖示，並修正淺色 Mixer 推桿、Meter 刻度與新版音效開關圖示。
+                  </p></article>
+            <article class="version-item"><div class="version-item-heading"><h3>v0.5b5</h3><time class="version-item-date">2026 06/18</time></div><p>- 「專輯聆聽」新增可展開的音效控制器，將播放系統拆分為純音樂、Music SFX 與循環 Ambience 音效。
+
+                    - 八色曲目改讀取 assets/audio/Album 中的純音樂，並在播放時同步啟動對應的 Music SFX；Blue 與 Gray 會同時播放兩條對應 SFX，Indigo 則維持純音樂播放。
+
+                    - 新增九種 Ambience 軌道與一條 Music 控制軌，可調整 Mute、Solo、dB 推桿與音樂獨立暫停；使用者也可以選擇本機音檔，暫時把網站作為播放器使用。
+
+                    - 補強播放控制：新增音效獨立按鈕、專輯循環／單曲循環／隨機播放模式、上一首按鍵重播邏輯，並讓 EQ 顯示跟隨實際混音後的音量與頻率。
+
+                    - 修正花朵綻放音效與循環音效控制的播放狀態，避免開花後播放器卡在綻放音效顯示，並讓調整 Ambience 音量時不再重新淡入。
+
+                    - 修正部分曲目或循環音效偶爾無聲、延遲很久才出聲的問題，讓音訊在使用者操作當下先送出播放請求，再由瀏覽器處理緩衝。
+
+                    - 修正靜音時 EQ 仍自動波動，以及調整 Ambience 音量、Mute、Solo 時不應重新淡入或自行啟動的問題。
+
+                    - 讓 Ambience 音量與 Solo 調整不再中斷音檔播放，並新增 Mixer 預設／自訂狀態切換按鈕。
+
+                    - 將音效按鈕改為同時控制 Music SFX 與循環 Ambience；暫停音效時 Music SFX 會改為靜音而不停止播放，避免與音樂時間軸錯開。
+
+                    - Music SFX 軌道新增暫停按鈕；音樂暫停時可讓對應軌道暫時改播循環音效，音樂恢復後會回到原 Music SFX 時間點。
+
+                    - 本機音檔也會在網站內計算播放次數，長檔名會自動捲動顯示；同時將隨機播放與循環模式拆成兩個小型無框按鈕。
+
+                    - 優化專輯音訊讀取與同步起播，讓音樂與 Music SFX 等待同一組音檔 ready 後一起播放；等待時會顯示「正在讀取網站」與花朵生長動畫。
+
+                    - 讀取音樂時新增略過按鈕、今日花語提示與隨機花瓣讀取動畫，並加入隱藏式 Console Log 供後續追蹤音訊流程。
+
+                    - 已成功預載的音檔在快速切歌時改為靜默等待同步，不再重複顯示讀取頁；讀取花則改為與花朵綻放一致的八瓣單色造型。
+
+                    - 循環音效尚未 ready 時會在該軌音量位置顯示讀取轉圈，並修正總音樂恢復後 Music SFX 暫停狀態未同步消失的問題。
+
+                    - 修正循環音效偶發顯示已啟用卻無聲的問題，清除殘留音量排程，並加入播放進度監測與自動恢復機制。
+                  </p></article>
             <article class="version-item"><div class="version-item-heading"><h3>v0.5b4</h3><time class="version-item-date">2026 06/16</time></div><p>- 新增了「花朵綻放」八色花朵的獨立網址入口，可使用 #red_bloom、#orange_bloom、#yellow_bloom、#green_bloom、#blue_bloom、#indigo_bloom、#purple_bloom、#violet_bloom、#gray_bloom 直接進入對應花色。
 
                     - 為符合行動瀏覽器的音訊播放限制，深連結不會立刻自動開花，而是先顯示「歡迎來到秘密花園」與「進入花園」按鈕；訪客點擊「進入花園」後，會直接播放對應顏色的開花音效、音樂與綻放動畫，不需要再選擇顏色。

@@ -328,6 +328,10 @@
     <a href="#v0-5b2">v0.5b2</a>
     <a href="#v0-5b3">v0.5b3</a>
     <a href="#v0-5b4">v0.5b4</a>
+    <a href="#v0-5b5">v0.5b5</a>
+    <a href="#v0-5b6">v0.5b6</a>
+    <a href="#v0-6b1">v0.6b1</a>
+    <a href="#v0-6b2">v0.6b2</a>
   </nav>
   <main>
     <h1>秘密花園網站版本紀錄日誌</h1>
@@ -1328,9 +1332,352 @@
       </article>
     </section>
 
+    <section class="version-group">
+      <h2 class="major-version" id="v0-5b5">v0.5b5</h2>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b5-1</h3>
+        <p class="date">修改時間：2026 06/18</p>
+        <p class="details">啟動「專輯聆聽」播放系統重大更新。新增可展開的「音效控制」區域，預設隱藏，點擊專輯區標題下方按鈕後展開，內含九條音效控制器與一條 Music 控制器。控制器支援 Mute、Solo、dB 音量推桿；Music 軌額外提供獨立暫停按鈕。</p>
+        <p class="details">將八色曲目的主要音訊來源改為 assets/audio/Album 中的純音樂檔，並新增 Music SFX 同步播放流程。Red 會借用 Violet／雨滴控制器，Blue 同時播放 Wave 與 Bell 兩條 SFX，Gray 同時播放 Birds 與 Wind 兩條 SFX，Indigo 沒有 SFX；播放前會等待純音樂與需要的 SFX 準備完成後再一起啟動，降低音樂先出、音效延遲的情況。</p>
+        <p class="details">新增九條循環 Ambience 軌道，對應雷雨、餐廳、窗戶、海浪、葉子、雨滴、小鳥、風與篝火。Ambience 音量若為負無限 dB、被 Mute、或正在被當前 Music SFX 佔用，會自動暫停以節省資源；當推桿大於負無限且未被佔用時，會開始循環播放。</p>
+        <p class="details">新增 Web Audio GainNode 混音流程，以支援 -∞ dB 到 +6 dB 的推桿範圍。右上角迷你播放器與專輯播放器的播放／暫停仍控制整體聲音；若只剩循環 Ambience 在播放，播放器會顯示「音效」與目前有聲的音效軌道，背景顏色會依播放中的 Ambience 色彩呈現。</p>
+        <p class="details">新增本機音檔選擇功能。使用者可在控制面板中選擇本機 audio 檔案，網站會使用瀏覽器產生的臨時 object URL 播放，不會上傳檔案；該音檔會以第十條 Music 控制器調整音量，播放器曲名顯示為檔案名稱。</p>
+        <p class="details">目前 assets/audio/Album 中尚未包含 Welcome to the Secret Garden 與 Hope Flower 的新版純音樂檔，因此這兩首暫時沿用既有音檔來源；八色曲目則已接入新的 Album 純音樂檔。</p>
+        <p class="details">同步將網站目前版本提升為 v0.5b5，更新 index.html、script.js 與 version.html 的資源快取參數為 20260618-b5-1，並在使用者版 version.html 新增 v0.5b5 條目。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b5-2</h3>
+        <p class="date">修改時間：2026 06/19</p>
+        <p class="details">修正 Music SFX 音量基準。Music SFX 推桿仍預設顯示 -15 dB，但此位置現在代表音檔原始音量；使用者往上推時會從原始音量繼續增益，而不是先被實際衰減 15 dB。</p>
+        <p class="details">修正部分循環 Ambience 拉起音量後偶爾無聲的問題。Ambience 啟動時會確認音訊節點、音檔來源與瀏覽器 AudioContext 狀態，並在第一次播放時一樣走淡入流程。</p>
+        <p class="details">重接 EQ 動態顯示來源，改為分析實際送到輸出的混合訊號。純音樂、Music SFX、Ambience 的 Mute、Solo 與音量推桿現在都會影響 EQ 顯示，不再使用獨立複製的音樂分析音源。</p>
+        <p class="details">右上角迷你播放器與「專輯聆聽」大播放器新增圓形「音效」按鈕，可獨立開關循環 Ambience。若尚未開過 Ambience，按下時會隨機啟動一到兩軌未被 Music SFX 佔用的循環音效；再次按下會以淡出暫停。</p>
+        <p class="details">播放／暫停按鈕改為只控制純音樂與 Music SFX；音效按鈕控制 Ambience。音樂或音效按鈕快速連點兩次時，若目前有任何聲音，會一次暫停全部音樂、Music SFX、Ambience 與花朵綻放音效；若目前沒有任何聲音，會一次啟動音樂與循環音效。</p>
+        <p class="details">新增專輯循環、單曲循環、隨機播放模式按鈕，預設維持專輯循環。上一首按鍵新增判斷：曲目播放超過 3 秒時回到該曲開頭，3 秒內才跳到上一首。</p>
+        <p class="details">花朵綻放音效現在也會接入音樂控制器，顯示為「紅色花朵綻放音效」等名稱，並可透過播放器暫停與拖曳進度條。切換曲目與展開音效控制面板也補上轉場動畫。</p>
+        <p class="details">補回 Welcome to the Secret Garden 與 Hope Flower 的 Album 音檔路徑，改讀取 assets/audio/Album/welcome-secret-garden.mp3 與 assets/audio/Album/secret-flower-demo.mp3。</p>
+        <p class="details">同步更新 index.html、styles.css、script.js 與 version.html 的資源快取參數為 20260619-b5-2，並在使用者版 version.html 補充 v0.5b5 的播放控制更新摘要。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b5-3</h3>
+        <p class="date">修改時間：2026 06/21</p>
+        <p class="details">修正花朵綻放音效狀態判斷。先前播放器使用 bloomSfxAudio.ended 判斷是否正在播放開花音效，但瀏覽器在剛切換 src、尚未開始播放時可能回報 ended，導致點擊八色種子後開花音效被跳過、或播放器卡在「XX花朵綻放音效」狀態。本次新增 bloomSfxTransportActive 明確旗標，統一由 setBloomSfxTransport 與 clearBloomSfxTransport 控制。</p>
+        <p class="details">修正開花音效播放流程。setBloomChoice 現在會在指定 bloomSfxAudio.src 後立即於使用者點擊流程中嘗試播放，避免等待音檔 ready 時錯過瀏覽器允許音訊播放的使用者手勢；若播放失敗，會立即清除 Bloom SFX transport 狀態、恢復目前曲目顯示，避免播放器殘留錯誤標題、背景色與進度條。</p>
+        <p class="details">修正循環 Ambience 音量調整時被重新淡入的問題。updateAmbiencePlayback 現在只有在 Ambience audio 原本處於 paused 狀態、需要從停到播時才呼叫 fadeResume；若使用者只是調整 Fader，會只更新 GainNode 音量，不再把音量拉回 0 後重新淡入。</p>
+        <p class="details">修正八色與 Hope 開花音效路徑。bloomChoices 原本指向 assets/audio/red_bloom.mp3 等舊位置，但實際檔案位於 assets/audio/Bloom/，造成點擊種子時開花音效 404 並直接進入歌曲播放；本次已統一改為 assets/audio/Bloom/*.mp3。</p>
+        <p class="details">同步更新 index.html 與 version.html 的資源快取參數為 20260621-b5-3a，並在使用者版 version.html 的 v0.5b5 條目補充本次音訊狀態修正摘要。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b5-4</h3>
+        <p class="date">修改時間：2026 06/21</p>
+        <p class="details">修正播放音樂或拉起循環 Ambience 時偶爾沒有聲音、過很久才開始播放的問題。先前 playBackground 會等待 backgroundAudio 與 Music SFX 進入 canplay/canplaythrough 後才呼叫 play，但在部分瀏覽器中這會錯過使用者點擊或拖曳所提供的音訊播放手勢，導致 play 被延遲或拒絕。</p>
+        <p class="details">調整曲目啟動流程。backgroundAudio 在切換 src 後會立即 load，prepareAlbumSfx 也會建立並 load 對應 SFX，但不再阻塞主播放流程；playAlbumGroup 會在同一次使用者操作中立即對純音樂與 Music SFX 呼叫 play，讓瀏覽器自行處理緩衝並提高啟動可靠性。</p>
+        <p class="details">調整循環 Ambience 啟動流程。九條 Ambience audio 改為 preload="auto" 並在初始化時 load；updateAmbiencePlayback 不再等待 AudioContext.resume 的 Promise 完成才呼叫 fadeResume，而是在使用者操作當下直接送出 play 請求，減少 Fader 已拉高但音效未啟動的情況。</p>
+        <p class="details">同步將 backgroundAudio preload 從 metadata 改為 auto，並更新 index.html 與 version.html 的資源快取參數為 20260621-b5-4。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b5-5</h3>
+        <p class="date">修改時間：2026 06/22</p>
+        <p class="details">修正專輯 EQ 在沒有任何聲音時仍進入備用動態模式的問題。updateTrackWaves 現在會先檢查 hasAnyAudibleAudio；若沒有可聽聲音，會直接把所有 EQ bar 寫成 0，不再因為 analyser 尚未建立而呼叫 fallbackEqLevels 產生自動波形。</p>
+        <p class="details">調整 Ambience 播放控制責任。applyMixerGains 新增 options，updateAmbiencePlayback 只有在 ambienceTransition 為 true 時才對循環音效執行 fadeResume／fadePause；一般 Fader、Mute、Solo 或 Music SFX 佔用釋放只會立即更新 GainNode 或立即暫停/恢復，不再淡入淡出。</p>
+        <p class="details">修正 Ambience 被 mixer 操作自行喚醒的問題。handleMixerInput 不再於調整循環音效的音量、Mute 或 Solo 時自動把 ambienceWanted 設為 true；只有專門的「音效」按鈕或全啟動流程會啟動循環音效。若 Ambience 已經由音效按鈕開啟，Fader、Mute、Solo 仍會即時影響既有播放狀態。</p>
+        <p class="details">同步更新 index.html 與 version.html 的資源快取參數為 20260622-b5-5，並在使用者版 version.html 的 v0.5b5 條目補充本次 EQ 與 Ambience 控制修正。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b5-6</h3>
+        <p class="date">修改時間：2026 06/22</p>
+        <p class="details">修正循環 Ambience 在調整音量、Solo 時會短暫中斷再繼續播放的問題。updateAmbiencePlayback 不再於每次 Mixer 更新時對既有 Ambience audio 呼叫 load()，避免正在播放的音檔被重新載入而產生斷續。</p>
+        <p class="details">重新定義 Ambience 的播放生命週期：只有專門的音效播放/暫停流程會執行淡入淡出；Fader 與 Solo 只更新 GainNode，不會暫停或重啟音檔；Mute 則會立即暫停該軌，解除 Mute 時若音效播放狀態仍開啟，會立即接回播放。</p>
+        <p class="details">在「音樂與音效控制」標題旁新增無框隨機樣式按鈕，可在使用者自訂 Mixer 狀態與預設狀態之間切換。預設狀態為 Music 0 dB、未 Mute、未 Solo，當前曲目的 Music SFX 維持 -15 dB，其餘循環 Ambience 回到 -∞ dB 並停止播放。</p>
+        <p class="details">同步更新 index.html 與 version.html 的資源快取參數為 20260622-b5-6，並在使用者版 version.html 的 v0.5b5 條目補充本次 Ambience 播放連續性與 Mixer 預設切換功能。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b5-7</h3>
+        <p class="date">修改時間：2026 06/22</p>
+        <p class="details">重新定義播放器中的「音效」按鈕為 Effect Bus 總開關，同時納入 Music SFX 與循環 Ambience。只要目前曲目存在未靜音、音量大於 -∞ 的 Music SFX，或有已啟用的 Ambience，音效按鈕就會顯示為開始狀態。</p>
+        <p class="details">調整音效暫停流程。按下音效按鈕關閉時，Music SFX 不再暫停音檔，而是把對應 Mixer 軌設為 Mute，讓 Music SFX 繼續跟著音樂時間軸前進；循環 Ambience 則將音量緩降到 -∞，緩降時間約 0.2 秒。</p>
+        <p class="details">補上手動啟動規則。若音效按鈕處於暫停狀態，使用者拉起任一循環 Ambience 或 Music SFX 的音量、或解除 Mute，系統會自動把音效按鈕切回開始狀態；若所有 Music SFX 與 Ambience 都為 -∞ 或 Mute，音效按鈕會自動回到暫停狀態。</p>
+        <p class="details">同步更新 index.html 與 version.html 的資源快取參數為 20260622-b5-7，並在使用者版 version.html 的 v0.5b5 條目補充本次 Effect Bus 音效總開關修正。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b5-8</h3>
+        <p class="date">修改時間：2026 06/23</p>
+        <p class="details">為目前被曲目 Music SFX 佔用的 Mixer 軌道新增「暫停」按鈕。按下總音樂暫停後，Music 軌與所有當前 Music SFX 軌的暫停按鈕會一起亮起，讓使用者能看見純音樂與 Music SFX 都已停在同一時間點。</p>
+        <p class="details">新增 Music SFX 暫停覆寫狀態。當音樂暫停時，若使用者再次點擊某條 Music SFX 的暫停按鈕使其變成開始狀態，系統會記住該 Music SFX 的暫停時間，暫時改用同一 Mixer 軌道播放對應的循環 Ambience；音樂恢復播放時，該軌會停止 Ambience 並回到原 Music SFX，從剛才記住的時間點繼續。</p>
+        <p class="details">調整進度同步。當使用者拖曳進度或回到曲首時，若 Music SFX 處於暫停狀態，也會同步更新記憶中的暫停時間，避免下一次恢復時跳回舊位置。</p>
+        <p class="details">重繪播放器「音效」按鈕圖示，改為白色 speaker 與圓弧造型，並增加白色光暈；按鈕底色仍沿用目前曲目或狀態色。</p>
+        <p class="details">同步更新 index.html 與 version.html 的資源快取參數為 20260623-b5-8，並在使用者版 version.html 的 v0.5b5 條目補充本次 Music SFX 暫停與音效圖示更新。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b5-9</h3>
+        <p class="date">修改時間：2026 06/23</p>
+        <p class="details">補上本機音檔的播放次數計算。使用者瀏覽本機音檔後，若播放滿 10 秒，網站會在前端記憶體中累加一次播放次數並更新播放器右上角顯示；此計數不會寫入 Supabase，重新整理頁面後會重置。</p>
+        <p class="details">新增本機長檔名的自動捲動顯示。當本機音檔名稱過長時，大播放器與迷你播放器會依照實際文字寬度捲動，頭尾帶有淡出遮罩，且每次回到開頭會停留一段時間再繼續。</p>
+        <p class="details">拆分播放模式按鈕。原先「專輯循環／單曲循環／隨機播放」三態按鈕改為「循環模式」與「隨機播放」兩顆小型無框按鈕，底部與上一首、開始、音效、下一首按鈕齊平；未啟用時為灰色，啟用時跟隨目前曲目顏色加深。</p>
+        <p class="details">同步更新 index.html 與 version.html 的資源快取參數為 20260623-b5-9，並在使用者版 version.html 的 v0.5b5 條目補充本次本機音檔顯示與播放模式按鈕更新。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b5-10</h3>
+        <p class="date">修改時間：2026 06/23</p>
+        <p class="details">優化專輯播放音訊預載。系統會優先預熱目前曲目、上一首與下一首的純音樂與 Music SFX，並在瀏覽器空閒時逐步預載整張專輯相關音檔，減少使用者切歌時的等待時間。</p>
+        <p class="details">調整 Music SFX 與純音樂的起播流程。播放新曲或恢復播放時，系統會先等待主音樂與目前所有 Music SFX 都達到可播放狀態，再同步校正 Music SFX 的 currentTime，最後才一起呼叫 play，降低兩路音訊分開起跑的機率。</p>
+        <p class="details">新增全站音訊讀取提示。若播放時音檔尚未讀取完成，畫面會暫時顯示「正在讀取網站」的大字遮罩，並播放一朵花從地上長出的循環 CSS 動畫；音檔 ready 後遮罩會淡出。</p>
+        <p class="details">為音訊等待加入錯誤與逾時保底。若瀏覽器未回報 canplay 或某個音檔發生錯誤，等待流程會在保底時間後解除，避免網站永久停在讀取畫面。</p>
+        <p class="details">同步更新 index.html 與 version.html 的資源快取參數為 20260623-b5-10，並在使用者版 version.html 的 v0.5b5 條目補充本次音訊讀取與同步起播優化。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b5-11</h3>
+        <p class="date">修改時間：2026 06/23</p>
+        <p class="details">調整背景音檔預載策略。使用者進入網站後，系統會延後約 3.6 秒才開始悄悄預載音檔，先讀取目前曲目、上一首與下一首，再利用瀏覽器空閒時間分批預載整張專輯，避免一進站就造成介面卡住。</p>
+        <p class="details">修復讀取畫面的花瓣顯示。讀取花朵改為四瓣循環綻放動畫，每次顯示時會從八色與希望色中隨機抽取花瓣色彩組合，並在「正在讀取網站」下方新增「今日花語：XXXX」文字區。</p>
+        <p class="details">讀取遮罩現在會阻擋底層網站操作，避免使用者在音檔等待期間誤觸；同時把自訂滑鼠層級提高到遮罩之上，讓游標仍可正常顯示。</p>
+        <p class="details">新增「或是先不播放這首音樂」按鈕。當新曲尚未讀取完成時，使用者可略過該曲並離開讀取畫面；系統會取消目前播放請求，並依照最近一次暫停或切歌前記錄的播放參數回到上一個曲目與時間點。若是自動下一首造成等待，則回到上一首曲目開頭。</p>
+        <p class="details">加入隱藏式 Console Log。系統會記錄使用者互動、播放請求、音檔等待與 ready、背景預載、讀取畫面顯示與取消等流程；預設隱藏，連點左上角 Welcome / Secret Garden 品牌七次才會在左下角顯示，並可用面板內叉叉關閉。</p>
+        <p class="details">同步更新 index.html 與 version.html 的資源快取參數為 20260623-b5-11，並在使用者版 version.html 的 v0.5b5 條目補充本次讀取畫面、略過按鈕與 Console Log 更新。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b5-12</h3>
+        <p class="date">修改時間：2026 06/24</p>
+        <p class="details">新增音檔來源 ready 記憶。當背景預載 Audio 或實際播放器曾成功收到 canplay、canplaythrough 或足夠 readyState 時，系統會以完整 URL 記錄該音檔已經讀取完成。</p>
+        <p class="details">調整快速切歌的讀取畫面判斷。音樂與 Music SFX 仍會等待整組 Audio 元件 ready 並校正時間後同步起播，但若所有來源 URL 都已有成功預載紀錄，等待會在背景靜默完成，不再重複顯示全螢幕讀取頁。</p>
+        <p class="details">重新製作讀取花朵。花朵改為與「花朵綻放」相同概念的八瓣橢圓花瓣與中央花蕊造型，每次長出來時整朵花只使用同一個隨機顏色，下一輪生長動畫再切換另一個顏色。</p>
+        <p class="details">同步更新 index.html 與 version.html 的資源快取參數為 20260624-b5-12，並在使用者版 version.html 的 v0.5b5 條目補充本次預載判斷與讀取花造型修正。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b5-13</h3>
+        <p class="date">修改時間：2026 06/24</p>
+        <p class="details">為九條循環 Ambience 軌道新增獨立讀取狀態。當使用者拉起音量並啟動尚未 ready 的循環音效時，該軌原本顯示 dB 數值的位置會暫時改為轉圈 Loading 圖示。</p>
+        <p class="details">循環音效收到 canplay、playing 或 error 事件後會結束讀取狀態並重新渲染 Mixer，Loading 圖示隨即恢復為該軌目前的正常 dB 數值；調整音量期間若仍在讀取，也不會提前覆蓋轉圈圖示。</p>
+        <p class="details">修正總音樂恢復播放後 Mixer 暫停按鈕未同步更新的問題。純音樂與 Music SFX 在開始播放前清除暫停狀態後，現在會立即重新渲染 Mixer，讓 Music 軌與目前被佔用的 Music SFX 軌道一併取消暫停顯示。</p>
+        <p class="details">同步更新 index.html 與 version.html 的資源快取參數為 20260624-b5-13，並在使用者版 version.html 的 v0.5b5 條目補充本次循環音效讀取提示與暫停狀態連動修正。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b5-14</h3>
+        <p class="date">修改時間：2026 06/24</p>
+        <p class="details">修正循環 Ambience 偶發「推桿已有音量、Audio 也不是 paused、但實際沒有聲音」的競態。一般音量調整現在會先取消 GainNode 上尚未完成的舊 automation，再從目前 gain 值套用新的音量，避免先前 0.2 秒淡出排程在使用者拉起推桿後仍把音量拉回 0。</p>
+        <p class="details">新增循環音效播放 watchdog。每條已啟用的 Ambience 在起播後會檢查 currentTime 是否真的前進，以及 AudioContext 是否維持 running；若媒體元素停滯、play 被拒絕或 AudioContext suspended，系統會顯示該軌 Loading、恢復 AudioContext 並重新送出播放。</p>
+        <p class="details">若同一軌持續停滯，第二次自動恢復會保留原本播放時間，視需要重新 load 音檔後再播放；恢復期間不會任意跳回開頭。修復結果與失敗原因也會寫入隱藏式 Console Log，方便後續辨識瀏覽器層級問題。</p>
+        <p class="details">保留音效總開關的淡入／淡出行為；一般推桿、Mute 與 Solo 操作仍直接改變 gain，不會因為新增自動恢復而重新觸發淡入動畫。</p>
+        <p class="details">同步更新 index.html 與 version.html 的資源快取參數為 20260624-b5-14，並在使用者版 version.html 的 v0.5b5 條目補充本次循環音效無聲自動修復。</p>
+      </article>
+    </section>
+
+    <section class="version-group">
+      <h2 class="major-version" id="v0-5b6">v0.5b6</h2>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b6-1</h3>
+        <p class="date">修改時間：2026 06/24</p>
+        <p class="details">將使用者提供的 Album、Single、Random 三個透明 PNG 圖示複製至 assets/icons/playback，並套用到專輯循環／不循環、單曲循環與隨機播放按鈕。圖示未啟用時以灰色無框顯示，啟用時才出現跟隨當前曲目顏色的圓形底色。</p>
+        <p class="details">將循環模式改為三態切換：專輯循環播放、單曲循環播放、專輯不循環播放。專輯不循環會依目前播放清單順序播放至最後一首後自動停止；加入本機音檔時，順序播放會先播放所有本機曲目，再銜接原本十首專輯曲目。</p>
+        <p class="details">重構隨機播放佇列。隨機播放會記錄本輪已播放曲目，確保整輪清單尚未耗盡前不會重複；專輯不循環模式下會在整輪結束後停止，專輯循環模式下則會在耗盡後重新洗牌。本機曲目加入後也會納入目前可播放清單。</p>
+        <p class="details">本機音檔選擇器改為支援一次加入多個檔案。新增專用本機播放清單，顯示曲名、順序與讀取到的時長；使用者可以點擊播放、拖曳更換順序，或按叉叉刪除。刪除時會同步釋放 Object URL、預載 Audio 與網站內播放次數資料。</p>
+        <p class="details">新增播放計時器。使用者可輸入 1 至 280 分鐘，啟動後顯示剩餘倒數並可隨時取消；倒數完成時會呼叫既有總播放暫停流程，停止純音樂、Music SFX 與循環音效。</p>
+        <p class="details">修正本機曲目插入播放清單前方後可能造成的索引偏移。花朵綻放選曲、Hope Flower 圖片解鎖、專輯卡片 active 狀態與換歌花朵動畫，改為依實際曲目物件與 albumIndex 尋址。</p>
+        <p class="details">三個圖示原檔已依規則備份至更新日誌/assets/v0.5b6-1。依使用者要求，本次重大播放功能更新重新歸檔為 v0.5b6-1，並在使用者版 version.html 新增 v0.5b6 條目。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b6-2</h3>
+        <p class="date">修改時間：2026 06/24</p>
+        <p class="details">重新定義播放器音效控制開關的 active 狀態。若目前沒有 Music SFX 以外的循環 Ambience，當音樂與 Music SFX 一起暫停時，音效開關會自動切為暫停顯示，不再因 Mixer 中仍保留 Music SFX 音量而錯誤亮起。</p>
+        <p class="details">新增暫停期間的 Music SFX 軌道 Ambience override。音樂暫停且沒有其他循環音效時，使用者再次點擊音效開關，會將目前曲目所佔用的 Music SFX 軌道暫時改播對應循環 Ambience；Blue 與 Gray 等雙 Music SFX 曲目會同時啟動兩條對應循環音效。</p>
+        <p class="details">恢復音樂時會先停止上述 Ambience override，將 Music SFX 時間軸復原至剛才和音樂一起暫停的位置，再讓純音樂與 Music SFX 同步開始。若使用者在暫停期間再次關閉音效開關，只會停止 override 並保留 Music SFX 暫停位置。</p>
+        <p class="details">將播放計時器與「匯入本機音檔」移出 Mixer 面板，改與「音效控制」按鈕排列在專輯標題下方同一工具列；本機播放清單則移至原本十首專輯曲目選擇器下方，即使不展開音效控制器也能管理本機曲目。</p>
+        <p class="details">將 Album、Single、Random 三個播放模式圖示放大約 1.3 倍，但維持按鈕與啟用圓形色框原尺寸，讓圖示更清楚而不改變控制列佈局。</p>
+        <p class="details">同步將網站目前版本提升為 v0.5b6，更新 index.html、script.js 與 version.html 的資源快取參數為 20260624-b6-2。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b6-3</h3>
+        <p class="date">修改時間：2026 06/24</p>
+        <p class="details">修正快速連續切歌時，舊曲目的 Music SFX 可能在較晚完成讀取後重新播放，形成上一首或上上首音效殘留且無法由目前 Mixer 控制的競態。新的曲目讀取權杖建立前會取消上一個權杖，避免舊非同步播放流程繼續取得控制權。</p>
+        <p class="details">新增 Music SFX 世代識別與全域播放實例登記。每次更換曲目都會立即停止所有舊世代 Music SFX；即使舊 Audio 的 play() 在切歌後才完成，播放流程也會再次檢查權杖與世代並立刻暫停。此掃除範圍僅包含專輯 Music SFX，不會停止或重置獨立的循環 Ambience 音效。</p>
+        <p class="details">重新排列專輯工具列：將「音效控制」固定在標題區中央，播放計時器與「匯入本機音檔」集中排列在右側；行動裝置仍維持等寬直向排列，避免工具互相擠壓。</p>
+        <p class="details">為「Welcome to the Secret Garden」等長曲名套用較小的專用字級與行高，避免標題超出播放器；同時固定右上角播放次數為不可壓縮項目並靠右對齊，使其維持與其他曲目一致的位置。</p>
+        <p class="details">將使用者提供的 Secret Garden Vol. I 正式專輯封面套用至大播放器左側，移除舊版 Secret／Garden 疊字與旋轉唱片標示。保留原始封面檔，另產生 1800 × 1800、約 1.6 MB 的網站用壓縮 JPG。</p>
+        <p class="details">使用者提供的播放器排版截圖與專輯封面原檔已收錄至更新日誌/assets/v0.5b6-3；同步更新 index.html、script.js 與 version.html 的資源快取參數為 20260624-b6-3。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b6-4</h3>
+        <p class="date">修改時間：2026 06/24</p>
+        <p class="details">配合正方形專輯封面重新整理大播放器垂直構圖。Now Playing、曲名、藝人與 EQ 改為靠近面板上方並保留舒適內距；播放控制與進度條則使用獨立 transport 群組固定靠近底部，避免播放器增高後所有內容仍擠在中央。</p>
+        <p class="details">將大播放器進度條縮短至面板寬度約 60%，避開右側曲目花朵背景的主要顯示範圍，降低花朵遮住或穿過進度條的情況；行動裝置維持 100% 寬度以保留可操作性。</p>
+        <p class="details">精簡專輯工具列文字與尺寸：「播放計時器」改為「計時」、分鐘輸入欄縮短，「匯入本機音檔」改為「本機音檔」。桌面版計時器與本機音檔按鈕維持同一水平列，手機版則延續直向排列。</p>
+        <p class="details">重構 Web Audio 輸出路徑。純音樂、Music SFX 與九條循環 Ambience 不再各自直接連接輸出，而是先匯入共同 Master Bus，再由 Master Bus 同時送往實際音訊輸出、EQ 與新增的雙聲道 Master Meter，讓量表反映使用者最後真正聽到的混音總和。</p>
+        <p class="details">在 Mixer 標題右側新增橫向左右聲道 Meter。量表使用 Master Bus 的即時 time-domain peak 計算音量，具備快速上升與較慢回落；0 dB 位置設有參考線，混音突破 0 dBFS 時會立即顯示「音量過大」。</p>
+        <p class="details">新增過載 Peak Hold：突破 0 dBFS 後，Meter 最右側會鎖定一條具厚度的紅色直線；它會保留至換歌、暫停或使用者直接點擊紅線。即時過載文字會在音量回到安全範圍一秒後淡出；大播放器右上角也會同步淡入／淡出「音量過大」提示。</p>
+        <p class="details">三張使用者提供的版面與 Meter 位置參考截圖已壓縮收錄至更新日誌/assets/v0.5b6-4；同步更新 index.html、script.js 與 version.html 的資源快取參數為 20260624-b6-4。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b6-5</h3>
+        <p class="date">修改時間：2026 06/25</p>
+        <p class="details">留言花園的留言檢視卡新增花朵色號資訊，在時間旁顯示對應色票與大寫 Hex 色碼，方便使用者確認該朵留言花的實際顏色。</p>
+        <p class="details">將 Mixer 的純音樂軌最大音量限制為 0 dB，九條音效軌仍維持最高 +6 dB；純音樂既有超過 0 dB 的狀態也會在輸出增益與控制介面中被安全限制。</p>
+        <p class="details">補齊 Master 過載警示至右上角迷你播放器。混音突破 0 dBFS 時會立即顯示「音量過大」，回到安全範圍一秒後再淡出，與大播放器和 Mixer Meter 共用同一套判定。</p>
+        <p class="details">調整 Mixer 標題列的 Master Meter 垂直位置，使雙聲道量表與「音樂與音效控制」主標題置中對齊；淺色模式移除 Mixer 上方過深的覆蓋底色，並補強播放器標題、曲目卡、Mixer、播放清單等文字顏色，避免切換淺色模式後文字與背景融在一起。</p>
+        <p class="details">恢復右上角迷你播放器長曲名的自動跑馬燈與頭尾淡出遮罩；修正大播放器曲名行高過緊造成 g、y 等下伸字母被裁切的問題。</p>
+        <p class="details">將九條音效與純音樂 Mixer 軌道原本的單字圓形圖示，替換為 assets/icons/playback/SFX icon 中的圖片資產；為避免中文檔名與空白路徑造成瀏覽器相容問題，另建立 assets/icons/playback/sfx 的 ASCII 網站用檔名版本。</p>
+        <p class="details">保留原本三位核心園丁卡片不變，於下方新增獨立協力人員 Credits 區，依「表演者、聲音技術執行、互動引導、攝影」分類顯示較小的圓形頭像、人名與職務。Helpers 中文原檔保留於原資料夾，網站實際引用改用 assets/gardeners/helpers-web 內的羅馬拼音 ASCII 檔名與壓縮 JPG。</p>
+        <p class="details">五張使用者提供的留言／Mixer／淺色模式／曲名裁切參考截圖已壓縮收錄至更新日誌/assets/v0.5b6-5；同步更新 index.html、script.js 與 version.html 的資源快取參數為 20260625-b6-5。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b6-6</h3>
+        <p class="date">修改時間：2026 06/25</p>
+        <p class="details">統一 sfxChannelDefinitions 的 icon 與 iconSrc 欄位，九種循環音效全部改為指向 assets/icons/playback/sfx 中的實際 PNG 圖示，不再保留「雷、餐、窗、浪」等舊版單字圖示資料。</p>
+        <p class="details">主專輯播放器在僅播放循環音效時，音效摘要由舊版「文字圖示＋名稱」改為真正的圓形音效圖片＋音效名稱；多軌同時播放時仍保留清楚的分隔與自動換行。</p>
+        <p class="details">園丁 Credits 的「互動引導」改為專用單列版面。桌面版固定九欄平均排列，窄螢幕保持同一橫列並可水平滑動；每位成員保留最小欄寬，避免新增人員後換行或頭像、姓名彼此重疊。</p>
+        <p class="details">同步更新 index.html、script.js、styles.css 與 version.html 的資源快取參數為 20260625-b6-6。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.5b6-7</h3>
+        <p class="date">修改時間：2026 06/25</p>
+        <p class="details">重新校準 Master Meter 色彩分段。-10 dB 以下維持綠色，從 -10 dB 起漸變為黃色；-3 dB 起再漸變為紅色，0 dB 至 +6 dB 全段固定為紅色。色彩節點依目前 Meter 的 -60 至 +6 dB 顯示範圍精準換算。</p>
+        <p class="details">僅播放循環音效時，大音樂控制器的曲目資訊列改為只顯示正在發聲軌道的音效圖片圖示，不再重複顯示「雷雨、餐廳」等文字；每個圖示仍保留 title 與無障礙名稱。</p>
+        <p class="details">重做 Mixer 音量推桿的跨瀏覽器外觀與即時填色。淺色模式改用淺灰軌道、金色已調整區段與清楚的圓形滑塊，不再沿用瀏覽器深色原生控制樣式；拖動時填色會同步更新。</p>
+        <p class="details">補強淺色模式 Master Meter 的雙聲道小外框與 0 dB 參考刻度，使其在白色面板上保持可辨識的灰色線條。</p>
+        <p class="details">將專輯大播放器與右上角迷你播放器的音效開關圖示替換為 assets/icons/playback/sfx/sound.png。深色模式自動將黑色線條反相為白色並保留光暈，淺色模式使用原始黑色線條。</p>
+        <p class="details">使用者提供的淺色 Mixer 參考截圖已壓縮收錄至更新日誌/assets/v0.5b6-7；同步更新 index.html、script.js、styles.css 與 version.html 的資源快取參數為 20260625-b6-7。</p>
+      </article>
+    </section>
+
+    <section class="version-group">
+      <h2 class="major-version" id="v0-6b1">v0.6b1</h2>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.6b1-1</h3>
+        <p class="date">修改時間：2026 06/25</p>
+        <p class="details">重新設計聯網音訊資源排程。九條循環 Ambience 不再於網站初始化時同時 preload 與 load，只有使用者實際啟用該軌時才開始讀取，避免約數十 MB 的背景音效在首頁階段與專輯播放競爭頻寬。</p>
+        <p class="details">建立可重用的 Music SFX 預載 Audio 元素池。背景已完成或正在進行預載的 Music SFX，在使用者真正播放對應曲目時會直接交由播放系統接管，不再另建一個 Audio 元素並重新要求相同來源；停止曲目後則歸還元素池供後續再次使用。</p>
+        <p class="details">背景專輯預載改為網路感知的循序佇列。首頁先延後準備目前曲目，再處理下一首；只有在未開啟節省流量且網路品質足夠時才繼續預載其餘曲目。每組音樂與 Music SFX 必須到達 canplay 或逾時後才會進入下一組，避免慢網路下逐步堆疊成大量並行下載。</p>
+        <p class="details">低優先序預載會在使用者正在讀取／播放曲目或頁面位於背景時暫停排程，待播放停止且頁面回到前景後再繼續；使用者成功起播後僅延後準備下一首曲目，確保播放操作永遠優先於背景下載。</p>
+        <p class="details">使用者手動選曲時會立即取消其他尚未完成、且不屬於目前音樂／Music SFX 的背景預載請求；已經完成的快取與正在被播放流程接管的 Audio 不受影響，避免切歌當下仍被無關的 8 至 12 MB 音檔占用頻寬。</p>
+        <p class="details">手機版音效控制器由十軌單欄改為雙欄卡片。每張軌道卡將圖示與名稱、暫停／Mute／Solo、音量推桿與 dB 數值分層排列，並縮整圖示、文字與間距；經 320px 與 390px 直式畫面測試，十張卡片均沒有文字或控制項重疊，也不會造成面板水平溢出。</p>
+        <p class="details">完成手機版主要區域排版稽核，檢查頂部品牌與迷你播放器、八格底部導覽、首頁八色入口、花朵綻放、種花區、專輯工具列、大播放器、十張曲目卡、花卡、園丁 Credits、活動紀錄與聯絡按鈕。加高底部導覽觸控列、擴大八色入口並同步增加各區底部安全距離，避免內容被固定導覽遮住。</p>
+        <p class="details">同步將網站目前版本提升為 v0.6b1，更新 index.html、script.js、styles.css 與 version.html 的資源快取參數為 20260625-06b1-1。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.6b1-2</h3>
+        <p class="date">修改時間：2026 06/25</p>
+        <p class="details">修正 v0.6b1 首版在聯網環境中可能出現的音訊卡死：停止將背景預載用的 Audio 元素直接交給 Music SFX 正式播放，也移除切歌時會取消非優先預載元素的競態流程。Music SFX 現在一律使用獨立播放元素，預載僅負責暖機瀏覽器快取；主音樂與 Music SFX 仍會等待同組音檔可播放後同步啟動，若任一音檔逾時或讀取失敗，會結束讀取狀態並留下 Console 紀錄，不再讓播放流程永久停住。</p>
+        <p class="details">補強八色花朵綻放音效：音效改為 auto preload，並在使用者點擊種子的同一個互動事件中立即送出播放請求，讓 Safari 等瀏覽器保留聲音播放授權，再由瀏覽器等待緩衝完成；若瀏覽器回報錯誤、逾時或播放事件未正常結束，會由安全計時器完成收尾並接續對應專輯曲目，避免播放器卡在「花朵綻放音效」。背景暖機順序改為先循序準備體積較小的九種開花音效，再準備目前專輯曲目；其餘曲目只在實際播放後按需準備，不再於初始階段載完整張專輯。讀取遮罩改為不攔截下層控制操作，使用者在等待期間仍可調整 Mixer Fader，右上角略過按鈕仍保留獨立點擊能力。</p>
+        <p class="details">修正手機版「種下一些花」標題說明與「留言花園／種花」按鈕重疊，移除模式切換列的負邊距並保留穩定間隔。手機草原在縮放大於 0% 且未查看留言時，草原範圍內的手勢不再帶動整頁捲動；0% 總覽與查看花朵留言時則恢復頁面捲動。</p>
+        <p class="details">重整手機版花朵留言聚焦構圖：目標花朵縮小並定位於左側，留言卡固定在右側且縮窄；情緒、留言內容、色號與時間資訊支援自動換行，避免花朵與文字卡重疊。更新 index.html、script.js、styles.css 與 version.html 的資源快取參數為 20260625-06b1-2。</p>
+      </article>
+    </section>
+
+    <section class="version-group">
+      <h2 class="major-version" id="v0-6b2">v0.6b2</h2>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.6b2-1</h3>
+        <p class="date">修改時間：2026 06/25</p>
+        <p class="details">依使用者要求暫時拔除複雜音效控制播放引擎。專輯聆聽回到單一 HTMLAudioElement 播放模式，十首專輯曲目改讀取 assets/audio/Music 內的完整音樂檔，不再建立 Music SFX、Ambience 或 Mixer 相關播放隊列。</p>
+        <p class="details">保留原有專輯播放器 UI、播放次數、本機音檔、計時器、專輯循環、單曲循環、專輯不循環與隨機播放等主要功能；音效控制器入口與音效開關暫時隱藏／停用，避免使用者再進入已拔除的 Mixer 流程。</p>
+        <p class="details">播放流程改為只等待 backgroundAudio 本身，切歌、暫停、恢復與播放結束都不再呼叫 Music SFX group 同步起播。背景預載也只處理專輯單一音檔與 Bloom 開花音效，降低聯網環境中多音檔同步等待造成的卡死風險。</p>
+        <p class="details">同步將網站目前版本提升為 v0.6b2，更新 index.html、script.js 與 version.html 的資源快取參數為 20260625-06b2-1，並在使用者版 version.html 新增 v0.6b2 條目。</p>
+      </article>
+      <article class="minor-entry">
+        <h3 class="minor-version">v0.6b2-2</h3>
+        <p class="date">修改時間：2026 06/25</p>
+        <p class="details">修復 v0.6b2 首版中花朵綻放音效消失的問題。setBloomChoice 不再將 bloomSfxAudio 登記為舊播放器運輸音訊，也不再等待 Mixer/可拖曳播放狀態；改為在使用者點擊種子或深連結入口後，直接讀取並播放 assets/audio/Bloom 對應音檔。</p>
+        <p class="details">開花音效現在會先送出 play() 請求並記錄 Console Log，接著播放開花動畫；若瀏覽器允許播放，會等待音效播完或安全逾時後再啟動對應專輯曲目。若瀏覽器阻擋音效，動畫與專輯播放仍會繼續，不會造成整個 Bloom 流程停住。</p>
+      </article>
+    </section>
+
     <section class="asset-section">
       <h2>附件與參考素材索引</h2>
       <p>以下素材已依版本號複製到「更新日誌/assets」中。若檔案顯示為缺失，代表該截圖或素材的原始本機路徑目前已不存在，無法從工作區再次取回。</p>
+
+      <div class="asset-version">
+        <h3>v0.6b1-2</h3>
+        <div class="asset-grid">
+          <div class="asset-card">
+            <img src="assets/v0.6b1-2/mobile-garden-mode-overlap.jpg" alt="手機版種下一些花標題說明與模式按鈕重疊參考截圖">
+            <a href="assets/v0.6b1-2/mobile-garden-mode-overlap.jpg">mobile-garden-mode-overlap.jpg</a>
+            <small>手機版「留言花園／種花」切換列與區域說明文字重疊，以及草原手勢捲動規則的修正參考。</small>
+          </div>
+          <div class="asset-card">
+            <img src="assets/v0.6b1-2/mobile-meadow-viewer-overlap.jpg" alt="手機版花朵留言聚焦時花朵與留言卡重疊參考截圖">
+            <a href="assets/v0.6b1-2/mobile-meadow-viewer-overlap.jpg">mobile-meadow-viewer-overlap.jpg</a>
+            <small>手機版查看留言時目標花朵過大、與右側留言卡重疊的構圖修正參考。</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="asset-version">
+        <h3>v0.5b6-7</h3>
+        <div class="asset-grid">
+          <div class="asset-card">
+            <img src="assets/v0.5b6-7/light-mixer-fader-reference.jpg" alt="淺色模式 Mixer 推桿與 Master Meter 顯示參考截圖">
+            <a href="assets/v0.5b6-7/light-mixer-fader-reference.jpg">light-mixer-fader-reference.jpg</a>
+            <small>淺色模式中音效軌道仍呈現深色原生推桿、Master Meter 外框與 0 dB 刻度不清楚的修正參考。</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="asset-version">
+        <h3>v0.5b6-5</h3>
+        <div class="asset-grid">
+          <div class="asset-card">
+            <img src="assets/v0.5b6-5/meter-alignment-reference.jpg" alt="Master Meter 與 Mixer 標題置中位置參考截圖">
+            <a href="assets/v0.5b6-5/meter-alignment-reference.jpg">meter-alignment-reference.jpg</a>
+            <small>使用者標示雙聲道 Master Meter 應與「音樂與音效控制」主標題置中對齊的位置參考。</small>
+          </div>
+          <div class="asset-card">
+            <img src="assets/v0.5b6-5/light-player-reference.jpg" alt="淺色模式大播放器文字對比參考截圖">
+            <a href="assets/v0.5b6-5/light-player-reference.jpg">light-player-reference.jpg</a>
+            <small>淺色模式中大播放器曲名與部分控制文字因顏色過淺而消失的參考截圖。</small>
+          </div>
+          <div class="asset-card">
+            <img src="assets/v0.5b6-5/light-mixer-reference.jpg" alt="淺色模式 Mixer 深色覆蓋與文字對比參考截圖">
+            <a href="assets/v0.5b6-5/light-mixer-reference.jpg">light-mixer-reference.jpg</a>
+            <small>淺色模式 Mixer 面板仍有深色覆蓋層、部分文字對比不足的參考截圖。</small>
+          </div>
+          <div class="asset-card">
+            <img src="assets/v0.5b6-5/light-track-list-reference.jpg" alt="淺色模式專輯曲目卡標題消失參考截圖">
+            <a href="assets/v0.5b6-5/light-track-list-reference.jpg">light-track-list-reference.jpg</a>
+            <small>淺色模式十首專輯曲目卡英文曲名接近白色、難以辨識的參考截圖。</small>
+          </div>
+          <div class="asset-card">
+            <img src="assets/v0.5b6-5/title-descender-reference.jpg" alt="大播放器 Orange 曲名字母下緣裁切參考截圖">
+            <a href="assets/v0.5b6-5/title-descender-reference.jpg">title-descender-reference.jpg</a>
+            <small>大播放器曲名 Orange 的字母 g 下伸部位被容器裁切的參考截圖。</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="asset-version">
+        <h3>v0.5b6-4</h3>
+        <div class="asset-grid">
+          <div class="asset-card">
+            <img src="assets/v0.5b6-4/player-layout-reference.jpg" alt="正方形專輯封面後播放器上下分區參考截圖">
+            <a href="assets/v0.5b6-4/player-layout-reference.jpg">player-layout-reference.jpg</a>
+            <small>Now Playing 資訊靠上、播放控制與進度條靠下，以及縮短進度條的版面參考。</small>
+          </div>
+          <div class="asset-card">
+            <img src="assets/v0.5b6-4/music-tools-reference.jpg" alt="計時器與本機音檔工具列排列參考截圖">
+            <a href="assets/v0.5b6-4/music-tools-reference.jpg">music-tools-reference.jpg</a>
+            <small>精簡計時器欄位與本機音檔按鈕文字、維持同一水平面的參考截圖。</small>
+          </div>
+          <div class="asset-card">
+            <img src="assets/v0.5b6-4/master-meter-reference.jpg" alt="Mixer 標題右側新增 Master Meter 位置參考截圖">
+            <a href="assets/v0.5b6-4/master-meter-reference.jpg">master-meter-reference.jpg</a>
+            <small>Mixer 標題右側雙聲道 Meter 與過載提示預定位置參考。</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="asset-version">
+        <h3>v0.5b6-3</h3>
+        <div class="asset-grid">
+          <div class="asset-card">
+            <img src="assets/v0.5b6-3/player-long-title-reference.jpg" alt="專輯播放器長曲名與播放次數錯位參考截圖">
+            <a href="assets/v0.5b6-3/player-long-title-reference.jpg">player-long-title-reference.jpg</a>
+            <small>使用者標示 Welcome to the Secret Garden 曲名超出顯示框、播放次數位置偏移的參考截圖。</small>
+          </div>
+          <div class="asset-card">
+            <img src="assets/v0.5b6-3/album-cover-secret-garden-vol-1-original.jpg" alt="Secret Garden Vol. I 正式專輯封面">
+            <a href="assets/v0.5b6-3/album-cover-secret-garden-vol-1-original.jpg">album-cover-secret-garden-vol-1-original.jpg</a>
+            <small>使用者提供的 Secret Garden Vol. I 正式專輯封面原檔；網站實際使用 assets/web 中的壓縮版本。</small>
+          </div>
+        </div>
+      </div>
 
       <div class="asset-version">
         <h3>v0.2b2-1</h3>

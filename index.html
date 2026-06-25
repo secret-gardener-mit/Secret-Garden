@@ -34,13 +34,40 @@
       rel="stylesheet"
     />
     <link rel="preload" as="image" href="assets/light-garden-bg.jpg" fetchpriority="high" />
-    <link rel="stylesheet" href="styles.css?v=20260617-b4-14" />
+    <link rel="stylesheet" href="styles.css?v=20260625-06b2-1" />
   </head>
   <body data-theme="light">
     <div class="ambient-layer" aria-hidden="true">
       <canvas id="petal-canvas"></canvas>
       <div class="cursor-orb"></div>
     </div>
+    <div class="site-loading-overlay" id="site-loading-overlay" hidden aria-live="polite" aria-label="正在讀取網站">
+      <button class="loading-skip-button" id="loading-skip-button" type="button">
+        <span>或是先不播放這首音樂</span>
+        <i aria-hidden="true"></i>
+      </button>
+      <div class="loading-flower" aria-hidden="true">
+        <i class="loading-stem"></i>
+        <span class="loading-petal p1"></span>
+        <span class="loading-petal p2"></span>
+        <span class="loading-petal p3"></span>
+        <span class="loading-petal p4"></span>
+        <span class="loading-petal p5"></span>
+        <span class="loading-petal p6"></span>
+        <span class="loading-petal p7"></span>
+        <span class="loading-petal p8"></span>
+        <span class="loading-center"></span>
+      </div>
+      <strong>正在讀取網站</strong>
+      <p class="loading-phrase" id="site-loading-phrase">今日花語：</p>
+    </div>
+    <aside class="site-console" id="site-console" hidden aria-label="網站 Console Log">
+      <div class="site-console-head">
+        <strong>Console Log</strong>
+        <button id="site-console-close" type="button" aria-label="關閉 Console Log"></button>
+      </div>
+      <div class="site-console-list" id="site-console-list"></div>
+    </aside>
 
     <header class="site-header">
       <a class="brand" href="#home" aria-label="Secret Garden home">
@@ -63,6 +90,7 @@
           <span class="mini-track-title" aria-hidden="true">
             <span id="mini-track-title">Welcome to the Secret Garden</span>
           </span>
+          <span class="mini-overload-alert" id="mini-overload-alert">音量過大</span>
         </button>
         <div class="music-touch-hint" id="music-touch-hint" aria-hidden="true">
           <span>點按以控制音樂</span>
@@ -77,6 +105,7 @@
           <div class="mini-player-controls">
             <button class="player-button prev" id="sound-prev" type="button" aria-label="上一首"></button>
             <button class="player-button play" id="mini-play" type="button" aria-label="暫停"></button>
+            <button class="player-button sfx" id="mini-sfx" type="button" aria-label="音效"></button>
             <button class="player-button next" id="sound-next" type="button" aria-label="下一首"></button>
           </div>
           <div class="mini-progress-wrap">
@@ -332,7 +361,10 @@
                 <article class="meadow-viewer-card">
                   <p class="meadow-viewer-mood" id="meadow-viewer-mood"></p>
                   <p class="meadow-viewer-content" id="meadow-viewer-content"></p>
-                  <time id="meadow-viewer-time"></time>
+                  <footer class="meadow-viewer-meta">
+                    <span class="meadow-viewer-color"><i id="meadow-viewer-color-swatch"></i><code id="meadow-viewer-color"></code></span>
+                    <time id="meadow-viewer-time"></time>
+                  </footer>
                 </article>
               </div>
               <div class="meadow-bloom-focus" id="meadow-bloom-focus" hidden aria-hidden="true"></div>
@@ -361,39 +393,87 @@
           <p class="eyebrow">Color Music</p>
           <h2 id="music-title">專輯聆聽</h2>
           <p>十首顏色音樂的試聽入口。選一首歌，讓花園用這種聲音呼吸。</p>
+          <div class="music-tool-row">
+            <button class="album-mixer-toggle" id="album-mixer-toggle" type="button" aria-expanded="false" aria-controls="album-mixer-panel">
+              <span>音效控制</span>
+            </button>
+            <div class="music-tool-actions">
+              <div class="sleep-timer-control" id="sleep-timer-control">
+                <label>
+                  <span>計時</span>
+                  <input id="sleep-timer-minutes" type="number" min="1" max="280" step="1" value="30" inputmode="numeric" aria-label="播放計時器分鐘數" />
+                  <em>分鐘</em>
+                </label>
+                <button id="sleep-timer-toggle" type="button">開始</button>
+                <output id="sleep-timer-output" hidden>30:00</output>
+              </div>
+              <label class="custom-audio-button">
+                <input id="custom-audio-input" type="file" accept="audio/*" multiple />
+                <span>本機音檔</span>
+              </label>
+            </div>
+          </div>
         </div>
         <div class="album-player reveal">
           <div class="album-console">
             <div class="album-art" aria-label="Secret Garden album visual">
-              <span>Secret</span>
-              <strong>Garden</strong>
-              <i></i>
+              <img src="assets/web/album-cover-secret-garden-vol-1.jpg" alt="Secret Garden Vol. I 專輯封面" />
             </div>
             <div class="album-now">
               <div class="album-top-row">
                 <p class="eyebrow">Now Playing</p>
-                <p class="album-play-count" id="album-play-count">播放次數：0</p>
+                <div class="album-status-group">
+                  <p class="album-overload-alert" id="album-overload-alert" aria-live="polite">音量過大</p>
+                  <p class="album-play-count" id="album-play-count">播放次數：0</p>
+                </div>
               </div>
               <div class="album-title-row">
-                <h3 id="album-now-title">Welcome to the Secret Garden</h3>
+                <h3 id="album-now-title"><span>Welcome to the Secret Garden</span></h3>
                 <div class="album-eq album-eq-title petal-wave" id="album-eq" aria-hidden="true"></div>
               </div>
               <div class="album-meta-row">
                 <p id="album-now-meta">李岳鴒｜2:49</p>
                 <div class="album-eq album-eq-meta petal-wave" aria-hidden="true"></div>
               </div>
-              <div class="album-controls" aria-label="Album playback controls">
-                <button class="player-button prev" id="album-prev" type="button" aria-label="上一首"></button>
-                <button class="player-button play" id="album-play" type="button" aria-label="暫停"></button>
-                <button class="player-button next" id="album-next" type="button" aria-label="下一首"></button>
-              </div>
-              <div class="album-progress-wrap">
-                <span id="album-current-time">0:00</span>
-                <input id="album-progress" class="album-progress" type="range" min="0" max="1000" value="0" aria-label="樂曲進度" />
-                <span id="album-duration">2:49</span>
+              <div class="album-transport">
+                <div class="album-controls" aria-label="Album playback controls">
+                  <button class="player-button prev" id="album-prev" type="button" aria-label="上一首"></button>
+                  <button class="player-button play" id="album-play" type="button" aria-label="暫停"></button>
+                  <button class="player-button sfx" id="album-sfx" type="button" aria-label="音效"></button>
+                  <button class="player-button next" id="album-next" type="button" aria-label="下一首"></button>
+                  <span class="play-mode-cluster" aria-label="播放模式">
+                    <button class="player-button mode loop album-loop active" id="album-play-mode" type="button" aria-label="專輯循環播放"></button>
+                    <button class="player-button mode random-toggle" id="album-random-mode" type="button" aria-label="隨機播放"></button>
+                  </span>
+                </div>
+                <div class="album-progress-wrap">
+                  <span id="album-current-time">0:00</span>
+                  <input id="album-progress" class="album-progress" type="range" min="0" max="1000" value="0" aria-label="樂曲進度" />
+                  <span id="album-duration">2:49</span>
+                </div>
               </div>
             </div>
           </div>
+          <section class="album-mixer-panel" id="album-mixer-panel" hidden aria-label="專輯音效控制器">
+            <div class="album-mixer-head">
+              <div>
+                <p class="eyebrow">Mixer</p>
+                <div class="album-mixer-title-row">
+                  <h3>音樂與音效控制</h3>
+                  <button class="album-mixer-reset" id="album-mixer-reset" type="button" aria-label="恢復預設音效控制" title="恢復預設音效控制"></button>
+                </div>
+              </div>
+              <div class="master-meter" id="master-meter" aria-label="Master 雙聲道音量量表">
+                <span class="master-meter-alert" id="master-meter-alert">音量過大</span>
+                <div class="master-meter-channels" aria-hidden="true">
+                  <span class="master-meter-channel"><i id="master-meter-left"></i></span>
+                  <span class="master-meter-channel"><i id="master-meter-right"></i></span>
+                </div>
+                <button class="master-meter-clip" id="master-meter-clip" type="button" aria-label="清除音量過大記錄" title="清除音量過大記錄"></button>
+              </div>
+            </div>
+            <div class="album-mixer-grid" id="album-mixer-grid"></div>
+          </section>
           <div class="track-list" id="album-track-list">
             <button class="track active" type="button" data-track="0" style="--track-color: #8fa780">
               <span class="track-number">1</span>
@@ -466,6 +546,16 @@
               <em>4:24</em>
             </button>
           </div>
+          <section class="local-playlist" id="local-playlist" hidden aria-labelledby="local-playlist-title">
+            <div class="local-playlist-head">
+              <div>
+                <p class="eyebrow">Local Playlist</p>
+                <h3 id="local-playlist-title">本機播放清單</h3>
+              </div>
+              <small>拖曳以調整播放順序</small>
+            </div>
+            <div class="local-playlist-list" id="local-playlist-list"></div>
+          </section>
         </div>
       </section>
 
@@ -614,15 +704,56 @@
           <article class="person reveal">
             <img class="avatar" src="assets/gardeners/chen-yingli.jpg" alt="陳映里大頭照" loading="lazy" />
             <h3>陳映里｜專案副召</h3>
-            <p>作曲家 / 聲景錄音 / 聲音設計 /<br />攝影紀錄 / Beta測試版網站架設</p>
+            <p>作曲家 / 聲景錄音 / 聲音設計 /<br />攝影紀錄 / 秘密花園網站架設</p>
             <small>喜歡的花：藍繡球｜喜歡的聲音：風拂大地</small>
           </article>
           <article class="person reveal">
             <img class="avatar" src="assets/gardeners/lin-shulei.jpg" alt="林書磊大頭照" loading="lazy" />
             <h3>林書磊｜執行長</h3>
-            <p>技術控管 / 作曲家 / 聲音設計 /<br />聲景錄音 / 線上展間架設</p>
+            <p>技術控管 / 作曲家 / 聲音設計 /<br />聲景錄音 / 器材管理</p>
             <small>喜歡的花：山茶花｜喜歡的聲音：微雨浸地</small>
           </article>
+        </div>
+        <div class="helper-credits reveal" aria-label="秘密花園協力人員">
+          <section class="helper-role">
+            <h3>表演者</h3>
+            <div class="helper-grid">
+              <article class="helper-person"><img src="assets/gardeners/li-yueling.png" alt="李岳鴒" loading="lazy" /><strong>李岳鴒</strong><small>鋼琴 / 人聲</small></article>
+              <article class="helper-person"><img src="assets/gardeners/chen-yingli.jpg" alt="陳映里" loading="lazy" /><strong>陳映里</strong><small>小提琴</small></article>
+              <article class="helper-person"><img src="assets/gardeners/lin-shulei.jpg" alt="林書磊" loading="lazy" /><strong>林書磊</strong><small>鋼琴</small></article>
+              <article class="helper-person"><img src="assets/gardeners/helpers-web/zhao-zhenhao.jpg" alt="趙振豪" loading="lazy" /><strong>趙振豪</strong><small>鋼琴</small></article>
+            </div>
+          </section>
+          <section class="helper-role">
+            <h3>聲音技術執行</h3>
+            <div class="helper-grid">
+              <article class="helper-person"><img src="assets/gardeners/lin-shulei.jpg" alt="林書磊" loading="lazy" /><strong>林書磊</strong><small>執行長</small></article>
+              <article class="helper-person"><img src="assets/gardeners/helpers-web/liu-yingqi.jpg" alt="劉映綺" loading="lazy" /><strong>劉映綺</strong><small>PA內場音控</small></article>
+              <article class="helper-person"><img src="assets/gardeners/helpers-web/lin-jiatong.jpg" alt="林家彤" loading="lazy" /><strong>林家彤</strong><small>PA外場音控</small></article>
+              <article class="helper-person"><img src="assets/gardeners/helpers-web/zheng-yongqing.jpg" alt="鄭詠罄" loading="lazy" /><strong>鄭詠罄</strong><small>Stage舞台監督</small></article>
+            </div>
+          </section>
+          <section class="helper-role">
+            <h3>互動引導</h3>
+            <div class="helper-grid helper-grid--interaction">
+              <article class="helper-person"><img src="assets/gardeners/li-yueling.png" alt="李岳鴒" loading="lazy" /><strong>李岳鴒</strong></article>
+              <article class="helper-person"><img src="assets/gardeners/lin-shulei.jpg" alt="林書磊" loading="lazy" /><strong>林書磊</strong></article>
+              <article class="helper-person"><img src="assets/gardeners/chen-yingli.jpg" alt="陳映里" loading="lazy" /><strong>陳映里</strong></article>
+              <article class="helper-person"><img src="assets/gardeners/helpers-web/chen-peiyu.jpg" alt="陳佩伃" loading="lazy" /><strong>陳佩伃</strong></article>
+              <article class="helper-person"><img src="assets/gardeners/helpers-web/hu-xuanmiao.jpg" alt="胡暄妙" loading="lazy" /><strong>胡暄妙</strong></article>
+              <article class="helper-person"><img src="assets/gardeners/helpers-web/zhao-zhenhao.jpg" alt="趙振豪" loading="lazy" /><strong>趙振豪</strong></article>
+              <article class="helper-person"><img src="assets/gardeners/helpers-web/liu-yingqi.jpg" alt="劉映綺" loading="lazy" /><strong>劉映綺</strong></article>
+              <article class="helper-person"><img src="assets/gardeners/helpers-web/zheng-yongqing.jpg" alt="鄭詠罄" loading="lazy" /><strong>鄭詠罄</strong></article>
+              <article class="helper-person"><img src="assets/gardeners/helpers-web/lin-jiatong.jpg" alt="林家彤" loading="lazy" /><strong>林家彤</strong></article>
+            </div>
+          </section>
+          <section class="helper-role">
+            <h3>攝影</h3>
+            <div class="helper-grid">
+              <article class="helper-person"><img src="assets/gardeners/helpers-web/zhang-weiting.jpg" alt="張瑋庭" loading="lazy" /><strong>張瑋庭</strong><small>動／靜態攝影</small></article>
+              <article class="helper-person"><img src="assets/gardeners/chen-yingli.jpg" alt="陳映里" loading="lazy" /><strong>陳映里</strong><small>靜態攝影</small></article>
+            </div>
+          </section>
         </div>
       </section>
 
@@ -645,7 +776,7 @@
                 <span class="version-link-copy">
                   <strong id="version-toggle-title">網站版本</strong>
                   <span class="version-link-inline">
-                    <small id="version-toggle-subtitle">v0.5b4</small>
+                  <small id="version-toggle-subtitle">v0.6b2</small>
                     <i class="version-link-arrow" aria-hidden="true"></i>
                   </span>
                 </span>
@@ -653,19 +784,25 @@
             </div>
           </div>
           <div class="timeline reveal">
-            <article data-summary="2026 06月 將於醫院進行義演，包含現場演出、音樂聆聽與線上展間體驗。">
-              <time>醫院義演活動</time>
-              <p>「秘密花園」將計畫在醫院場所進行現場演出、音樂聆聽、「秘密花園」線上展間之體驗等等，我們將會持續更新最新消息，期待你的參與。</p>
+            <article data-summary="2026 06月25 上午10點 將於關渡醫院進行義演，包含現場演出、音樂聆聽與網站體驗。">
+              <time>關渡醫院義演活動</time>
+              <p>「秘密花園」將計畫在6/25（四）上午10:00至11:00於北市立關渡醫院場所進行現場演出、音樂聆聽、「秘密花園網站」之體驗，並搭配現場解說，以及工作人員引導，期待您能在活動中獲得平靜。
+                詳細資訊請參訪秘密花園IG貼文：<a class="magnetic" href="https://www.instagram.com/p/DZ9GNx6yUZu/?igsh=MXh3bno0cnN5Y2Z6bw==">活動介紹請點我</a>
+              </p>
             </article>
             <article data-summary="團隊多次進行義演曲目與技術彩排，持續調整演出流程與聲音細節。">
               <time>演出彩排</time>
-              <p>「秘密花園」團隊為了醫院的義演活動，多次在 國立臺北藝術大學 活動中心一樓B116實驗室 進行演出彩排。
+              <p>「秘密花園」團隊為了關渡醫院的義演活動，多次在 國立臺北藝術大學 活動中心一樓B116實驗室 進行演出彩排。
 
                 - 2026 05/25（15:00 ~ 17:00）：義演當天的曲目安排與時長規劃；演出曲目「Gray｜灰」排練；演出曲目「Near Light」排練。
 
                 - 2026 06/01（13:00 ~ 17:00）：演出曲目「Gray｜灰」排練；解決技術問題。
 
-                - 2026 06/15（13:00 ~ 17:00）：即將到來。
+                - 2026 06/15（13:00 ~ 17:00）：總綵排 I。
+
+                - 2026 06/22（13:00 ~ 17:00）：總綵排 II。
+
+                - 2026 06/24（15:00 ~ 17:00）：關渡醫院場勘。
               </p>
             </article>
             <article data-summary="團隊獲得專案補助，支持作品持續發展。">
@@ -719,6 +856,6 @@
     </div>
     <div class="bloom-toast" id="bloom-toast" aria-live="polite"></div>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="script.js?v=20260617-b4-14"></script>
+    <script src="script.js?v=20260625-06b2-1"></script>
   </body>
 </html>
